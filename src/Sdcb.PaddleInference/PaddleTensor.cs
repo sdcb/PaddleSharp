@@ -17,19 +17,19 @@ namespace Sdcb.PaddleInference
 			_ptr = predictorPointer;
 		}
 
-		public string Name => Marshal.PtrToStringUTF8(PdInvoke.PD_TensorGetName(_ptr));
+		public string Name => Marshal.PtrToStringUTF8(PaddleNative.PD_TensorGetName(_ptr));
 		public unsafe int[] Shape
 		{
 			get
 			{
-				using PdInvoke.PdIntArrayWrapper wrapper = new() { ptr = PdInvoke.PD_TensorGetShape(_ptr) };
+				using PaddleNative.PdIntArrayWrapper wrapper = new() { ptr = PaddleNative.PD_TensorGetShape(_ptr) };
 				return wrapper.ToArray();
 			}
 			set
 			{
 				fixed (int* ptr = value)
 				{
-					PdInvoke.PD_TensorReshape(_ptr, value.Length, (IntPtr)ptr);
+					PaddleNative.PD_TensorReshape(_ptr, value.Length, (IntPtr)ptr);
 				}
 			}
 		}
@@ -39,11 +39,11 @@ namespace Sdcb.PaddleInference
 			TypeCode code = Type.GetTypeCode(typeof(T));
 			Action<IntPtr, IntPtr> copyAction = code switch
 			{
-				TypeCode.Single => PdInvoke.PD_TensorCopyToCpuFloat,
-				TypeCode.Int32 => PdInvoke.PD_TensorCopyToCpuInt32,
-				TypeCode.Int64 => PdInvoke.PD_TensorCopyToCpuInt64,
-				TypeCode.Byte => PdInvoke.PD_TensorCopyToCpuUint8,
-				TypeCode.SByte => PdInvoke.PD_TensorCopyToCpuInt8,
+				TypeCode.Single => PaddleNative.PD_TensorCopyToCpuFloat,
+				TypeCode.Int32 => PaddleNative.PD_TensorCopyToCpuInt32,
+				TypeCode.Int64 => PaddleNative.PD_TensorCopyToCpuInt64,
+				TypeCode.Byte => PaddleNative.PD_TensorCopyToCpuUint8,
+				TypeCode.SByte => PaddleNative.PD_TensorCopyToCpuInt8,
 				_ => throw new NotSupportedException($"GetData for {typeof(T).Name} is not supported.")
 			};
 
@@ -66,7 +66,7 @@ namespace Sdcb.PaddleInference
 		{
 			fixed (void* ptr = data)
 			{
-				PdInvoke.PD_TensorCopyFromCpuFloat(_ptr, (IntPtr)ptr);
+				PaddleNative.PD_TensorCopyFromCpuFloat(_ptr, (IntPtr)ptr);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Sdcb.PaddleInference
 		{
 			fixed (void* ptr = data)
 			{
-				PdInvoke.PD_TensorCopyFromCpuInt32(_ptr, (IntPtr)ptr);
+				PaddleNative.PD_TensorCopyFromCpuInt32(_ptr, (IntPtr)ptr);
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Sdcb.PaddleInference
 		{
 			fixed (void* ptr = data)
 			{
-				PdInvoke.PD_TensorCopyFromCpuInt64(_ptr, (IntPtr)ptr);
+				PaddleNative.PD_TensorCopyFromCpuInt64(_ptr, (IntPtr)ptr);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace Sdcb.PaddleInference
 		{
 			fixed (void* ptr = data)
 			{
-				PdInvoke.PD_TensorCopyFromCpuUint8(_ptr, (IntPtr)ptr);
+				PaddleNative.PD_TensorCopyFromCpuUint8(_ptr, (IntPtr)ptr);
 			}
 		}
 
@@ -98,17 +98,17 @@ namespace Sdcb.PaddleInference
 		{
 			fixed (void* ptr = data)
 			{
-				PdInvoke.PD_TensorCopyFromCpuInt8(_ptr, (IntPtr)ptr);
+				PaddleNative.PD_TensorCopyFromCpuInt8(_ptr, (IntPtr)ptr);
 			}
 		}
 
-		public DataTypes DataType => (DataTypes)PdInvoke.PD_TensorGetDataType(_ptr);
+		public DataTypes DataType => (DataTypes)PaddleNative.PD_TensorGetDataType(_ptr);
 
 		public void Dispose()
 		{
 			if (_ptr != IntPtr.Zero)
 			{
-				PdInvoke.PD_TensorDestroy(_ptr);
+				PaddleNative.PD_TensorDestroy(_ptr);
 				_ptr = IntPtr.Zero;
 			}
 		}

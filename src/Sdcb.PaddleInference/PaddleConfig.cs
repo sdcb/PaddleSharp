@@ -11,7 +11,7 @@ namespace Sdcb.PaddleInference
 
 		public PaddleConfig()
 		{
-			_ptr = PdInvoke.PD_ConfigCreate();
+			_ptr = PaddleNative.PD_ConfigCreate();
 		}
 
 		public PaddleConfig(IntPtr configPointer)
@@ -24,16 +24,16 @@ namespace Sdcb.PaddleInference
 			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + @"C:\_\3rd\paddle\dll");
 		}
 
-		public static string Version => Marshal.PtrToStringUTF8(PdInvoke.PD_GetVersion());
+		public static string Version => Marshal.PtrToStringUTF8(PaddleNative.PD_GetVersion());
 
 		public bool GLogEnabled
 		{
-			get => PdInvoke.PD_ConfigGlogInfoDisabled() == 0;
+			get => PaddleNative.PD_ConfigGlogInfoDisabled() == 0;
 			set
 			{
 				if (!value)
 				{
-					PdInvoke.PD_ConfigDisableGlogInfo(_ptr);
+					PaddleNative.PD_ConfigDisableGlogInfo(_ptr);
 				}
 				else if (!GLogEnabled)
 				{
@@ -42,15 +42,15 @@ namespace Sdcb.PaddleInference
 			}
 		}
 
-		public bool IsMemoryModel => PdInvoke.PD_ConfigModelFromMemory(_ptr) != 0;
+		public bool IsMemoryModel => PaddleNative.PD_ConfigModelFromMemory(_ptr) != 0;
 		public bool MkldnnEnabled
 		{
-			get => PdInvoke.PD_ConfigMkldnnEnabled(_ptr) != 0;
+			get => PaddleNative.PD_ConfigMkldnnEnabled(_ptr) != 0;
 			set
 			{
 				if (value)
 				{
-					PdInvoke.PD_ConfigEnableMKLDNN(_ptr);
+					PaddleNative.PD_ConfigEnableMKLDNN(_ptr);
 				}
 				else if (MkldnnEnabled)
 				{
@@ -66,7 +66,7 @@ namespace Sdcb.PaddleInference
 			set
 			{
 				_MkldnnCacheCapacity = value;
-				PdInvoke.PD_ConfigSetMkldnnCacheCapacity(_ptr, value);
+				PaddleNative.PD_ConfigSetMkldnnCacheCapacity(_ptr, value);
 			}
 		}
 
@@ -82,18 +82,18 @@ namespace Sdcb.PaddleInference
 			if (paramsPath == null) throw new ArgumentNullException(nameof(paramsPath));
 			if (!File.Exists(programPath)) throw new FileNotFoundException("programPath not found", programPath);
 			if (!File.Exists(paramsPath)) throw new FileNotFoundException("paramsPath not found", paramsPath);
-			PdInvoke.PD_ConfigSetModel(_ptr, programPath, paramsPath);
+			PaddleNative.PD_ConfigSetModel(_ptr, programPath, paramsPath);
 		}
 
-		public string ProgramPath => Marshal.PtrToStringUTF8(PdInvoke.PD_ConfigGetProgFile(_ptr));
-		public string ParamsPath => Marshal.PtrToStringUTF8(PdInvoke.PD_ConfigGetParamsFile(_ptr));
+		public string ProgramPath => Marshal.PtrToStringUTF8(PaddleNative.PD_ConfigGetProgFile(_ptr));
+		public string ParamsPath => Marshal.PtrToStringUTF8(PaddleNative.PD_ConfigGetParamsFile(_ptr));
 
 		public unsafe void SetMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
 		{
 			fixed (byte* pprogram = programBuffer)
 			fixed (byte* pparams = paramsBuffer)
 			{
-				PdInvoke.PD_ConfigSetModelBuffer(_ptr,
+				PaddleNative.PD_ConfigSetModelBuffer(_ptr,
 					(IntPtr)pprogram, programBuffer.Length,
 					(IntPtr)pparams, paramsBuffer.Length);
 			}
@@ -101,15 +101,15 @@ namespace Sdcb.PaddleInference
 
 		public int CpuMathThreadCount
 		{
-			get => PdInvoke.PD_ConfigGetCpuMathLibraryNumThreads(_ptr);
-			set => PdInvoke.PD_ConfigSetCpuMathLibraryNumThreads(_ptr, value);
+			get => PaddleNative.PD_ConfigGetCpuMathLibraryNumThreads(_ptr);
+			set => PaddleNative.PD_ConfigSetCpuMathLibraryNumThreads(_ptr, value);
 		}
 
 		public PaddlePredictor CreatePredictor()
 		{
 			try
 			{
-				return new PaddlePredictor(PdInvoke.PD_PredictorCreate(_ptr));
+				return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
 			}
 			finally
 			{
@@ -121,7 +121,7 @@ namespace Sdcb.PaddleInference
 		{
 			if (_ptr != IntPtr.Zero)
 			{
-				PdInvoke.PD_ConfigDestroy(_ptr);
+				PaddleNative.PD_ConfigDestroy(_ptr);
 				_ptr = IntPtr.Zero;
 			}
 		}

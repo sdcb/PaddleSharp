@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleInference.Native
 {
-	public class PdInvoke
+	public class PaddleNative
 	{
         private unsafe struct PdStringArray
         {
