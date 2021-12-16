@@ -1,6 +1,6 @@
 *.exe
 *.dll
 *.nupkg
-/.vs/PaddleSharp/v17
+/.vs
 /**/obj
 /**/bin
