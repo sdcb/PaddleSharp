@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CCC0070E-E444-42B2-84F7-EE999ADA0750}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6-DE13-4070-B359-CC6F6FD49A07}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.linq = build\build.linq
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "win64", "win64", "{20EABB5E-30F3-435B-85A2-7701DB13DD0B}"
+	ProjectSection(SolutionItems) = preProject
+		build\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec = build\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec
+		build\win64\Sdcb.PaddleInference.runtime.win64.mkl.props = build\win64\Sdcb.PaddleInference.runtime.win64.mkl.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B3A59318-2F90-40D4-B995-7D56EB8C50F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleInference", "src\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj", "{BCD42B48-62DF-4E44-8F43-08371A0FC567}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCD42B48-62DF-4E44-8F43-08371A0FC567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD42B48-62DF-4E44-8F43-08371A0FC567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD42B48-62DF-4E44-8F43-08371A0FC567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD42B48-62DF-4E44-8F43-08371A0FC567}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20EABB5E-30F3-435B-85A2-7701DB13DD0B} = {D2A95EF6-DE13-4070-B359-CC6F6FD49A07}
+		{BCD42B48-62DF-4E44-8F43-08371A0FC567} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+*.exe
+*.dll
+*.nupkg
+/.vs/PaddleSharp/v17
+/src/Sdcb.PaddleInference/obj
+/src/Sdcb.PaddleInference/bin/Debug/netstandard2.1
