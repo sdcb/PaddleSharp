@@ -101,13 +101,13 @@ namespace Sdcb.PaddleOCR
 					.Where(x => x.Width > 5 && x.Height > 5)
 					.Select(rect =>
 					{
-						int x = Math.Clamp(rect.Left - rect.Height, 0, size.Width);
-						int y = Math.Clamp(rect.Top - rect.Height, 0, size.Height);
+						int x = MathUtil.Clamp(rect.Left - rect.Height, 0, size.Width);
+						int y = MathUtil.Clamp(rect.Top - rect.Height, 0, size.Height);
 						int width = rect.Width + 2 * rect.Height;
 						int height = rect.Height * 3;
 						return new Rect(x, y,
-							Math.Clamp(width, 0, size.Width - x),
-							Math.Clamp(height, 0, size.Height - y));
+							MathUtil.Clamp(width, 0, size.Width - x),
+							MathUtil.Clamp(height, 0, size.Height - y));
 					})
 					.ToArray();
 				return rects;

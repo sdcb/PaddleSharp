@@ -17,7 +17,7 @@ namespace Sdcb.PaddleInference
 			_ptr = predictorPointer;
 		}
 
-		public string Name => Marshal.PtrToStringUTF8(PaddleNative.PD_TensorGetName(_ptr));
+		public string Name => PaddleNative.PD_TensorGetName(_ptr).UTF8PtrToString();
 		public unsafe int[] Shape
 		{
 			get

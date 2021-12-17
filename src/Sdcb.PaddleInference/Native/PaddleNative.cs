@@ -17,7 +17,7 @@ namespace Sdcb.PaddleInference.Native
                 var result = new string[Size];
                 for (int i = 0; i < Size; ++i)
                 {
-                    result[i] = Marshal.PtrToStringUTF8((IntPtr)Data[i]);
+                    result[i] = ((IntPtr)Data[i]).UTF8PtrToString();
                 }
                 return result;
             }
