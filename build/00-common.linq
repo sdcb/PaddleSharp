@@ -4,7 +4,7 @@
   <IncludeUncapsulator>false</IncludeUncapsulator>
 </Query>
 
-const string VersionSuffix = "rc.7";
+const string VersionSuffix = "rc.9";
 
 async Task Main()
 {

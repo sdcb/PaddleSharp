@@ -76,7 +76,7 @@ namespace Sdcb.PaddleOCR.KnownModels
 
         public Task EnsureDetectionModel(CancellationToken cancellationToken = default) => EnsureModelFile(DetectionModelUri, "det", cancellationToken);
         public Task EnsureClassifierModel(CancellationToken cancellationToken = default) => EnsureModelFile(ClassifierModelUri, "cls", cancellationToken);
-        public Task EnsureRecognitionModel(CancellationToken cancellationToken = default) => EnsureModelFile(RecognitionModelUri, "cls", cancellationToken);
+        public Task EnsureRecognitionModel(CancellationToken cancellationToken = default) => EnsureModelFile(RecognitionModelUri, "rec", cancellationToken);
         public async Task EnsureKeyFile(CancellationToken cancellationToken = default)
         {
             if (!File.Exists(KeyPath))
