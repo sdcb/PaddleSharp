@@ -7,13 +7,13 @@ namespace Sdcb.PaddleInference
 {
     internal static class PtrExtensions
     {
-#if NETSTANDARD2_1
-        public static string AsUtf8String(this IntPtr ptr)
+#if NET6_0_OR_GREATER
+        public static string? UTF8PtrToString(this IntPtr ptr)
         {
             return Marshal.PtrToStringUTF8(ptr);
         }
 #else
-        public unsafe static string UTF8PtrToString(this IntPtr ptr)
+        public unsafe static string? UTF8PtrToString(this IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
                 return null;

@@ -6,6 +6,8 @@
   <Namespace>System.Runtime.CompilerServices</Namespace>
 </Query>
 
+#load ".\00-common"
+
 async Task Main()
 {
 	Environment.CurrentDirectory = Util.CurrentQuery.Location;
@@ -17,30 +19,6 @@ async Task Main()
 }
 
 const string PaddleInferenceCLib = @".\win64\bin\paddle_inference_c.dll";
-
-async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
-{
-	using HttpClient http = new();
-
-	HttpResponseMessage resp = await http.GetAsync(uri, cancellationToken);
-	if (!resp.IsSuccessStatusCode)
-	{
-		throw new Exception($"Failed to download: {uri}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
-	}
-
-	using (FileStream file = File.OpenWrite(localFile))
-	{
-		await resp.Content.CopyToAsync(file, cancellationToken);
-	}
-}
-
-async Task<string> EnsureNugetExe(CancellationToken cancellationToken = default)
-{
-	Uri uri = new Uri(@"https://dist.nuget.org/win-x86-commandline/latest/nuget.exe");
-	string localPath = @".\win64\nuget.exe";
-	await DownloadFile(uri, localPath, cancellationToken);
-	return localPath;
-}
 
 async IAsyncEnumerable<string> EnsureCLib([EnumeratorCancellation]CancellationToken cancellationToken = default)
 {

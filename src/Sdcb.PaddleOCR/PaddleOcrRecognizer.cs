@@ -36,6 +36,17 @@ namespace Sdcb.PaddleOCR
 			_labels = labels;
 		}
 
+		public PaddleOcrRecognizer(PaddleConfig config, string labelFilePath)
+		{
+			_c = config;
+			_p = _c.CreatePredictor();
+
+			List<string> labels = File.ReadAllLines(labelFilePath).ToList();
+			labels.Insert(0, "!!");
+			labels.Add(" ");
+			_labels = labels;
+		}
+
 		public void Dispose()
 		{
 			_p.Dispose();
@@ -53,7 +64,10 @@ namespace Sdcb.PaddleOCR
 				float[] data = ExtractMat(normalized);
 				input.SetData(data);
 			}
-			Debug.Assert(predictor.Run());
+			if (!predictor.Run())
+            {
+				throw new Exception($"PaddlePredictor(Recognizer) run failed.");
+            }
 
 			using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
 			{

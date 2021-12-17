@@ -24,7 +24,7 @@ namespace Sdcb.PaddleInference
 			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + @"C:\_\3rd\paddle\dll");
 		}
 
-		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString();
+		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
 
 		public bool GLogEnabled
 		{
@@ -85,8 +85,8 @@ namespace Sdcb.PaddleInference
 			PaddleNative.PD_ConfigSetModel(_ptr, programPath, paramsPath);
 		}
 
-		public string ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).UTF8PtrToString();
-		public string ParamsPath => PaddleNative.PD_ConfigGetParamsFile(_ptr).UTF8PtrToString();
+		public string? ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).UTF8PtrToString();
+		public string? ParamsPath => PaddleNative.PD_ConfigGetParamsFile(_ptr).UTF8PtrToString();
 
 		public unsafe void SetMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
 		{

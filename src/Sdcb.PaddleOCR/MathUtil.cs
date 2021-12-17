@@ -8,7 +8,7 @@ namespace Sdcb.PaddleOCR
     {
         public static int Clamp(int val, int min, int max)
         {
-#if NET5
+#if NET6_0_OR_GREATER
             return Math.Clamp(val, min, max);
 #else
             if (val < min)

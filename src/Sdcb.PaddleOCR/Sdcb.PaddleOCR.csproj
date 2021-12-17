@@ -11,7 +11,16 @@
 	<RepositoryType>git</RepositoryType>
 	<PackageTags>AI;Paddle;OCR;PaddleOCR</PackageTags>
 	<VersionPrefix>2.2.1</VersionPrefix>
+	<PackageIcon>icon.jpg</PackageIcon>
+	<Description>Awesome multilingual OCR toolkits based on PaddlePaddle (practical ultra lightweight OCR system, support 80+ languages recognition)</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.5.3.20211207" />

@@ -27,6 +27,12 @@ namespace Sdcb.PaddleOCR
 			_p = _c.CreatePredictor();
 		}
 
+		public PaddleOcrDetector(PaddleConfig config)
+		{
+			_c = config;
+			_p = _c.CreatePredictor();
+		}
+
 		public void Dispose()
 		{
 			_p.Dispose();
@@ -72,7 +78,10 @@ namespace Sdcb.PaddleOCR
 				float[] data = ExtractMat(normalized);
 				input.SetData(data);
 			}
-			Debug.Assert(predictor.Run());
+			if (!predictor.Run())
+            {
+				throw new Exception("PaddlePredictor(Detector) run failed.");
+            }
 
 			using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
 			{
