@@ -25,6 +25,7 @@ string[] Projects = new[]
 {
 	"Sdcb.PaddleInference",
 	"Sdcb.PaddleOCR",
+	"Sdcb.PaddleOCR.KnownModels", 
 };
 
 async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)

@@ -25,7 +25,8 @@ namespace Sdcb.PaddleOCR.KnownModels
         public Uri KeyUri { get; }
         public string Name { get; }
 
-        public string RootDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Name);
+        public static readonly string GlobalModelDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "paddleocr-models");
+        public string RootDirectory => Path.Combine(GlobalModelDirectory, Name);
 
         private async Task EnsureModelFile(Uri uri, string prefix, CancellationToken cancellationToken = default)
         {
