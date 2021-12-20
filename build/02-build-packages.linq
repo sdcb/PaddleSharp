@@ -33,8 +33,8 @@ object LoadTable()
 void Build(string project)
 {
 	//DotNetRun($@"build ..\src\{project}\{project}.csproj -c Release");
-	DotNetRun($@"pack ..\src\{project}\{project}.csproj {VersionSuffixExpression()} -c Release -o .\nupkgs");
+	DotNetRun($@"pack ..\src\{project}\{project}.csproj -p:Version={Version} -c Release -o .\nupkgs".Dump());
 	Refresh();
 }
 
-string VersionSuffixExpression() => string.IsNullOrEmpty(VersionSuffix) ? "" : $"--version-suffix {VersionSuffix}";
+//string VersionSuffixExpression() => string.IsNullOrEmpty(VersionSuffix) ? "" : $"--version-suffix {VersionSuffix}";

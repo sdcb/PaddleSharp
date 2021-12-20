@@ -16,7 +16,6 @@ namespace Sdcb.PaddleOCR
 		{
 			_c = new PaddleConfig
 			{
-				GLogEnabled = false,
 				CpuMathThreadCount = 0,
 				MkldnnEnabled = true,
 				MkldnnCacheCapacity = 10,

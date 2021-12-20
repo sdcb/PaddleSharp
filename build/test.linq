@@ -1,15 +1,16 @@
 <Query Kind="Program">
   <NuGetReference>OpenCvSharp4</NuGetReference>
   <NuGetReference>OpenCvSharp4.runtime.win</NuGetReference>
-  <NuGetReference Prerelease="true">Sdcb.PaddleInference</NuGetReference>
+  <NuGetReference>Sdcb.PaddleInference</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleInference.runtime.win64.mkl</NuGetReference>
-  <NuGetReference Prerelease="true">Sdcb.PaddleOCR</NuGetReference>
+  <NuGetReference>Sdcb.PaddleOCR</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleOCR.KnownModels</NuGetReference>
   <Namespace>OpenCvSharp</Namespace>
   <Namespace>Sdcb.PaddleInference</Namespace>
   <Namespace>Sdcb.PaddleOCR</Namespace>
   <Namespace>Sdcb.PaddleOCR.KnownModels</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
+  <Namespace>System.Runtime.InteropServices</Namespace>
 </Query>
 
 async Task Main()

@@ -10,7 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6-DE13-4070-B359-CC6F6FD49A07}"
 	ProjectSection(SolutionItems) = preProject
-		build\build.linq = build\build.linq
+		build\00-common.linq = build\00-common.linq
+		build\01-build-win64-mkl.linq = build\01-build-win64-mkl.linq
+		build\02-build-packages.linq = build\02-build-packages.linq
+		build\03-publish-proget.linq = build\03-publish-proget.linq
+		build\icon.jpg = build\icon.jpg
+		build\test.linq = build\test.linq
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "win64", "win64", "{20EABB5E-30F3-435B-85A2-7701DB13DD0B}"
@@ -25,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleInference", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR", "src\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj", "{A80CAB18-32B8-4E2E-B639-F7285C4C8559}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleOCR.KnownModels", "src\Sdcb.PaddleOCR.KnownModels\Sdcb.PaddleOCR.KnownModels.csproj", "{5998A9C2-F7F8-4623-8FCF-315B7FE6EB1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.KnownModels", "src\Sdcb.PaddleOCR.KnownModels\Sdcb.PaddleOCR.KnownModels.csproj", "{5998A9C2-F7F8-4623-8FCF-315B7FE6EB1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

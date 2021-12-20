@@ -1,7 +1,8 @@
 ﻿using Sdcb.PaddleInference.Native;
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace Sdcb.PaddleInference
 {
@@ -12,19 +13,35 @@ namespace Sdcb.PaddleInference
 		public PaddleConfig()
 		{
 			_ptr = PaddleNative.PD_ConfigCreate();
+
+			if (!EnableGLogOnNewInstance)
+            {
+				GLogEnabled = EnableGLogOnNewInstance;
+			}
 		}
 
 		public PaddleConfig(IntPtr configPointer)
 		{
 			_ptr = configPointer;
+
+			if (!EnableGLogOnNewInstance)
+			{
+				GLogEnabled = EnableGLogOnNewInstance;
+			}
 		}
 
 		static PaddleConfig()
 		{
-			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + @"C:\_\3rd\paddle\dll");
+			_ = Version;
+			string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
+				.Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
+				.FileName);
+			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + mkldnnPath);
 		}
 
 		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
+
+		public static bool EnableGLogOnNewInstance = false;
 
 		public bool GLogEnabled
 		{

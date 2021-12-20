@@ -15,7 +15,7 @@ async Task Main()
 	
 	string[] libs = await EnsureCLib().ToArrayAsync(QueryCancelToken);
 	string nugetExePath = await EnsureNugetExe(QueryCancelToken);
-	Util.Cmd(nugetExePath, $@"pack .\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec -OutputDirectory .\nupkgs", Encoding.GetEncoding("gb2312"));
+	Util.Cmd(nugetExePath, $@"pack .\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec -Version {Version} -OutputDirectory .\nupkgs", Encoding.GetEncoding("gb2312"));
 }
 
 const string PaddleInferenceCLib = @".\win64\bin\paddle_inference_c.dll";
