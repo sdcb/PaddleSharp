@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<NativeDlls>$(MSBuildThisFileDirectory)..\..\runtimes</NativeDlls>
 	</PropertyGroup>
-	<ItemGroup Condition="!$(TargetFramework.Contains('netstandard')) And !$(TargetFramework.Contains('netcoreapp')) And !$(TargetFramework.Contains('net5'))">
+	<ItemGroup Condition="!$(TargetFramework.Contains('netstandard')) And !$(TargetFramework.Contains('netcoreapp')) And !$(TargetFramework.Contains('net5') And !$(TargetFramework.Contains('net6'))">
 		<Content Include="$(NativeDlls)\win-x64\native\paddle_inference_c.dll">
 			<Link>dll\x64\paddle_inference_c.dll</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
