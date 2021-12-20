@@ -26,8 +26,9 @@ dotnet add package OpenCvSharp4.runtime.win
 
 2. write following C# code to get result:
 ```csharp
-await KnownOCRModel.PPOcrV2.EnsureAll();
-using (PaddleOcrAll all = new PaddleOcrAll(KnownOCRModel.PPOcrV2.RootDirectory, KnownOCRModel.PPOcrV2.KeyPath))
+OCRModel model = KnownOCRModel.PPOcrV2;
+await model.EnsureAll();
+using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
 using (Mat src = Cv2.ImRead(@"C:\Users\ZhouJie\Pictures\xdr5480.jpg"))
 {
     Console.WriteLine(all.Run(src).Text);
@@ -44,8 +45,9 @@ using (Mat src = Cv2.ImRead(@"C:\Users\ZhouJie\Pictures\xdr5480.jpg"))
 // OpenCvSharp4
 // OpenCvSharp4.runtime.win
 string inputFile = @"C:\Users\ZhouJie\Pictures\xdr5480.jpg";
-await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
-using (PaddleOcrDetector detector = new PaddleOcrDetector(KnownOCRModel.PPOcrV2.DetectionDirectory))
+OCRModel model = KnownOCRModel.PPOcrV2;
+await model.EnsureAll();
+using (PaddleOcrDetector detector = new PaddleOcrDetector(model.DetectionDirectory))
 using (Mat src = Cv2.ImRead(inputFile))
 {
     Rect[] rects = detector.Run(src);
