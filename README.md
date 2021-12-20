@@ -48,16 +48,16 @@ await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
 using (PaddleOcrDetector detector = new PaddleOcrDetector(KnownOCRModel.PPOcrV2.DetectionDirectory))
 using (Mat src = Cv2.ImRead(inputFile))
 {
-	Rect[] rects = detector.Run(src);
-	using (Mat clone = src.Clone())
-	{
-		foreach (Rect rect in rects)
-		{
-			clone.Rectangle(rect, Scalar.Red, thickness: 2);
-		}
-		string outputFile = Path.Combine(Path.GetDirectoryName(inputFile), "output.jpg");
-		clone.ImWrite(outputFile);
-	}
+    Rect[] rects = detector.Run(src);
+    using (Mat clone = src.Clone())
+    {
+        foreach (Rect rect in rects)
+        {
+            clone.Rectangle(rect, Scalar.Red, thickness: 2);
+        }
+        string outputFile = Path.Combine(Path.GetDirectoryName(inputFile), "output.jpg");
+        clone.ImWrite(outputFile);
+    }
 }
 
 ```
