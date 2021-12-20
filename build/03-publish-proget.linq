@@ -22,6 +22,7 @@ void Refresh()
 object BuildTable()
 {
 	return Directory.EnumerateFiles(@".\nupkgs\", "*.nupkg")
+		.Where(x => x.Contains(Version))
 		.Select(x => new 
 		{ 
 			Package = Path.GetFileNameWithoutExtension(x), 
