@@ -83,7 +83,7 @@ namespace Sdcb.PaddleInference.Native
 #if NET461_OR_GREATER
 			@"dll\x64\paddle_inference_c.dll";
 #elif NETSTANDARD2_0_OR_GREATER
-			@"paddle_inference_c.dll";
+			@"paddle_inference_c";
 #endif
 
 
