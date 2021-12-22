@@ -4,7 +4,7 @@
   <IncludeUncapsulator>false</IncludeUncapsulator>
 </Query>
 
-const string Version = "2.2.1.5";
+const string Version = "2.2.1.6";
 
 async Task Main()
 {
@@ -18,9 +18,9 @@ async Task SetupAsync(CancellationToken cancellationToken = default)
 	await EnsureNugetExe(cancellationToken);
 }
 
-void NuGetRun(string args) => Run(@".\win64\nuget.exe", args);
-void DotNetRun(string args) => Run("dotnet", args);
-void Run(string exe, string args) => Util.Cmd(exe, args, Encoding.GetEncoding("gb2312"));
+static void NuGetRun(string args) => Run(@".\nuget.exe", args);
+static void DotNetRun(string args) => Run("dotnet", args);
+static void Run(string exe, string args) => Util.Cmd(exe, args, Encoding.GetEncoding("gb2312"));
 string[] Projects = new[]
 {
 	"Sdcb.PaddleInference",
@@ -28,7 +28,7 @@ string[] Projects = new[]
 	"Sdcb.PaddleOCR.KnownModels", 
 };
 
-async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
+static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
 {
 	using HttpClient http = new();
 
@@ -44,10 +44,10 @@ async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellatio
 	}
 }
 
-async Task<string> EnsureNugetExe(CancellationToken cancellationToken = default)
+static async Task<string> EnsureNugetExe(CancellationToken cancellationToken = default)
 {
 	Uri uri = new Uri(@"https://dist.nuget.org/win-x86-commandline/latest/nuget.exe");
-	string localPath = @".\win64\nuget.exe";
+	string localPath = @".\nuget.exe";
 	if (!File.Exists(localPath))
 	{
 		await DownloadFile(uri, localPath, cancellationToken);

@@ -1,0 +1,337 @@
+<Query Kind="Program">
+  <NuGetReference>SharpZipLib</NuGetReference>
+  <NuGetReference>System.Linq.Async</NuGetReference>
+  <Namespace>ICSharpCode.SharpZipLib.Tar</Namespace>
+  <Namespace>System.IO.Compression</Namespace>
+  <Namespace>System.Net.Http</Namespace>
+  <Namespace>System.Runtime.CompilerServices</Namespace>
+  <Namespace>System.Threading.Tasks</Namespace>
+</Query>
+
+#load ".\00-common"
+
+async Task Main()
+{
+	await SetupAsync(QueryCancelToken);
+	await new LinuxNuGetSource().Process(QueryCancelToken);
+	await new WindowsNugetSource().Process(QueryCancelToken);
+//	// Linux(x64) NuGet
+//	{
+//		string rid = "linux-x64", titleRid = "win64.mkl";
+//		string[] libs = await EnsureTgzLibs(@"libpaddle_inference_c.so", rid, new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz"), QueryCancelToken);
+//		string nugetExePath = await EnsureNugetExe(QueryCancelToken);
+//
+//		string nuspecPath = BuildNuspec(libs, rid, titleRid);
+//		string nugetFile = $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{Version}.nupkg";
+//		if (!File.Exists(nugetFile))
+//		{
+//			NuGetRun($@"pack {nuspecPath} -Version {Version} -OutputDirectory .\nupkgs".Dump());
+//		}
+//		else
+//		{
+//			Util.HorizontalRun(false, Util.Metatext(nugetFile), " exists, skip.").Dump();
+//		}
+//	}
+//
+//	// Windows(x64) NuGet
+//	{
+//		string rid = "win-x64", titleRid = "linux64.mkl";
+//		string[] libs = await EnsureWindowsCLib("paddle_inference_c.dll", rid, new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_mkl/paddle_inference_c.zip"), QueryCancelToken);
+//
+//		string nugetExePath = await EnsureNugetExe(QueryCancelToken);
+//
+//		string nuspecPath = BuildNuspec(libs, rid, titleRid);
+//		string nugetFile = $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{Version}.nupkg";
+//		if (!File.Exists(nugetFile))
+//		{
+//			NuGetRun($@"pack {nuspecPath} -Version {Version} -OutputDirectory .\nupkgs".Dump());
+//		}
+//		else
+//		{
+//			Util.HorizontalRun(false, Util.Metatext(nugetFile), " exists, skip.").Dump();
+//		}
+//	}
+}
+
+static string BuildNuspec(string[] libs, string rid, string titleRid)
+{
+	// props
+	{
+		XDocument props = XDocument.Parse(File
+			.ReadAllText("./Sdcb.PaddleInference.runtime.props"));
+		string ns = props.Root.GetDefaultNamespace().NamespaceName;
+		XmlNamespaceManager nsr = new(new NameTable());
+		nsr.AddNamespace("p", ns);
+
+		string platform = rid.Split("-").Last();
+
+		XElement itemGroup = props.XPathSelectElement("/p:Project/p:ItemGroup", nsr);
+		itemGroup.Add(
+		libs
+			.Select(x => Path.GetFileName(x))
+			.Select(x => new XElement(XName.Get("Content", ns), new XAttribute("Include", $@"$(NativeDlls)\{rid}\native\{x}"),
+				new XElement(XName.Get("Link", ns), @$"dll\{platform}\{x}"),
+				new XElement(XName.Get("CopyToOutputDirectory", ns), "PreserveNewest")))
+				);
+		props.Save(@$"./{rid}/Sdcb.PaddleInference.runtime.{titleRid}.props");
+	}
+
+	// nuspec
+	{
+		XDocument nuspec = XDocument.Parse(File
+			.ReadAllText("./Sdcb.PaddleInference.runtime.nuspec")
+			.Replace("{rid}", rid)
+			.Replace("{titleRid}", titleRid));
+
+		string ns = nuspec.Root.GetDefaultNamespace().NamespaceName;
+		XmlNamespaceManager nsr = new(new NameTable());
+		nsr.AddNamespace("p", ns);
+
+		XElement files = nuspec.XPathSelectElement("/p:package/p:files", nsr);
+		files.Add(libs.Select(x => new XElement(
+			XName.Get("file", ns),
+			new XAttribute("src", x),
+			new XAttribute("target", @$"runtimes\{rid}\native"))));
+		files.Add(new[] { "net", "netstandard", "netcoreapp" }.Select(x => new XElement(
+			XName.Get("file", ns),
+			new XAttribute("src", $"Sdcb.PaddleInference.runtime.{titleRid}.props"),
+			new XAttribute("target", @$"build\{x}\Sdcb.PaddleInference.runtime.{titleRid}.props"))));
+
+		string destinationFile = @$"./{rid}/{rid}.nuspec";
+		nuspec.Save(destinationFile);
+		return destinationFile;
+	}
+}
+
+async Task<string[]> EnsureWindowsCLib(string libName, string rid, Uri uri, CancellationToken cancellationToken = default)
+{
+	string clibFilePath = $@"./{rid}/bin/{libName}";
+	string directory = Path.GetDirectoryName(clibFilePath);
+	if (!File.Exists(clibFilePath))
+	{
+		Directory.CreateDirectory(directory);
+		string localZipFile = Path.Combine(directory, uri.Segments.Last());
+
+		if (!File.Exists(localZipFile))
+		{
+			Console.Write($"{clibFilePath} not exists, downloading from {uri}... ");
+			await DownloadFile(uri, localZipFile, cancellationToken);
+			Console.WriteLine("Done");
+		}
+
+		using (ZipArchive zip = ZipFile.OpenRead(localZipFile))
+		{
+			foreach (ZipArchiveEntry entry in zip.Entries.Where(x => x.FullName.EndsWith(".dll")))
+			{
+				string localEntryDest = Path.Combine(directory, Path.GetFileName(entry.FullName));
+				Console.Write($"Expand {entry.FullName} -> {localEntryDest}... ");
+				using Stream stream = entry.Open();
+				using FileStream localFile = File.OpenWrite(localEntryDest);
+				await stream.CopyToAsync(localFile, cancellationToken);
+				Console.WriteLine("Done");
+			}
+		}
+
+		File.Delete(localZipFile);
+	}
+
+	return Directory.EnumerateFiles(directory, "*.dll")
+		.Select(f => f.Replace(rid + @"\", ""))
+		.ToArray();
+}
+
+async Task<string[]> EnsureTgzLibs(string libName, string rid, Uri uri, CancellationToken cancellationToken = default)
+{
+	string clibFilePath = $@"./{rid}/bin/{libName}";
+	string directory = Path.GetDirectoryName(clibFilePath);
+	if (!File.Exists(clibFilePath))
+	{
+		Directory.CreateDirectory(directory);
+		string localZipFile = Path.Combine(directory, uri.Segments.Last());
+
+		if (!File.Exists(localZipFile))
+		{
+			Console.Write($"{clibFilePath} not exists, downloading from {uri}... ");
+			await DownloadFile(uri, localZipFile, cancellationToken);
+			Console.WriteLine("Done");
+		}
+
+		using (FileStream file = File.OpenRead(localZipFile))
+		using (GZipStream gzip = new(file, CompressionMode.Decompress))
+		using (TarInputStream tar = new(gzip, Encoding.UTF8))
+		{
+			static IEnumerable<TarEntry> GetAllEntries(TarInputStream tar)
+			{
+				TarEntry entry = null;
+				while ((entry = tar.GetNextEntry()) != null)
+				{
+					yield return entry;
+				}
+			}
+
+			Dictionary<string, string> symlinkMap = new();
+			foreach (TarEntry soEntry in GetAllEntries(tar).Where(x => x.Name.Contains(".so")))
+			{
+				string fileName = Path.GetFileName(soEntry.Name);
+				Console.WriteLine(soEntry.Name);
+				if (soEntry.TarHeader.LinkName != "")
+				{
+					symlinkMap[fileName] = soEntry.TarHeader.LinkName;
+				}
+
+				using (FileStream destFile = File.OpenWrite(Path.Combine(directory, fileName)))
+				{
+					tar.CopyEntryContents(destFile);
+				}
+			}
+			foreach (var map in symlinkMap)
+			{
+				string src = Path.Combine(directory, map.Key);
+				string dest = Path.Combine(directory, map.Value);
+				File.Copy(dest, src, /* override */ true);
+				// nuget not support symlink, using File.Copy: https://github.com/NuGet/Home/issues/10734
+				// File.Delete(src);
+				// File.CreateSymbolicLink(src, dest).Dump();
+				// Console.WriteLine($"{src} -> {dest}");
+			}
+		}
+
+		File.Delete(localZipFile);
+	}
+
+	return Directory.EnumerateFiles(directory, "*.so*")
+		.Select(f => f.Replace(rid + @"\", ""))
+		.ToArray();
+}
+
+public record WindowsNugetSource() : NupkgBuildSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_mkl/paddle_inference_c.zip"))
+{
+	protected override async Task Decompress(string localZipFile, CancellationToken cancellationToken)
+	{
+		using (ZipArchive zip = ZipFile.OpenRead(localZipFile))
+		{
+			foreach (ZipArchiveEntry entry in zip.Entries.Where(x => x.FullName.EndsWith(".dll")))
+			{
+				string localEntryDest = Path.Combine(PlatformDir, Path.GetFileName(entry.FullName));
+				Console.Write($"Expand {entry.FullName} -> {localEntryDest}... ");
+				using Stream stream = entry.Open();
+				using FileStream localFile = File.OpenWrite(localEntryDest);
+				await stream.CopyToAsync(localFile, cancellationToken);
+				Console.WriteLine("Done");
+			}
+		}
+	}
+
+	protected override string[] GetDlls()
+	{
+		return Directory.EnumerateFiles(PlatformDir, "*.dll")
+			.Select(f => f.Replace(rid + @"\", ""))
+			.ToArray();
+	}
+}
+
+public record LinuxNuGetSource() : NupkgBuildSource("linux-x64", "linux64.mkl", "libpaddle_inference_c.so", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz"))
+{
+	protected override Task Decompress(string localZipFile, CancellationToken cancellationToken)
+	{
+		using (FileStream file = File.OpenRead(localZipFile))
+		using (GZipStream gzip = new(file, CompressionMode.Decompress))
+		using (TarInputStream tar = new(gzip, Encoding.UTF8))
+		{
+			static IEnumerable<TarEntry> GetAllEntries(TarInputStream tar)
+			{
+				TarEntry entry = null;
+				while ((entry = tar.GetNextEntry()) != null)
+				{
+					yield return entry;
+				}
+			}
+
+			Dictionary<string, string> symlinkMap = new();
+			foreach (TarEntry soEntry in GetAllEntries(tar).Where(x => x.Name.Contains(".so")))
+			{
+				string fileName = Path.GetFileName(soEntry.Name);
+				Console.WriteLine(soEntry.Name);
+				if (soEntry.TarHeader.LinkName != "")
+				{
+					symlinkMap[fileName] = soEntry.TarHeader.LinkName;
+				}
+
+				using (FileStream destFile = File.OpenWrite(Path.Combine(PlatformDir, fileName)))
+				{
+					tar.CopyEntryContents(destFile);
+				}
+			}
+			foreach (var map in symlinkMap)
+			{
+				string src = Path.Combine(PlatformDir, map.Key);
+				string dest = Path.Combine(PlatformDir, map.Value);
+				File.Copy(dest, src, /* override */ true);
+				// nuget not support symlink, using File.Copy: https://github.com/NuGet/Home/issues/10734
+				// File.Delete(src);
+				// File.CreateSymbolicLink(src, dest).Dump();
+				// Console.WriteLine($"{src} -> {dest}");
+			}
+		}
+		
+		return Task.FromResult(0);
+	}
+
+	protected override string[] GetDlls()
+	{
+		return Directory.EnumerateFiles(PlatformDir, "*.so*")
+			.Select(f => f.Replace(rid + @"\", ""))
+			.ToArray();
+	}
+}
+
+public abstract record NupkgBuildSource(string rid, string titleRid, string libName, Uri uri)
+{
+	public string CLibFilePath => $@"./{rid}/bin/{libName}";
+	public string PlatformDir => Path.GetDirectoryName(CLibFilePath);
+	public string NuGetPath => $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{Version}.nupkg";
+
+	public async Task<string> EnsurePackage(CancellationToken cancellationToken = default)
+	{
+		string localZipFile = Path.Combine(PlatformDir, uri.Segments.Last());
+		if (!File.Exists(CLibFilePath))
+		{
+			Directory.CreateDirectory(PlatformDir);
+
+			if (!File.Exists(localZipFile))
+			{
+				Console.Write($"{CLibFilePath} not exists, downloading from {uri}... ");
+				await DownloadFile(uri, localZipFile, cancellationToken);
+				Console.WriteLine("Done");
+			}
+		}
+		return localZipFile;
+	}
+
+	protected abstract Task Decompress(string localZipFile, CancellationToken cancellationToken);
+	protected abstract string[] GetDlls();
+
+	public async Task Process(CancellationToken cancellationToken)
+	{
+		Console.WriteLine($"processing {rid}...");
+		if (!File.Exists(CLibFilePath))
+		{
+			string localZipFile = await EnsurePackage(cancellationToken);
+			await Decompress(localZipFile, cancellationToken);
+			File.Delete(localZipFile);
+		}
+		string[] libs = GetDlls();		
+		
+		string nugetExePath = await EnsureNugetExe(cancellationToken);
+
+		string nuspecPath = BuildNuspec(libs, rid, titleRid);
+		if (!File.Exists(NuGetPath))
+		{
+			NuGetRun($@"pack {nuspecPath} -Version {Version} -OutputDirectory .\nupkgs".Dump());
+		}
+		else
+		{
+			Util.HorizontalRun(false, Util.Metatext(NuGetPath), " exists, skip.").Dump();
+		}
+	}
+}

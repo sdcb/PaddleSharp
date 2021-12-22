@@ -4,3 +4,5 @@
 /.vs
 /**/obj
 /**/bin
+/build/linux-x64
+/build/win-64

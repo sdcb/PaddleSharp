@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Sdcb.PaddleInference.runtime.{titleRid}</id>
+        <version>2.2.1</version>
+        <title>PaddleInference native bindings for {rid}</title>
+        <authors>sdcb</authors>
+        <license type="expression">Apache-2.0</license>
+        <projectUrl>https://github.com/sdcb/PaddleSharp</projectUrl>
+        <iconUrl>https://avatars.githubusercontent.com/u/23534030?s=200</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Native binding for paddle_inference_c to work on {rid}.</description>
+        <summary>Native binding for paddle_inference_c to work on {rid}.</summary>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2021</copyright>
+        <tags>AI Paddle OCR PaddleOCR</tags>
+        <repository type="git" url="https://github.com/sdcb/PaddleSharp.git" />
+        <dependencies>
+            <group targetFramework="net461"></group>
+            <group targetFramework="netstandard2.0"></group>
+            <group targetFramework="netstandard2.1"></group>
+            <group targetFramework="netcoreapp2.1"></group>
+        </dependencies>
+        <frameworkAssemblies>
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+    </files>
+</package>
