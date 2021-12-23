@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleInference
 {
@@ -15,19 +14,28 @@ namespace Sdcb.PaddleInference
 		{
 			_ptr = PaddleNative.PD_ConfigCreate();
 
-			if (!EnableGLogOnNewInstance)
+			if (!EnableGLogByDefault)
             {
-				GLogEnabled = EnableGLogOnNewInstance;
+				GLogEnabled = EnableGLogByDefault;
 			}
+			if (EnableMkldnnByDefault)
+            {
+				MkldnnEnabled = true;
+				MkldnnCacheCapacity = MkldnnDefaultCacheCapacity;
+			}
+			if (CpuMathDefaultThreadCount != 0)
+            {
+				CpuMathThreadCount = CpuMathDefaultThreadCount;
+            }
 		}
 
 		public PaddleConfig(IntPtr configPointer)
 		{
 			_ptr = configPointer;
 
-			if (!EnableGLogOnNewInstance)
+			if (!EnableGLogByDefault)
 			{
-				GLogEnabled = EnableGLogOnNewInstance;
+				GLogEnabled = EnableGLogByDefault;
 			}
 		}
 
@@ -64,13 +72,17 @@ namespace Sdcb.PaddleInference
 			string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
 				.Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
 				.FileName);
-			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + mkldnnPath);
+			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + Path.PathSeparator + mkldnnPath);
 #endif
 		}
 
 		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
 
-		public static bool EnableGLogOnNewInstance = false;
+		public static bool EnableGLogByDefault = false;
+		public static bool EnableMkldnnByDefault = true;
+		public static int MkldnnDefaultCacheCapacity = 10;
+		public static int CpuMathDefaultThreadCount = 0;
+
 
 		public bool GLogEnabled
 		{

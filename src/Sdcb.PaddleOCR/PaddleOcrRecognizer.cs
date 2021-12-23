@@ -18,12 +18,7 @@ namespace Sdcb.PaddleOCR
 
 		public PaddleOcrRecognizer(string modelDir, string labelFilePath)
 		{
-			_c = new PaddleConfig
-			{
-				CpuMathThreadCount = 0,
-				MkldnnEnabled = true,
-				MkldnnCacheCapacity = 10,
-			};
+			_c = new PaddleConfig();
 			_c.SetModel(
 				Path.Combine(modelDir, "inference.pdmodel"),
 				Path.Combine(modelDir, "inference.pdiparams"));
