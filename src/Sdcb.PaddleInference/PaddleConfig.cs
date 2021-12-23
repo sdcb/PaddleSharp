@@ -67,7 +67,7 @@ namespace Sdcb.PaddleInference
 			{
 				bool windows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 				bool linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-				if (windows || linux)
+				if (windows)
 				{
 					string libName = windows ?
 						$"{PaddleNative.PaddleInferenceCLib}.dll" :
