@@ -6,17 +6,17 @@
 
 | NuGet Package                          | Version                                                                                                                                                  | Description                                                |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Sdcb.PaddleInference                   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                     | Paddle Inference C API `.NET` binding                      |
-| Sdcb.PaddleOCR                         | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                                                 | `PaddleOCR` library(based on `Sdcb.PaddleInference`)       |
-| Sdcb.PaddleOCR.KnownModels             | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)                         | Helper to download `PaddleOCR` models                      |
+| Sdcb.PaddleInference                   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                     | Paddle Inference C API .NET binding                        |
+| Sdcb.PaddleOCR                         | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                                                 | PaddleOCR library(based on Sdcb.PaddleInference)           |
+| Sdcb.PaddleOCR.KnownModels             | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)                         | Helper to download PaddleOCR models                        |
 | Sdcb.PaddleInference.runtime.win64.mkl | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl) | Paddle Inference C API Windows x64(mkl-dnn) Native binding |
 
 **Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1) to development:
 
-| Docker Images                               | Version                                                                                | Description                                                                          |
-| ------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| sdflysha/ubuntu20-dotnet6-paddleocr2.2.1    | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)    | `PaddleOCR` 2.2.1, `OpenCV` 4.5.3, based on official `Ubuntu` 20.04 `.NET` 6 Runtime |
-| sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1 | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1) | `PaddleOCR` 2.2.1, `OpenCV` 4.5.3, based on official `Ubuntu` 20.04 `.NET` 6 SDK     |
+| Docker Images                               | Version                                                                                | Description                                                                  |
+| ------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| sdflysha/ubuntu20-dotnet6-paddleocr2.2.1    | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)    | PaddleOCR 2.2.1, OpenCV 4.5.3, based on official Ubuntu 20.04 .NET 6 Runtime |
+| sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1 | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1) | PaddleOCR 2.2.1, OpenCV 4.5.3, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 # Usage
 
