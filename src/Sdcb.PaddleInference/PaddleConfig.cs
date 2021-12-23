@@ -3,9 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-#if NET6_0_OR_GREATER
 using System.Runtime.InteropServices;
-#endif
 
 namespace Sdcb.PaddleInference
 {
@@ -45,38 +43,65 @@ namespace Sdcb.PaddleInference
 		static PaddleConfig()
 		{
 #if NET6_0_OR_GREATER
-			string? dirs = (string?)AppContext.GetData("NATIVE_DLL_SEARCH_DIRECTORIES");
-			if (dirs != null)
-            {
-				bool windows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-				bool linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-				if (windows || linux)
-                {
-					string libPath = windows ?
-						$"{PaddleNative.PaddleInferenceCLib}.dll" :
-						$"lib{PaddleNative.PaddleInferenceCLib}.so";
-
-					string? destinationLib = dirs.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
-						.FirstOrDefault(dir => File.Exists(Path.Combine(dir, libPath)));
-					if (destinationLib != null)
-                    {
-						string envId = windows ? "PATH" : "LD_LIBRARY_PATH";
-						Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + destinationLib);
-                    }
-				}
-				else
-                {
-					Console.WriteLine("Warn: OSPlatform is not windows or linux, platform might not supported.");
-                }
-			}
+			SearchPathLoad();
 #elif NETSTANDARD2_0_OR_GREATER
+			AutoLoad();
+#endif
+		}
+
+		private static void AutoLoad()
+        {
 			// Linux would not supported in this case.
 			_ = Version;
 			string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
 				.Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
-				.FileName);
-			Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + Path.PathSeparator + mkldnnPath);
+				.FileName)!;
+			AddLibPathToEnvironment(mkldnnPath);
+		}
+
+#if NET6_0_OR_GREATER
+		private static void SearchPathLoad()
+        {
+			string? dirs = (string?)AppContext.GetData("NATIVE_DLL_SEARCH_DIRECTORIES");
+			if (dirs != null)
+			{
+				bool windows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+				bool linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+				if (windows || linux)
+				{
+					string libName = windows ?
+						$"{PaddleNative.PaddleInferenceCLib}.dll" :
+						$"lib{PaddleNative.PaddleInferenceCLib}.so";
+
+					string? libPath = dirs.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries)
+						.FirstOrDefault(dir => File.Exists(Path.Combine(dir, libName)));
+					if (libPath != null)
+					{
+						AddLibPathToEnvironment(libPath);
+					}
+					else
+					{
+						Console.WriteLine($"Warn: {libName} not found from {dirs}, fallback to use auto load.");
+						AutoLoad();
+					}
+				}
+				else
+				{
+					Console.WriteLine("Warn: OSPlatform is not windows or linux, platform might not supported.");
+				}
+			}
+		}
 #endif
+
+		private static void AddLibPathToEnvironment(string libPath)
+        {
+#if NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER
+			bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
+			const bool isWindows = true;
+#endif
+			string envId = isWindows ? "PATH" : "LD_LIBRARY_PATH";
+			Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + libPath);
 		}
 
 		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;

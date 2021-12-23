@@ -17,6 +17,6 @@ async Task Main()
 {
 	await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
 	using PaddleOcrAll all = new (KnownOCRModel.PPOcrV2.RootDirectory, KnownOCRModel.PPOcrV2.KeyPath);
-	using Mat src = Cv2.ImRead(@"C:\Users\ZhouJie\Pictures\xdr5480.jpg");
+	using Mat src = Cv2.ImRead(@"C:\Users\sdfly\Pictures\xdr5480.jpg");
 	Console.WriteLine(all.Run(src).Text);
 }
