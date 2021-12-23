@@ -72,21 +72,30 @@ namespace Sdcb.PaddleOCR.KnownModels
         {
             using HttpClient http = new()
             {
-                Timeout = TimeSpan.FromSeconds(5),
+                Timeout = TimeSpan.FromSeconds(10),
             };
 
-            foreach (Uri uri2 in uris)
+            foreach (Uri uri in uris)
             {
-                HttpResponseMessage resp = await http.GetAsync(uri2, cancellationToken);
-                if (!resp.IsSuccessStatusCode)
+                try
                 {
-                    Console.WriteLine($"Failed to download: {uri2}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
-                }
+                    HttpResponseMessage resp = await http.GetAsync(uri, cancellationToken);
+                    if (!resp.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"Failed to download: {uri}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
+                        continue;
+                    }
 
-                using (FileStream file = File.OpenWrite(localFile))
+                    using (FileStream file = File.OpenWrite(localFile))
+                    {
+                        await resp.Content.CopyToAsync(file/*, cancellationToken*/);
+                        return;
+                    }
+                }
+                catch (TaskCanceledException _)
                 {
-                    await resp.Content.CopyToAsync(file/*, cancellationToken*/);
-                    return;
+                    Console.WriteLine($"Failed to download: {uri}, timeout.");
+                    continue;
                 }
             }
 
