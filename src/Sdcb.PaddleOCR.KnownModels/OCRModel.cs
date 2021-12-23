@@ -8,27 +8,42 @@ using System.Threading.Tasks;
 
 namespace Sdcb.PaddleOCR.KnownModels
 {
-    public partial class OCRModel
+    public class OCRModel : IOCRModel
     {
-        public OCRModel(string name, Uri detectionModelUri, Uri classifierModelUri, Uri recognitionModelUri, Uri keyUri)
+        public OCRModel(string name, Uri[] detectionModelUris, Uri[] classifierModelUris, Uri[] recognitionModelUris, Uri[] keyUris)
         {
+            if (name == null) throw new ArgumentNullException("name");
+
+            if (detectionModelUris == null) throw new ArgumentNullException(nameof(detectionModelUris));
+            if (classifierModelUris == null) throw new ArgumentNullException(nameof(classifierModelUris));
+            if (recognitionModelUris == null) throw new ArgumentNullException(nameof(recognitionModelUris));
+            if (keyUris == null) throw new ArgumentNullException(nameof(keyUris));
+
+            if (detectionModelUris.Length == 0) throw new ArgumentException($"Length of {nameof(detectionModelUris)} should > 0.");
+            if (classifierModelUris.Length == 0) throw new ArgumentException($"Length of {nameof(classifierModelUris)} should > 0.");
+            if (recognitionModelUris.Length == 0) throw new ArgumentException($"Length of {nameof(recognitionModelUris)} should > 0.");
+            if (keyUris.Length == 0) throw new ArgumentException($"Length of {nameof(keyUris)} should > 0.");
+
             Name = name;
-            DetectionModelUri = detectionModelUri;
-            ClassifierModelUri = classifierModelUri;
-            RecognitionModelUri = recognitionModelUri;
-            KeyUri = keyUri;
+            DetectionModelUris = detectionModelUris;
+            ClassifierModelUris = classifierModelUris;
+            RecognitionModelUris = recognitionModelUris;
+            KeyUris = keyUris;
         }
 
-        public Uri DetectionModelUri { get; }
-        public Uri ClassifierModelUri { get; }
-        public Uri RecognitionModelUri { get; }
-        public Uri KeyUri { get; }
-        public string Name { get; }
+        public OCRModel(string name, Uri detectionModelUri, Uri classifierModelUri, Uri recognitionModelUri, Uri[] keyUris)
+            : this(name, new[] { detectionModelUri }, new[] { classifierModelUri }, new[] { recognitionModelUri }, keyUris)
+        {
+        }
 
-        public static readonly string GlobalModelDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "paddleocr-models");
+        public string Name { get; }
+        public Uri[] DetectionModelUris { get; }
+        public Uri[] ClassifierModelUris { get; }
+        public Uri[] RecognitionModelUris { get; }
+        public Uri[] KeyUris { get; }
         public string RootDirectory => Path.Combine(GlobalModelDirectory, Name);
 
-        private async Task EnsureModelFile(Uri uri, string prefix, CancellationToken cancellationToken = default)
+        private async Task EnsureModelFile(Uri[] uris, string prefix, CancellationToken cancellationToken = default)
         {
             string directory = Path.Combine(RootDirectory, prefix);
             string paramsFile = Path.Combine(directory, "inference.pdiparams");
@@ -36,11 +51,11 @@ namespace Sdcb.PaddleOCR.KnownModels
 
             if (!File.Exists(paramsFile))
             {
-                string localTarFile = Path.Combine(directory, uri.Segments.Last());
+                string localTarFile = Path.Combine(directory, uris[0].Segments.Last());
                 if (!File.Exists(localTarFile))
                 {
-                    Console.WriteLine($"Downloading {prefix} model from {uri}");
-                    await DownloadFile(uri, localTarFile, cancellationToken);
+                    Console.WriteLine($"Downloading {prefix} model from {string.Join(", ", uris.Select(x => x.ToString()))}");
+                    await DownloadFile(uris, localTarFile, cancellationToken);
                 }
 
                 Console.WriteLine($"Extracting {localTarFile} to {directory}");
@@ -53,46 +68,67 @@ namespace Sdcb.PaddleOCR.KnownModels
             }
         }
 
-        private static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken)
+        private static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
-            using HttpClient http = new();
-
-            HttpResponseMessage resp = await http.GetAsync(uri, cancellationToken);
-            if (!resp.IsSuccessStatusCode)
+            using HttpClient http = new()
             {
-                throw new Exception($"Failed to download: {uri}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
+                Timeout = TimeSpan.FromSeconds(5),
+            };
+
+            foreach (Uri uri2 in uris)
+            {
+                HttpResponseMessage resp = await http.GetAsync(uri2, cancellationToken);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Failed to download: {uri2}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
+                }
+
+                using (FileStream file = File.OpenWrite(localFile))
+                {
+                    await resp.Content.CopyToAsync(file/*, cancellationToken*/);
+                    return;
+                }
             }
 
-            using (FileStream file = File.OpenWrite(localFile))
-            {
-                await resp.Content.CopyToAsync(file/*, cancellationToken*/);
-            }
+            throw new Exception($"Failed to download {localFile} from all uris: {string.Join(", ", uris.Select(x => x.ToString()))}");
         }
+
+        public static readonly string GlobalModelDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "paddleocr-models");
 
         public string DetectionDirectory => Path.Combine(RootDirectory, "det");
         public string ClassifierDirectory => Path.Combine(RootDirectory, "cls");
         public string RecognitionDirectory => Path.Combine(RootDirectory, "rec");
         public string KeyPath => Path.Combine(RootDirectory, "key.txt");
 
-        public Task EnsureDetectionModel(CancellationToken cancellationToken = default) => EnsureModelFile(DetectionModelUri, "det", cancellationToken);
-        public Task EnsureClassifierModel(CancellationToken cancellationToken = default) => EnsureModelFile(ClassifierModelUri, "cls", cancellationToken);
-        public Task EnsureRecognitionModel(CancellationToken cancellationToken = default) => EnsureModelFile(RecognitionModelUri, "rec", cancellationToken);
+        public Task EnsureDetectionModel(CancellationToken cancellationToken = default) => EnsureModelFile(DetectionModelUris, "det", cancellationToken);
+        public Task EnsureClassifierModel(CancellationToken cancellationToken = default) => EnsureModelFile(ClassifierModelUris, "cls", cancellationToken);
+        public Task EnsureRecognitionModel(CancellationToken cancellationToken = default) => EnsureModelFile(RecognitionModelUris, "rec", cancellationToken);
         public async Task EnsureKeyFile(CancellationToken cancellationToken = default)
         {
             if (!File.Exists(KeyPath))
             {
-                Console.WriteLine($"Downloading key file {KeyPath} from {KeyUri}");
-                await DownloadFile(KeyUri, KeyPath, cancellationToken);
+                Console.WriteLine($"Downloading key file {KeyPath} from {KeyUris}");
+                await DownloadFile(KeyUris, KeyPath, cancellationToken);
             }
         }
 
-        public Task EnsureAll(CancellationToken cancellationToken = default)
+        public async Task<IOCRModel> EnsureAll(CancellationToken cancellationToken = default)
         {
-            return Task.WhenAll(
+            await Task.WhenAll(
                 EnsureDetectionModel(cancellationToken),
                 EnsureClassifierModel(cancellationToken),
                 EnsureRecognitionModel(cancellationToken),
                 EnsureKeyFile(cancellationToken));
+            return this;
         }
+    }
+
+    public interface IOCRModel
+    {
+        public string Name { get; }
+        public string DetectionDirectory { get; }
+        public string ClassifierDirectory { get; }
+        public string RecognitionDirectory { get; }
+        public string KeyPath { get; }
     }
 }

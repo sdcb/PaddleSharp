@@ -3,6 +3,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+#if NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 namespace Sdcb.PaddleInference
 {
