@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Sdcb.PaddleOCR
+﻿namespace Sdcb.PaddleOCR
 {
     internal static class MathUtil
     {

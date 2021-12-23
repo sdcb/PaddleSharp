@@ -1,13 +1,12 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleInference;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace Sdcb.PaddleOCR
 {
-	public class PaddleOcrDetector : IDisposable
+    public class PaddleOcrDetector : IDisposable
 	{
 		PaddleConfig _c;
 		PaddlePredictor _p;
