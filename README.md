@@ -1,22 +1,35 @@
 # PaddleSharp
 
-💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support **Windows** and **Linux**.
+💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
 
-## NuGet Packages
+## NuGet Packages/Docker Images
 
-| NuGet Package                            | Version                                                                                                                                                  | Description                                                |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `Sdcb.PaddleInference`                   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                     | Paddle Inference C API .NET binding                        |
-| `Sdcb.PaddleOCR`                         | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                                                 | PaddleOCR library(based on Sdcb.PaddleInference)           |
-| `Sdcb.PaddleOCR.KnownModels`             | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)                         | Helper to download PaddleOCR models                        |
-| `Sdcb.PaddleInference.runtime.win64.mkl` | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl) | Paddle Inference C API Windows x64(mkl-dnn) Native binding |
+| NuGet Package                          | Version                                                                                                                                                  | Description                                                |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Sdcb.PaddleInference                   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                     | Paddle Inference C API `.NET` binding                      |
+| Sdcb.PaddleOCR                         | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                                                 | `PaddleOCR` library(based on `Sdcb.PaddleInference`)       |
+| Sdcb.PaddleOCR.KnownModels             | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)                         | Helper to download `PaddleOCR` models                      |
+| Sdcb.PaddleInference.runtime.win64.mkl | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl) | Paddle Inference C API Windows x64(mkl-dnn) Native binding |
 
-**Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1) to development.
+**Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1) to development:
+
+| Docker Images                               | Version                                                                                | Description                                                                          |
+| ------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| sdflysha/ubuntu20-dotnet6-paddleocr2.2.1    | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)    | `PaddleOCR` 2.2.1, `OpenCV` 4.5.3, based on official `Ubuntu` 20.04 `.NET` 6 Runtime |
+| sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1 | ![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1) | `PaddleOCR` 2.2.1, `OpenCV` 4.5.3, based on official `Ubuntu` 20.04 `.NET` 6 SDK     |
 
 # Usage
 
 ## Windows: Detection and Recognition(All)
-1. Install NuGet Packages:
+1. Pre-condition
+
+Please ensure the [latest Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) was installed in `Windows`(typically it should automatically installed if you have `Visual Studio` installed)
+Otherwise, it will failed with following error(Windows only):
+```
+DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
+```
+
+2. Install NuGet Packages:
 ```ps
 dotnet add package Sdcb.PaddleInference
 dotnet add package Sdcb.PaddleInference.runtime.win64.mkl
@@ -26,7 +39,7 @@ dotnet add package OpenCvSharp4
 dotnet add package OpenCvSharp4.runtime.win
 ```
 
-2. write following C# code to get result:
+3. Using following C# code to get result:
 ```csharp
 OCRModel model = KnownOCRModel.PPOcrV2;
 await model.EnsureAll();
@@ -56,8 +69,10 @@ using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
 ```
 
 ## Linux(Ubuntu 20.04): Detection and Recognition(All)
-1. Use `sdflysha/ubuntu20-dotnet6-paddleocr2.2.1:20211223` as docker base image in `Dockerfile`
+1. Use `sdflysha/ubuntu20-dotnet6-paddleocr2.2.1:20211223` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
+
 The build steps for `ubuntu20-dotnet6-paddleocr` was described [here](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile).
+
 And also, we also provided another dotnet6-sdk `Dockerfile`, described [here](./build/docker/ubuntu20-dotnet6sdk-paddleocr2.2.1/Dockerfile).
 
 2. Install NuGet Packages:
@@ -112,7 +127,3 @@ using (Mat src = Cv2.ImRead(inputFile))
 }
 
 ```
-
-## Deploy FAQ
-* (Windows only) DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
-Try install the latest Visual C++ Redistributable: https://aka.ms/vs/17/release/vc_redist.x64.exe
