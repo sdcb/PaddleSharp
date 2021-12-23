@@ -13,7 +13,7 @@
 async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
-	await new LinuxNuGetSource().Process(QueryCancelToken);
+	//await new LinuxNuGetSource().Process(QueryCancelToken);
 	await new WindowsNugetSource().Process(QueryCancelToken);
 }
 
