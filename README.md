@@ -65,5 +65,5 @@ using (Mat src = Cv2.ImRead(inputFile))
 ```
 
 ## Deploy FAQ
-* DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
+* (Windows only) DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
 Try install the latest Visual C++ Redistributable: https://aka.ms/vs/17/release/vc_redist.x64.exe
