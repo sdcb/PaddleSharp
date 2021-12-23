@@ -69,7 +69,7 @@ dotnet add package OpenCvSharp4
 dotnet add package OpenCvSharp4.runtime.ubuntu.18.04-x64
 ```
 
-Please aware in 
+Please aware in `Linux`, the native binding library is not required, instead, you should compile your own `OpenCV`/`PaddleInference` library, or just use the `Docker` image.
 
 3. write following C# code to get result(also can be exactly the same as windows):
 ```csharp
