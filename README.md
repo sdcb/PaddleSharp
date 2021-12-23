@@ -1,6 +1,6 @@
 # PaddleSharp
 
-.NET Wrapper for PaddleInference C API, include PaddleOCR
+.NET Wrapper for PaddleInference C API, include PaddleOCR, support Windows and Linux(Ubuntu 20.04)
 
 ## NuGet Packages
 
@@ -11,9 +11,11 @@
 | `Sdcb.PaddleOCR`                         | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                                                 | PaddleOCR library(based on Sdcb.PaddleInference)           |
 | `Sdcb.PaddleOCR.KnownModels`             | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)                         | Helper to download PaddleOCR models                        |
 
+**Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1) to development.
+
 # Usage
 
-## Detection and Recognition(All)
+## Windows: Detection and Recognition(All)
 1. Install NuGet Packages:
 ```ps
 dotnet add package Sdcb.PaddleInference
@@ -28,8 +30,55 @@ dotnet add package OpenCvSharp4.runtime.win
 ```csharp
 OCRModel model = KnownOCRModel.PPOcrV2;
 await model.EnsureAll();
+
+byte[] sampleImageData;
+string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
+using (HttpClient http = new HttpClient())
+{
+    Console.WriteLine("Download sample image from: " + sampleImageUrl);
+    sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
+}
+
 using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
-using (Mat src = Cv2.ImRead(@"C:\Users\ZhouJie\Pictures\xdr5480.jpg"))
+{
+    // Load local file by following code:
+    // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
+    using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+    {
+        PaddleOcrResult result = all.Run(src);
+        Console.WriteLine("Detected all texts: " + result.Text);
+        foreach (PaddleOcrResultRegion region in result.Regions)
+        {
+            Console.WriteLine($"Rect: ({region.Rect.X},{region.Rect.Y},{region.Rect.Width},{region.Rect.Width}), Text: {region.Text}, Score: {region.Score}");
+        }
+    }
+}
+```
+
+## Linux(Ubuntu 20.04): Detection and Recognition(All)
+1. Use `sdflysha/ubuntu20-dotnet6-paddleocr2.2.1:20211223` as docker base image in `Dockerfile`
+The build steps for `ubuntu20-dotnet6-paddleocr` was described [here](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile).
+And also, we also provided another dotnet6-sdk `Dockerfile`, described [here](./build/docker/ubuntu20-dotnet6sdk-paddleocr2.2.1/Dockerfile).
+
+2. Install NuGet Packages:
+```ps
+dotnet add package Sdcb.PaddleInference
+dotnet add package Sdcb.PaddleOCR
+dotnet add package Sdcb.PaddleOCR.KnownModels
+dotnet add package OpenCvSharp4
+dotnet add package OpenCvSharp4.runtime.ubuntu.18.04-x64
+```
+
+Please aware in 
+
+3. write following C# code to get result(also can be exactly the same as windows):
+```csharp
+OCRModel model = KnownOCRModel.PPOcrV2;
+await model.EnsureAll();
+using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
+// Load in-memory data by following code:
+// using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 {
     Console.WriteLine(all.Run(src).Text);
 }
@@ -39,7 +88,7 @@ using (Mat src = Cv2.ImRead(@"C:\Users\ZhouJie\Pictures\xdr5480.jpg"))
 ```csharp
 // Install following packages:
 // Sdcb.PaddleInference
-// Sdcb.PaddleInference.runtime.win64.mkl
+// Sdcb.PaddleInference.runtime.win64.mkl (required in windows)
 // Sdcb.PaddleOCR
 // Sdcb.PaddleOCR.KnownModels
 // OpenCvSharp4
