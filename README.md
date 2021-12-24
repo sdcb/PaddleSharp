@@ -62,7 +62,7 @@ using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
         Console.WriteLine("Detected all texts: " + result.Text);
         foreach (PaddleOcrResultRegion region in result.Regions)
         {
-            Console.WriteLine($"Rect: ({region.Rect.X},{region.Rect.Y},{region.Rect.Width},{region.Rect.Width}), Text: {region.Text}, Score: {region.Score}");
+            Console.WriteLine($"Rect: ({region.Rect.X},{region.Rect.Y},{region.Rect.Width},{region.Rect.Height}), Text: {region.Text}, Score: {region.Score}");
         }
     }
 }
