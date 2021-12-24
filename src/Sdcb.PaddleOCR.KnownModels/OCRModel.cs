@@ -116,7 +116,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         {
             if (!File.Exists(KeyPath))
             {
-                Console.WriteLine($"Downloading key file {KeyPath} from {KeyUris}");
+                Console.WriteLine($"Downloading key file {KeyPath} from {string.Join(", ", KeyUris.Select(x => x))}");
                 await DownloadFile(KeyUris, KeyPath, cancellationToken);
             }
         }
