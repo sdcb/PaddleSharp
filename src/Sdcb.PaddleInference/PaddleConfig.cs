@@ -90,7 +90,7 @@ namespace Sdcb.PaddleInference
 						AutoLoad();
 					}
 				}
-				else
+				else if (!linux)
 				{
 					Console.WriteLine("Warn: OSPlatform is not windows or linux, platform might not supported.");
 				}
