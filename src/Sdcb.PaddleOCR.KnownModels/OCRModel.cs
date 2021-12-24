@@ -92,6 +92,11 @@ namespace Sdcb.PaddleOCR.KnownModels
                         return;
                     }
                 }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine($"Failed to download: {uri}, {ex}");
+                    continue;
+                }
                 catch (TaskCanceledException)
                 {
                     Console.WriteLine($"Failed to download: {uri}, timeout.");
