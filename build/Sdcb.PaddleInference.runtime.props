@@ -1,6 +1,6 @@
 ﻿<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<NativeDlls>$(MSBuildThisFileDirectory)..\..\runtimes</NativeDlls>
+		<PaddleInferenceDlls>$(MSBuildThisFileDirectory)..\..\runtimes</PaddleInferenceDlls>
 	</PropertyGroup>
 	<ItemGroup Condition="!$(TargetFramework.Contains('netstandard')) And !$(TargetFramework.Contains('netcoreapp')) And !$(TargetFramework.Contains('net5')) And !$(TargetFramework.Contains('net6'))">
 	</ItemGroup>

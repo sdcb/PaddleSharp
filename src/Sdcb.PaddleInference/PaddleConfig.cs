@@ -42,6 +42,11 @@ namespace Sdcb.PaddleInference
 
 		static PaddleConfig()
 		{
+			if (IntPtr.Size == 4)
+            {
+				throw new PlatformNotSupportedException("Paddle Inference does not support 32bit platform.");
+            }
+
 #if NET6_0_OR_GREATER
 			SearchPathLoad();
 #elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER

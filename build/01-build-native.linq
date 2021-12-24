@@ -33,7 +33,7 @@ static string BuildNuspec(string[] libs, string rid, string titleRid)
 		itemGroup.Add(
 		libs
 			.Select(x => Path.GetFileName(x))
-			.Select(x => new XElement(XName.Get("Content", ns), new XAttribute("Include", $@"$(NativeDlls)\{rid}\native\{x}"),
+			.Select(x => new XElement(XName.Get("Content", ns), new XAttribute("Include", $@"$(PaddleInferenceDlls)\{rid}\native\{x}"),
 				new XElement(XName.Get("Link", ns), @$"dll\{platform}\{x}"),
 				new XElement(XName.Get("CopyToOutputDirectory", ns), "PreserveNewest")))
 				);
