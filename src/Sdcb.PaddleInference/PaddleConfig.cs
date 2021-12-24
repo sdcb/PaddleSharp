@@ -44,7 +44,7 @@ namespace Sdcb.PaddleInference
 		{
 #if NET6_0_OR_GREATER
 			SearchPathLoad();
-#elif NETSTANDARD2_0_OR_GREATER
+#elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER
 			AutoLoad();
 #endif
 		}
