@@ -11,6 +11,8 @@ namespace Sdcb.PaddleOCR
 		PaddleConfig _c;
 		PaddlePredictor _p;
 
+		public int? MaxSize { get; set; } = 2048;
+
 		public PaddleOcrDetector(string modelDir)
 		{
 			_c = new PaddleConfig();
@@ -44,7 +46,7 @@ namespace Sdcb.PaddleOCR
 
 		public Rect[] Run(Mat src)
 		{
-			return StaticRun(_p, src);
+			return StaticRun(_p, src, MaxSize);
 		}
 
 		public Rect[] ConcurrentRun(Mat src)
@@ -56,14 +58,16 @@ namespace Sdcb.PaddleOCR
 			}
 			using (predictor)
 			{
-				return StaticRun(predictor, src);
+				return StaticRun(predictor, src, MaxSize);
 			}
 		}
 
-		public static Rect[] StaticRun(PaddlePredictor predictor, Mat src)
+		public static Rect[] StaticRun(PaddlePredictor predictor, Mat src, int? maxSize)
 		{
-			using Mat resized = MatPadding32(src);
-			using Mat normalized = Normalize(resized);
+			using Mat resized = MatResize(src, maxSize);
+			using Mat padded = MatPadding32(resized);
+			using Mat normalized = Normalize(padded);
+			Size resizedSize = resized.Size();
 
 			using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
 			{
@@ -97,16 +101,18 @@ namespace Sdcb.PaddleOCR
 				}
 
 				Point[][] contours = dilated.FindContoursAsArray(RetrievalModes.List, ContourApproximationModes.ApproxSimple);
+
 				Size size = src.Size();
+				double scaleRate = 1.0 * src.Width / resizedSize.Width;
 				Rect[] rects = contours
 					.Select(x => Cv2.BoundingRect(x))
 					.Where(x => x.Width > 5 && x.Height > 5)
 					.Select(rect =>
 					{
-						int x = MathUtil.Clamp(rect.Left - rect.Height, 0, size.Width);
-						int y = MathUtil.Clamp(rect.Top - rect.Height, 0, size.Height);
-						int width = rect.Width + 2 * rect.Height;
-						int height = rect.Height * 3;
+						int x = (int)Math.Floor(MathUtil.Clamp(rect.Left - rect.Height, 0, size.Width) * scaleRate);
+						int y = (int)Math.Floor(MathUtil.Clamp(rect.Top - rect.Height, 0, size.Height) * scaleRate);
+						int width = (int)Math.Floor((rect.Width + 2 * rect.Height) * scaleRate);
+						int height = (int)Math.Floor(rect.Height * 3 * scaleRate);
 						return new Rect(x, y,
 							MathUtil.Clamp(width, 0, size.Width - x),
 							MathUtil.Clamp(height, 0, size.Height - y));
@@ -116,7 +122,20 @@ namespace Sdcb.PaddleOCR
 			}
 		}
 
-		private unsafe static float[] ExtractMat(Mat src)
+        private static Mat MatResize(Mat src, int? maxSize)
+        {
+			if (maxSize == null) return src.Clone();
+
+			Size size = src.Size();
+			int longEdge = Math.Max(size.Width, size.Height);
+			double scaleRate = 1.0 * maxSize.Value / longEdge;
+
+			return scaleRate < 1.0 ?
+				src.Resize(Size.Zero, scaleRate, scaleRate) :
+				src.Clone();
+		}
+
+        private unsafe static float[] ExtractMat(Mat src)
 		{
 			int rows = src.Rows;
 			int cols = src.Cols;
