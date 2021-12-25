@@ -57,7 +57,7 @@ namespace Sdcb.PaddleOCR
 
 			Point2f[] srcPoints = (wider, angle) switch
 			{
-				(true, > 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
+				(true, >= 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
 				_ => new[] { rp[0], rp[3], rp[2], rp[1] }
 			};
 
