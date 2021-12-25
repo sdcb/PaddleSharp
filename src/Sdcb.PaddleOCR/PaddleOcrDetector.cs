@@ -92,7 +92,7 @@ namespace Sdcb.PaddleOCR
 					using Mat cbuf = new();
 					using (pred)
 					{
-						using Mat roi = pred[0, src.Rows, 0, src.Cols];
+						using Mat roi = pred[0, resizedSize.Height, 0, resizedSize.Width];
 						roi.ConvertTo(cbuf, MatType.CV_8UC1, 255);
 					}
 
@@ -101,7 +101,6 @@ namespace Sdcb.PaddleOCR
 				}
 
 				Point[][] contours = dilated.FindContoursAsArray(RetrievalModes.List, ContourApproximationModes.ApproxSimple);
-
 				Size size = src.Size();
 				double scaleRate = 1.0 * src.Width / resizedSize.Width;
 				Rect[] rects = contours
