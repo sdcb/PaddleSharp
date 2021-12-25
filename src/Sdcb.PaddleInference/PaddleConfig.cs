@@ -42,9 +42,14 @@ namespace Sdcb.PaddleInference
 
 		static PaddleConfig()
 		{
+			if (IntPtr.Size == 4)
+            {
+				throw new PlatformNotSupportedException("Paddle Inference does not support 32bit platform.");
+            }
+
 #if NET6_0_OR_GREATER
 			SearchPathLoad();
-#elif NETSTANDARD2_0_OR_GREATER
+#elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER
 			AutoLoad();
 #endif
 		}
@@ -85,7 +90,7 @@ namespace Sdcb.PaddleInference
 						AutoLoad();
 					}
 				}
-				else
+				else if (!linux)
 				{
 					Console.WriteLine("Warn: OSPlatform is not windows or linux, platform might not supported.");
 				}

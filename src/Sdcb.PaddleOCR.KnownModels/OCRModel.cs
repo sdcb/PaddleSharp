@@ -70,7 +70,10 @@ namespace Sdcb.PaddleOCR.KnownModels
 
         private static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
-            using HttpClient http = new();
+            using HttpClient http = new()
+            {
+                Timeout = TimeSpan.FromSeconds(10),
+            };
 
             foreach (Uri uri in uris)
             {
@@ -88,6 +91,11 @@ namespace Sdcb.PaddleOCR.KnownModels
                         await resp.Content.CopyToAsync(file/*, cancellationToken*/);
                         return;
                     }
+                }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine($"Failed to download: {uri}, {ex}");
+                    continue;
                 }
                 catch (TaskCanceledException)
                 {
@@ -113,7 +121,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         {
             if (!File.Exists(KeyPath))
             {
-                Console.WriteLine($"Downloading key file {KeyPath} from {KeyUris}");
+                Console.WriteLine($"Downloading key file {KeyPath} from {string.Join(", ", KeyUris.Select(x => x))}");
                 await DownloadFile(KeyUris, KeyPath, cancellationToken);
             }
         }
