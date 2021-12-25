@@ -70,10 +70,7 @@ namespace Sdcb.PaddleOCR.KnownModels
 
         private static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
-            using HttpClient http = new()
-            {
-                Timeout = TimeSpan.FromSeconds(10),
-            };
+            using HttpClient http = new();
 
             foreach (Uri uri in uris)
             {
