@@ -21,8 +21,8 @@ namespace Sdcb.PaddleOCR
 		public PaddleOcrResultRegion[] Regions { get; }
 
 		public string Text => string.Join("\n", Regions
-			.OrderBy(x => x.Rect.Y)
-			.ThenBy(x => x.Rect.X)
+			.OrderBy(x => x.Rect.Center.Y)
+			.ThenBy(x => x.Rect.Center.X)
 			.Select(x => x.Text));
 	}
 #endif

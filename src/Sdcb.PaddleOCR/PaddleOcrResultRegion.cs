@@ -2,5 +2,5 @@
 
 namespace Sdcb.PaddleOCR
 {
-    public record struct PaddleOcrResultRegion(Rect Rect, string Text, float Score);
+    public record struct PaddleOcrResultRegion(RotatedRect Rect, string Text, float Score);
 }

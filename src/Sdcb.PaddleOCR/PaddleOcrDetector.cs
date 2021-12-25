@@ -12,6 +12,11 @@ namespace Sdcb.PaddleOCR
 		PaddlePredictor _p;
 
 		public int? MaxSize { get; set; } = 2048;
+		public int? DilatedSize { get; set; } = 2;
+		public float? BoxScoreThreahold { get; set; } = 0.7f;
+		public float? BoxThreshold { get; set; } = 0.3f;
+		public int MinSize { get; set; } = 3;
+		public float UnclipRatio { get; set; } = 1.5f;
 
 		public PaddleOcrDetector(string modelDir)
 		{
@@ -34,94 +39,123 @@ namespace Sdcb.PaddleOCR
 			_c.Dispose();
 		}
 
-		public static Mat Visualize(Mat src, Rect[] rects, Scalar color, int thickness)
+		public static Mat Visualize(Mat src, RotatedRect[] rects, Scalar color, int thickness)
 		{
 			Mat clone = src.Clone();
-			foreach (Rect rect in rects)
-			{
-				clone.Rectangle(rect, color, thickness);
-			}
+			clone.DrawContours(rects.Select(x => x.Points().Select(x => (Point)x)), -1, color, thickness);
 			return clone;
 		}
 
-		public Rect[] Run(Mat src)
+		public RotatedRect[] Run(Mat src)
 		{
-			return StaticRun(_p, src, MaxSize);
-		}
-
-		public Rect[] ConcurrentRun(Mat src)
-		{
-			PaddlePredictor predictor;
-			lock (_p)
+			if (src.Empty())
 			{
-				predictor = _p.Clone();
+				throw new ArgumentException("src size should not be 0, wrong input picture provided?");
 			}
-			using (predictor)
-			{
-				return StaticRun(predictor, src, MaxSize);
-			}
-		}
 
-		public static Rect[] StaticRun(PaddlePredictor predictor, Mat src, int? maxSize)
-		{
-			using Mat resized = MatResize(src, maxSize);
+			using Mat resized = MatResize(src, MaxSize);
 			using Mat padded = MatPadding32(resized);
 			using Mat normalized = Normalize(padded);
 			Size resizedSize = resized.Size();
 
-			using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+			using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
 			{
 				input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
 				float[] data = ExtractMat(normalized);
 				input.SetData(data);
 			}
-			if (!predictor.Run())
-            {
+			if (!_p.Run())
+			{
 				throw new Exception("PaddlePredictor(Detector) run failed.");
-            }
+			}
 
-			using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
+			using (PaddleTensor output = _p.GetOutputTensor(_p.OutputNames[0]))
 			{
 				float[] data = output.GetData<float>();
 				int[] shape = output.Shape;
 
+				using Mat pred = new Mat(shape[2], shape[3], MatType.CV_32FC1, data);
+				using Mat cbuf = new();
+				{
+					using Mat roi = pred[0, resizedSize.Height, 0, resizedSize.Width];
+					roi.ConvertTo(cbuf, MatType.CV_8UC1, 255);
+				}
 				using Mat dilated = new();
 				{
-					Mat pred = new Mat(shape[2], shape[3], MatType.CV_32FC1, data);
+					using Mat binary = BoxThreshold != null ?
+						cbuf.Threshold((int)(BoxThreshold * 255), 255, ThresholdTypes.Binary) :
+						cbuf;
 
-					using Mat cbuf = new();
-					using (pred)
+					if (DilatedSize != null)
 					{
-						using Mat roi = pred[0, resizedSize.Height, 0, resizedSize.Width];
-						roi.ConvertTo(cbuf, MatType.CV_8UC1, 255);
+						using Mat ones = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(DilatedSize.Value, DilatedSize.Value));
+						Cv2.Dilate(binary, dilated, ones);
 					}
-
-					using Mat ones = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(2, 2));
-					Cv2.Dilate(cbuf, dilated, ones);
+					else
+					{
+						Cv2.CopyTo(binary, dilated);
+					}
 				}
 
 				Point[][] contours = dilated.FindContoursAsArray(RetrievalModes.List, ContourApproximationModes.ApproxSimple);
 				Size size = src.Size();
 				double scaleRate = 1.0 * src.Width / resizedSize.Width;
-				Rect[] rects = contours
-					.Select(x => Cv2.BoundingRect(x))
-					.Where(x => x.Width > 5 && x.Height > 5)
+
+				RotatedRect[] rects = contours
+					.Where(x => BoxScoreThreahold == null || GetScore(x, pred) > BoxScoreThreahold)
+					.Select(x => Cv2.MinAreaRect(x))
+					.Where(x => x.Size.Width > MinSize && x.Size.Height > MinSize)
 					.Select(rect =>
 					{
-						int x = (int)Math.Floor(MathUtil.Clamp(rect.Left - rect.Height, 0, size.Width) * scaleRate);
-						int y = (int)Math.Floor(MathUtil.Clamp(rect.Top - rect.Height, 0, size.Height) * scaleRate);
-						int width = (int)Math.Floor((rect.Width + 2 * rect.Height) * scaleRate);
-						int height = (int)Math.Floor(rect.Height * 3 * scaleRate);
-						return new Rect(x, y,
-							MathUtil.Clamp(width, 0, size.Width - x),
-							MathUtil.Clamp(height, 0, size.Height - y));
+						float minEdge = Math.Min(rect.Size.Width, rect.Size.Height);
+						Size2f newSize = new Size2f(
+							(rect.Size.Width + UnclipRatio * minEdge) * scaleRate,
+							(rect.Size.Height + UnclipRatio * minEdge) * scaleRate);
+						RotatedRect largerRect = new RotatedRect(rect.Center * scaleRate, newSize, rect.Angle);
+						return largerRect;
 					})
 					.ToArray();
+				//{
+				//	using Mat demo = dilated.CvtColor(ColorConversionCodes.GRAY2RGB);
+				//	demo.DrawContours(contours, -1, Scalar.Red);
+				//	Image(demo).Dump();
+				//}
 				return rects;
 			}
 		}
 
-        private static Mat MatResize(Mat src, int? maxSize)
+		private float GetScore(Point[] contour, Mat pred)
+		{
+			int width = pred.Width;
+			int height = pred.Height;
+			int[] boxX = contour.Select(v => v.X).ToArray();
+			int[] boxY = contour.Select(v => v.Y).ToArray();
+
+			int xmin = MathUtil.Clamp(boxX.Min(), 0, width - 1);
+			int xmax = MathUtil.Clamp(boxX.Max(), 0, width - 1);
+			int ymin = MathUtil.Clamp(boxY.Min(), 0, height - 1);
+			int ymax = MathUtil.Clamp(boxY.Max(), 0, height - 1);
+
+			Point[] rootPoints = contour
+				.Select(v => new Point(v.X - xmin, v.Y - ymin))
+				.ToArray();
+			using Mat mask = new Mat(ymax - ymin + 1, xmax - xmin + 1, MatType.CV_8UC1, Scalar.Black);
+			mask.FillPoly(new[] { rootPoints }, new Scalar(1));
+
+			using Mat croppedMat = pred[ymin, ymax + 1, xmin, xmax + 1];
+			float score = (float)croppedMat.Mean(mask).Val0;
+
+			// Debug
+			//{
+			//	using Mat cu = new Mat();
+			//	croppedMat.ConvertTo(cu, MatType.CV_8UC1, 255);
+			//	Util.HorizontalRun(true, Image(cu), Image(mask), score).Dump();
+			//}
+
+			return score;
+		}
+
+		private static Mat MatResize(Mat src, int? maxSize)
         {
 			if (maxSize == null) return src.Clone();
 
