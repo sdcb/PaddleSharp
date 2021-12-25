@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using Sdcb.PaddleInference;
 using System;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,12 @@ namespace Sdcb.PaddleOCR
 		{
 			Detector = new(Path.Combine(modelPath, "det"));
 			Recognizer = new(Path.Combine(modelPath, "rec"), labelFilePath);
+		}
+
+		public PaddleOcrAll(PaddleConfig detectorConfig, PaddleConfig recognizerConfig, string labelFilePath)
+		{
+			Detector = new(detectorConfig);
+			Recognizer = new(recognizerConfig, labelFilePath);
 		}
 
 		public PaddleOcrResult Run(Mat src)
