@@ -103,27 +103,30 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 ```csharp
 // Install following packages:
 // Sdcb.PaddleInference
-// Sdcb.PaddleInference.runtime.win64.mkl (required in windows)
+// Sdcb.PaddleInference.runtime.win64.mkl (required in Windows)
 // Sdcb.PaddleOCR
 // Sdcb.PaddleOCR.KnownModels
 // OpenCvSharp4
-// OpenCvSharp4.runtime.win
-string inputFile = @"C:\Users\ZhouJie\Pictures\xdr5480.jpg";
+// OpenCvSharp4.runtime.win (required in Windows)
+// OpenCvSharp4.runtime.linux18.04 (required in Linux)
+byte[] sampleImageData;
+string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
+using (HttpClient http = new HttpClient())
+{
+    Console.WriteLine("Download sample image from: " + sampleImageUrl);
+    sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
+}
+
 OCRModel model = KnownOCRModel.PPOcrV2;
 await model.EnsureAll();
 using (PaddleOcrDetector detector = new PaddleOcrDetector(model.DetectionDirectory))
-using (Mat src = Cv2.ImRead(inputFile))
+using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 {
-    Rect[] rects = detector.Run(src);
-    using (Mat clone = src.Clone())
+    RotatedRect[] rects = detector.Run(src);
+    using (Mat visualized = PaddleOcrDetector.Visualize(src, rects, Scalar.Red, thickness: 2))
     {
-        foreach (Rect rect in rects)
-        {
-            clone.Rectangle(rect, Scalar.Red, thickness: 2);
-        }
-        string outputFile = Path.Combine(Path.GetDirectoryName(inputFile), "output.jpg");
-        clone.ImWrite(outputFile);
+        string outputFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "output.jpg");
+        visualized.ImWrite(outputFile);
     }
 }
-
 ```
