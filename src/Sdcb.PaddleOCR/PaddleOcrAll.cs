@@ -41,18 +41,24 @@ namespace Sdcb.PaddleOCR
 		{
 			bool wider = rect.Size.Width > rect.Size.Height;
 			float angle = rect.Angle;
+			Size srcSize = src.Size();
 			Rect boundingRect = rect.BoundingRect();
 
 			int expTop = Math.Max(0, 0 - boundingRect.Top);
-			int expBottom = Math.Max(0, boundingRect.Bottom - src.Height);
+			int expBottom = Math.Max(0, boundingRect.Bottom - srcSize.Height);
 			int expLeft = Math.Max(0, 0 - boundingRect.Left);
-			int expRight = Math.Max(0, boundingRect.Right - src.Width);
-			using Mat expMat = src.CopyMakeBorder(expTop, expBottom, expLeft, expRight, BorderTypes.Replicate);
+			int expRight = Math.Max(0, boundingRect.Right - srcSize.Width);
 
 			Rect rectToExp = boundingRect + new Point(expTop, expLeft);
-			using Mat boundingMat = expMat[rectToExp];
+			Rect roiRect = Rect.FromLTRB(
+				boundingRect.Left + expLeft,
+				boundingRect.Top + expTop,
+				boundingRect.Right - expRight,
+				boundingRect.Bottom - expBottom);
+			using Mat boundingMat = src[roiRect];
+			using Mat expanded = boundingMat.CopyMakeBorder(expTop, expBottom, expLeft, expRight, BorderTypes.Replicate);
 			Point2f[] rp = rect.Points()
-				.Select(x => new Point2f(x.X - rectToExp.X, x.Y - rectToExp.Y))
+				.Select(v => new Point2f(v.X - rectToExp.X, v.Y - rectToExp.Y))
 				.ToArray();
 
 			Point2f[] srcPoints = (wider, angle) switch
@@ -68,7 +74,7 @@ namespace Sdcb.PaddleOCR
 
 			using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, new[] { ptsDst0, ptsDst1, ptsDst2, ptsDst3 });
 
-			Mat dest = boundingMat.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
+			Mat dest = expanded.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
 
 			if (!wider)
 			{
