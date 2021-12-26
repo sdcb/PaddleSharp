@@ -54,17 +54,17 @@ using (HttpClient http = new HttpClient())
 
 using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
 {
-	// Load local file by following code:
-	// using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
-	using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
-	{
-		PaddleOcrResult result = all.Run(src);
-		Console.WriteLine("Detected all texts: \n" + result.Text);
-		foreach (PaddleOcrResultRegion region in result.Regions)
-		{
-			Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize: {region.Rect.Size}, Angle: {region.Rect.Angle}");
-		}
-	}
+    // Load local file by following code:
+    // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
+    using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+    {
+        PaddleOcrResult result = all.Run(src);
+        Console.WriteLine("Detected all texts: \n" + result.Text);
+        foreach (PaddleOcrResultRegion region in result.Regions)
+        {
+            Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize: {region.Rect.Size}, Angle: {region.Rect.Angle}");
+        }
+    }
 }
 ```
 
