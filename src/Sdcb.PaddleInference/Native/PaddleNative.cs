@@ -106,6 +106,16 @@ namespace Sdcb.PaddleInference.Native
 		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigMkldnnEnabled(IntPtr config);
 		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableMKLDNN(IntPtr config);
 		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigSetMkldnnCacheCapacity(IntPtr config, int capacity);
+		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableMemoryOptim(IntPtr config);
+		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigMemoryOptimEnabled(IntPtr config);
+
+		/* This API is hard because free is not easy to PInvoke */
+		//[DllImport(PaddleInferenceCLib)] public static extern IntPtr PD_ConfigSummary(IntPtr config);
+		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableProfile(IntPtr config);
+		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigProfileEnabled(IntPtr config);
+
+
+
 
 
 		[DllImport(PaddleInferenceCLib)] public static extern IntPtr PD_PredictorCreate(IntPtr config);

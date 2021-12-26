@@ -28,6 +28,10 @@ namespace Sdcb.PaddleInference
             {
 				CpuMathThreadCount = CpuMathDefaultThreadCount;
             }
+			if (MemoryOptimizedByDefault)
+            {
+				MemoryOptimized = MemoryOptimizedByDefault;
+            }
 		}
 
 		public PaddleConfig(IntPtr configPointer)
@@ -115,6 +119,7 @@ namespace Sdcb.PaddleInference
 		public static bool EnableMkldnnByDefault = true;
 		public static int MkldnnDefaultCacheCapacity = 10;
 		public static int CpuMathDefaultThreadCount = 0;
+		public static bool MemoryOptimizedByDefault = true;
 
 
 		public bool GLogEnabled
@@ -129,6 +134,22 @@ namespace Sdcb.PaddleInference
 				else if (!GLogEnabled)
 				{
 					Console.WriteLine($"Warn: Glog cannot re-enable after disabled.");
+				}
+			}
+		}
+
+		public bool MemoryOptimized
+		{
+			get => PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0;
+			set
+			{
+				if (value)
+				{
+					PaddleNative.PD_ConfigEnableMemoryOptim(_ptr);
+				}
+				else if (PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0)
+				{
+					Console.WriteLine($"Warn: Memory optimized cannot disabled after enabled.");
 				}
 			}
 		}
@@ -158,6 +179,22 @@ namespace Sdcb.PaddleInference
 			{
 				_MkldnnCacheCapacity = value;
 				PaddleNative.PD_ConfigSetMkldnnCacheCapacity(_ptr, value);
+			}
+		}
+
+		public bool ProfileEnabled
+		{
+			get => PaddleNative.PD_ConfigProfileEnabled(_ptr) != 0;
+			set
+			{
+				if (value)
+				{
+					PaddleNative.PD_ConfigEnableProfile(_ptr);
+				}
+				else if (PaddleNative.PD_ConfigProfileEnabled(_ptr) != 0)
+				{
+					Console.WriteLine($"Warn: Profile cannot disabled after enabled.");
+				}
 			}
 		}
 
