@@ -16,7 +16,7 @@ namespace Sdcb.PaddleOCR
 		public float? BoxScoreThreahold { get; set; } = 0.7f;
 		public float? BoxThreshold { get; set; } = 0.3f;
 		public int MinSize { get; set; } = 3;
-		public float UnclipRatio { get; set; } = 1.5f;
+		public float UnclipRatio { get; set; } = 2.0f;
 
 		public PaddleOcrDetector(string modelDir)
 		{

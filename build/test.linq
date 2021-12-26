@@ -18,6 +18,7 @@ async Task Main()
 {
 	await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
 	using PaddleOcrAll all = new (KnownOCRModel.PPOcrV2.RootDirectory, KnownOCRModel.PPOcrV2.KeyPath);
+	all.Dump();
 	using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "xdr5480.jpg"));
 	//using Mat src = Cv2.ImDecode(GetClipboardImage(), ImreadModes.Color);
 	string result = null;

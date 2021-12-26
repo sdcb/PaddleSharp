@@ -27,40 +27,15 @@ namespace Sdcb.PaddleOCR
 		{
 			RotatedRect[] rects = Detector.Run(src);
 			return new PaddleOcrResult(rects
-				.AsParallel()
                 .Select(rect =>
                 {
                     using Mat roi = GetRotateCropImage(src, rect);
-                    return RecognizeRegion(rect, roi);
-                })
-				.ToArray());
-		}
-
-		/// <summary>
-		/// ~12% faster, but unable recognize text with angle.
-		/// </summary>
-		public PaddleOcrResult FastRun(Mat src)
-		{
-			RotatedRect[] rects = Detector.Run(src);
-			return new PaddleOcrResult(rects
-				.AsParallel()
-				.Select(rect =>
-				{
-					using Mat roi = src[rect.BoundingRect()];
-					return RecognizeRegion(rect, roi);
+					PaddleOcrRecognizerResult result = Recognizer.Run(roi);
+					PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
+					return region;
 				})
 				.ToArray());
 		}
-
-		private PaddleOcrResultRegion RecognizeRegion(RotatedRect rect, Mat roi)
-        {
-			lock (Recognizer)
-            {
-				PaddleOcrRecognizerResult result = Recognizer.Run(roi);
-				PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
-				return region;
-			}
-        }
 
 		public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
 		{
