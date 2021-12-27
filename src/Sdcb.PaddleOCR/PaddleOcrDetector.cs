@@ -8,8 +8,7 @@ namespace Sdcb.PaddleOCR
 {
     public class PaddleOcrDetector : IDisposable
 	{
-		PaddleConfig _c;
-		PaddlePredictor _p;
+        readonly PaddlePredictor _p;
 
 		public int? MaxSize { get; set; } = 2048;
 		public int? DilatedSize { get; set; } = 2;
@@ -18,25 +17,27 @@ namespace Sdcb.PaddleOCR
 		public int MinSize { get; set; } = 3;
 		public float UnclipRatio { get; set; } = 2.0f;
 
-		public PaddleOcrDetector(string modelDir)
+		public PaddleOcrDetector(PaddleConfig config) : this(config.CreatePredictor())
 		{
-			_c = new PaddleConfig();
-			_c.SetModel(
-				Path.Combine(modelDir, "inference.pdmodel"),
-				Path.Combine(modelDir, "inference.pdiparams"));
-			_p = _c.CreatePredictor();
 		}
 
-		public PaddleOcrDetector(PaddleConfig config)
+		public PaddleOcrDetector(PaddlePredictor predictor)
 		{
-			_c = config;
-			_p = _c.CreatePredictor();
+			_p = predictor;
+		}
+
+		public PaddleOcrDetector(string modelDir) : this(PaddleConfig.FromModelDir(modelDir))
+		{
+		}
+
+		public PaddleOcrDetector Clone()
+		{
+			return new PaddleOcrDetector(_p.Clone());
 		}
 
 		public void Dispose()
 		{
 			_p.Dispose();
-			_c.Dispose();
 		}
 
 		public static Mat Visualize(Mat src, RotatedRect[] rects, Scalar color, int thickness)

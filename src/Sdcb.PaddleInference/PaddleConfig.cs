@@ -14,24 +14,6 @@ namespace Sdcb.PaddleInference
 		public PaddleConfig()
 		{
 			_ptr = PaddleNative.PD_ConfigCreate();
-
-			if (!EnableGLogByDefault)
-            {
-				GLogEnabled = EnableGLogByDefault;
-			}
-			if (EnableMkldnnByDefault)
-            {
-				MkldnnEnabled = true;
-				MkldnnCacheCapacity = MkldnnDefaultCacheCapacity;
-			}
-			if (CpuMathDefaultThreadCount != 0)
-            {
-				CpuMathThreadCount = CpuMathDefaultThreadCount;
-            }
-			if (MemoryOptimizedByDefault)
-            {
-				MemoryOptimized = MemoryOptimizedByDefault;
-            }
 		}
 
 		public PaddleConfig(IntPtr configPointer)
@@ -42,6 +24,68 @@ namespace Sdcb.PaddleInference
 			{
 				GLogEnabled = EnableGLogByDefault;
 			}
+		}
+
+		public static PaddleConfig FromModelDir(string modelDir)
+		{
+			PaddleConfig c = CreateDefault();
+			c.SetModel(
+				Path.Combine(modelDir, "inference.pdmodel"),
+				Path.Combine(modelDir, "inference.pdiparams"));
+			return c;
+		}
+
+		public static PaddleConfig FromModelFiles(string programPath, string paramsPath)
+		{
+			PaddleConfig c = CreateDefault();
+			c.SetModel(
+				programPath,
+				paramsPath);
+			return c;
+		}
+
+		public static PaddleConfig FromMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
+		{
+			PaddleConfig c = CreateDefault();
+			c.SetMemoryModel(programBuffer, paramsBuffer);
+			return c;
+		}
+
+		private static PaddleConfig CreateDefault()
+		{
+			var c = new PaddleConfig();
+
+			if (!EnableGLogByDefault)
+			{
+				c.GLogEnabled = EnableGLogByDefault;
+			}
+			if (EnableMkldnnByDefault)
+			{
+				c.MkldnnEnabled = true;
+				c.MkldnnCacheCapacity = MkldnnDefaultCacheCapacity;
+			}
+			if (CpuMathDefaultThreadCount != 0)
+			{
+				c.CpuMathThreadCount = CpuMathDefaultThreadCount;
+			}
+			if (MemoryOptimizedByDefault)
+			{
+				c.MemoryOptimized = MemoryOptimizedByDefault;
+			}
+			if (ProfileEnabledByDefault)
+            {
+				c.ProfileEnabled = ProfileEnabledByDefault;
+            }
+			if (UseGpuByDefault)
+            {
+				c.EnableUseGpu(DefaultInitialGpuMemoryMb, DefaultGpuDeviceId);
+				if (EnableGpuMultiStreamByDefault)
+                {
+					c.EnableGpuMultiStream = EnableGpuMultiStreamByDefault;
+                }
+            }
+
+			return c;
 		}
 
 		static PaddleConfig()
@@ -120,6 +164,11 @@ namespace Sdcb.PaddleInference
 		public static int MkldnnDefaultCacheCapacity = 10;
 		public static int CpuMathDefaultThreadCount = 0;
 		public static bool MemoryOptimizedByDefault = true;
+		public static bool ProfileEnabledByDefault = false;
+		public static bool UseGpuByDefault = false;
+		public static int DefaultInitialGpuMemoryMb = 500;
+		public static int DefaultGpuDeviceId = 0;
+		public static bool EnableGpuMultiStreamByDefault = true;
 
 
 		public bool GLogEnabled
@@ -203,6 +252,49 @@ namespace Sdcb.PaddleInference
 		//	get => Marshal.PtrToStringUTF8(PdInvoke.PD_ConfigGetModelDir(_ptr));
 		//	set => PdInvoke.PD_ConfigSetModelDir(_ptr, value);
 		//}
+
+		public bool UseGpu
+		{
+			get => PaddleNative.PD_ConfigUseGpu(_ptr) != 0;
+			set
+			{
+				if (!value)
+				{
+					PaddleNative.PD_ConfigDisableGpu(_ptr);
+				}
+				else
+				{
+					Console.WriteLine($"Warn: Use EnableUseGpu to use GPU.");
+				}
+			}
+		}
+
+		public int GpuDeviceId => PaddleNative.PD_ConfigGpuDeviceId(_ptr);
+
+		public int InitialGpuMemorySizeMB => PaddleNative.PD_ConfigMemoryPoolInitSizeMb(_ptr);
+
+		public float FractionOfGpuMemoryForPool => PaddleNative.PD_ConfigFractionOfGpuMemoryForPool(_ptr);
+
+		public bool EnableGpuMultiStream
+		{
+			get => PaddleNative.PD_ConfigThreadLocalStreamEnabled(_ptr) != 0;
+			set
+			{
+				if (value)
+				{
+					PaddleNative.PD_ConfigEnableGpuMultiStream(_ptr);
+				}
+				else
+				{
+					Console.WriteLine($"Warn: GpuMultiStream cannot disabled after enabled.");
+				}
+			}
+		}
+
+		public void EnableUseGpu(int initialMemoryMB, int deviceId)
+		{
+			PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId);
+		}
 
 		public void SetModel(string programPath, string paramsPath)
 		{

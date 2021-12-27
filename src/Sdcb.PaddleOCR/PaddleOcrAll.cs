@@ -1,5 +1,4 @@
 ﻿using OpenCvSharp;
-using Sdcb.PaddleInference;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,18 +8,31 @@ namespace Sdcb.PaddleOCR
     public class PaddleOcrAll : IDisposable
 	{
 		public PaddleOcrDetector Detector { get; }
+		public PaddleOcrClassifier Classifier { get; }
 		public PaddleOcrRecognizer Recognizer { get; }
+
+		public bool Enable180Classification { get; set; } = false;
+		public bool AllowRotateDetection { get; set; } = true;
 
 		public PaddleOcrAll(string modelPath, string labelFilePath)
 		{
 			Detector = new(Path.Combine(modelPath, "det"));
+			Classifier = new PaddleOcrClassifier(Path.Combine(modelPath, "cls"));
 			Recognizer = new(Path.Combine(modelPath, "rec"), labelFilePath);
 		}
 
-		public PaddleOcrAll(PaddleConfig detectorConfig, PaddleConfig recognizerConfig, string labelFilePath)
+		public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath)
 		{
-			Detector = new(detectorConfig);
-			Recognizer = new(recognizerConfig, labelFilePath);
+			Detector = new(detectionModelDir);
+			Classifier = new PaddleOcrClassifier(classificationModelDir);
+			Recognizer = new(recognitionModelDir, labelFilePath);
+		}
+
+		public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier classifier, PaddleOcrRecognizer recognizer, string labelFilePath)
+		{
+			Detector = detector;
+			Classifier = classifier;
+			Recognizer = recognizer;
 		}
 
 		public PaddleOcrResult Run(Mat src)
@@ -29,7 +41,8 @@ namespace Sdcb.PaddleOCR
 			return new PaddleOcrResult(rects
                 .Select(rect =>
                 {
-                    using Mat roi = GetRotateCropImage(src, rect);
+                    using Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[rect.BoundingRect()];
+					using Mat cls = Enable180Classification ? Classifier.Run(roi) : roi;
 					PaddleOcrRecognizerResult result = Recognizer.Run(roi);
 					PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
 					return region;
@@ -90,6 +103,7 @@ namespace Sdcb.PaddleOCR
 		public void Dispose()
 		{
 			Detector.Dispose();
+			Classifier.Dispose();
 			Recognizer.Dispose();
 		}
 	}

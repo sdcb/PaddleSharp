@@ -8,45 +8,46 @@ using System.Text;
 
 namespace Sdcb.PaddleOCR
 {
-
     public class PaddleOcrRecognizer : IDisposable
 	{
-		private readonly PaddleConfig _c;
 		private readonly PaddlePredictor _p;
 		private readonly IReadOnlyList<string> _labels;
 
-		public PaddleOcrRecognizer(string modelDir, string labelFilePath)
+		public PaddleOcrRecognizer(string modelDir, string labelFilePath) : this(PaddleConfig.FromModelDir(modelDir), File.ReadAllLines(labelFilePath))
 		{
-			_c = new PaddleConfig();
-			_c.SetModel(
-				Path.Combine(modelDir, "inference.pdmodel"),
-				Path.Combine(modelDir, "inference.pdiparams"));
-			_p = _c.CreatePredictor();
+		}
 
-			List<string> labels = File.ReadAllLines(labelFilePath).ToList();
-			labels.Insert(0, "!!");
-			labels.Add(" ");
+		public PaddleOcrRecognizer(PaddleConfig config, IReadOnlyList<string> labels) : this(config.CreatePredictor(), labels)
+		{
+		}
+
+		public PaddleOcrRecognizer(PaddlePredictor predictor, IReadOnlyList<string> labels)
+		{
+			_p = predictor;
 			_labels = labels;
 		}
 
-		public PaddleOcrRecognizer(PaddleConfig config, string labelFilePath)
+		public PaddleOcrRecognizer Clone()
 		{
-			_c = config;
-			_p = _c.CreatePredictor();
-
-			List<string> labels = File.ReadAllLines(labelFilePath).ToList();
-			labels.Insert(0, "!!");
-			labels.Add(" ");
-			_labels = labels;
+			return new PaddleOcrRecognizer(_p.Clone(), _labels);
 		}
 
 		public void Dispose()
 		{
 			_p.Dispose();
-			_c.Dispose();
 		}
 
-		public static PaddleOcrRecognizerResult StaticRun(PaddlePredictor predictor, Mat src, IReadOnlyList<string> labels)
+		private string GetLabelByIndex(int i)
+        {
+			return i switch
+			{
+				var x when x > 0 && x <= _labels.Count => _labels[x - 1],
+				var x when x == _labels.Count + 1 => " ", 
+				_ => " ", /* error */
+			};
+        }
+
+		public PaddleOcrRecognizerResult Run(Mat src)
 		{
 			if (src.Channels() != 3)
 			{
@@ -56,18 +57,18 @@ namespace Sdcb.PaddleOCR
 			using Mat resized = ResizePadding(src);
 			using Mat normalized = Normalize(resized);
 
-			using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+			using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
 			{
 				input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
 				float[] data = ExtractMat(normalized);
 				input.SetData(data);
 			}
-			if (!predictor.Run())
-            {
+			if (!_p.Run())
+			{
 				throw new Exception($"PaddlePredictor(Recognizer) run failed.");
-            }
+			}
 
-			using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
+			using (PaddleTensor output = _p.GetOutputTensor(_p.OutputNames[0]))
 			{
 				float[] data = output.GetData<float>();
 				int[] shape = output.Shape;
@@ -87,30 +88,11 @@ namespace Sdcb.PaddleOCR
 					if (maxIdx[1] > 0 && (!(n > 0 && maxIdx[1] == lastIndex)))
 					{
 						score += (float)maxVal;
-						sb.Append(labels[maxIdx[1]]);
+						sb.Append(GetLabelByIndex(maxIdx[1]));
 					}
 					lastIndex = maxIdx[1];
 				}
 				return new(sb.ToString(), score / sb.Length);
-			}
-		}
-
-		public PaddleOcrRecognizerResult Run(Mat src)
-		{
-			return StaticRun(_p, src, _labels);
-		}
-
-		public PaddleOcrRecognizerResult ConcurrentRun(Mat src)
-		{
-			PaddlePredictor p;
-			lock (_p)
-			{
-				p = _p.Clone();
-			}
-
-			using (p)
-			{
-				return StaticRun(p, src, _labels);
 			}
 		}
 

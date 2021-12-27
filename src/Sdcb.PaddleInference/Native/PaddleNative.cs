@@ -113,7 +113,14 @@ namespace Sdcb.PaddleInference.Native
 		//[DllImport(PaddleInferenceCLib)] public static extern IntPtr PD_ConfigSummary(IntPtr config);
 		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableProfile(IntPtr config);
 		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigProfileEnabled(IntPtr config);
-
+		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableUseGpu(IntPtr config, ulong memory_pool_init_size_mb, int device_id);
+		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigDisableGpu(IntPtr config);
+		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigUseGpu(IntPtr config);
+		[DllImport(PaddleInferenceCLib)] public static extern int PD_ConfigGpuDeviceId(IntPtr cofig);
+		[DllImport(PaddleInferenceCLib)] public static extern int PD_ConfigMemoryPoolInitSizeMb(IntPtr cofig);
+		[DllImport(PaddleInferenceCLib)] public static extern float PD_ConfigFractionOfGpuMemoryForPool(IntPtr cofig);
+		[DllImport(PaddleInferenceCLib)] public static extern void PD_ConfigEnableGpuMultiStream(IntPtr cofig);
+		[DllImport(PaddleInferenceCLib)] public static extern byte PD_ConfigThreadLocalStreamEnabled(IntPtr cofig);
 
 
 
