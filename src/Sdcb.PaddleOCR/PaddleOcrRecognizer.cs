@@ -48,6 +48,11 @@ namespace Sdcb.PaddleOCR
 
 		public static PaddleOcrRecognizerResult StaticRun(PaddlePredictor predictor, Mat src, IReadOnlyList<string> labels)
 		{
+			if (src.Channels() != 3)
+			{
+				throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
+			}
+
 			using Mat resized = ResizePadding(src);
 			using Mat normalized = Normalize(resized);
 
