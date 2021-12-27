@@ -63,7 +63,7 @@ namespace Sdcb.PaddleInference.Native
 			}
 		}
 
-		public unsafe ref struct PdIntArrayWrapper
+		public ref struct PdIntArrayWrapper
 		{
 			public IntPtr ptr;
 
