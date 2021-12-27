@@ -36,6 +36,16 @@ namespace Sdcb.PaddleOCR
 
 		public Mat Run(Mat src)
 		{
+			if (src.Empty())
+			{
+				throw new ArgumentException("src size should not be 0, wrong input picture provided?");
+			}
+
+			if (src.Channels() != 3)
+			{
+				throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
+			}
+
 			using Mat resized = ResizePadding(src);
 			using Mat normalized = Normalize(resized);
 

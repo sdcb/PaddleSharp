@@ -68,7 +68,7 @@ namespace Sdcb.PaddleOCR.KnownModels
             }
         }
 
-        private static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
+        internal static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
             using HttpClient http = new();
 

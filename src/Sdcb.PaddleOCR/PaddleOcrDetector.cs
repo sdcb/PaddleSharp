@@ -179,14 +179,14 @@ namespace Sdcb.PaddleOCR
 			int rows = src.Rows;
 			int cols = src.Cols;
 			float[] result = new float[rows * cols * 3];
-			GCHandle resultHandle;
+			GCHandle resultHandle = default;
 			try
 			{
 				resultHandle = GCHandle.Alloc(result, GCHandleType.Pinned);
 				IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
 				for (int i = 0; i < src.Channels(); ++i)
 				{
-					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols + sizeof(float));
+					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
 					Cv2.ExtractChannel(src, dest, i);
 				}
 			}

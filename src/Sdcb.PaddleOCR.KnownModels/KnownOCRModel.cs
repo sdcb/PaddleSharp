@@ -11,7 +11,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         };
         private static readonly Uri[] EnglishKeyUris = new[]
         {
-            new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/en_dict.txt"),
+            new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/en_dict.txt"), /* Github */
             new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.3/ppocr/utils/en_dict.txt"), /* Gitee */
         };
 

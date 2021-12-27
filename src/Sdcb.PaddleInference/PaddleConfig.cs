@@ -16,13 +16,15 @@ namespace Sdcb.PaddleInference
 			_ptr = PaddleNative.PD_ConfigCreate();
 		}
 
+		public static readonly PaddleConfigDefaults Defaults = new PaddleConfigDefaults();
+
 		public PaddleConfig(IntPtr configPointer)
 		{
 			_ptr = configPointer;
 
-			if (!EnableGLogByDefault)
+			if (!Defaults.EnableGLog)
 			{
-				GLogEnabled = EnableGLogByDefault;
+				GLogEnabled = Defaults.EnableGLog;
 			}
 		}
 
@@ -55,35 +57,35 @@ namespace Sdcb.PaddleInference
 		{
 			var c = new PaddleConfig();
 
-			if (!EnableGLogByDefault)
+			if (!Defaults.EnableGLog)
 			{
-				c.GLogEnabled = EnableGLogByDefault;
+				c.GLogEnabled = Defaults.EnableGLog;
 			}
-			if (EnableMkldnnByDefault)
+			if (Defaults.CpuMathThreadCount != 0)
 			{
-				c.MkldnnEnabled = true;
-				c.MkldnnCacheCapacity = MkldnnDefaultCacheCapacity;
+				c.CpuMathThreadCount = Defaults.CpuMathThreadCount;
 			}
-			if (CpuMathDefaultThreadCount != 0)
+			if (Defaults.MemoryOptimized)
 			{
-				c.CpuMathThreadCount = CpuMathDefaultThreadCount;
+				c.MemoryOptimized = Defaults.MemoryOptimized;
 			}
-			if (MemoryOptimizedByDefault)
-			{
-				c.MemoryOptimized = MemoryOptimizedByDefault;
-			}
-			if (ProfileEnabledByDefault)
+			if (Defaults.ProfileEnabled)
             {
-				c.ProfileEnabled = ProfileEnabledByDefault;
+				c.ProfileEnabled = Defaults.ProfileEnabled;
             }
-			if (UseGpuByDefault)
+			if (Defaults.UseGpu)
             {
-				c.EnableUseGpu(DefaultInitialGpuMemoryMb, DefaultGpuDeviceId);
-				if (EnableGpuMultiStreamByDefault)
+				c.EnableUseGpu(Defaults.InitialGpuMemoryMb, Defaults.GpuDeviceId);
+				if (Defaults.EnableGpuMultiStream)
                 {
-					c.EnableGpuMultiStream = EnableGpuMultiStreamByDefault;
+					c.EnableGpuMultiStream = Defaults.EnableGpuMultiStream;
                 }
             }
+			else if (Defaults.UseMkldnn)
+			{
+				c.MkldnnEnabled = true;
+				c.MkldnnCacheCapacity = Defaults.MkldnnCacheCapacity;
+			}
 
 			return c;
 		}
@@ -95,7 +97,9 @@ namespace Sdcb.PaddleInference
 				throw new PlatformNotSupportedException("Paddle Inference does not support 32bit platform.");
             }
 
-#if NET6_0_OR_GREATER
+#if LINQPAD
+			AddLibPathToEnvironment(@"C:\_\3rd\paddle\dll");
+#elif NET6_0_OR_GREATER
 			SearchPathLoad();
 #elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER
 			AutoLoad();
@@ -158,17 +162,6 @@ namespace Sdcb.PaddleInference
 		}
 
 		public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
-
-		public static bool EnableGLogByDefault = false;
-		public static bool EnableMkldnnByDefault = true;
-		public static int MkldnnDefaultCacheCapacity = 10;
-		public static int CpuMathDefaultThreadCount = 0;
-		public static bool MemoryOptimizedByDefault = true;
-		public static bool ProfileEnabledByDefault = false;
-		public static bool UseGpuByDefault = false;
-		public static int DefaultInitialGpuMemoryMb = 500;
-		public static int DefaultGpuDeviceId = 0;
-		public static bool EnableGpuMultiStreamByDefault = true;
 
 
 		public bool GLogEnabled
@@ -345,5 +338,24 @@ namespace Sdcb.PaddleInference
 				_ptr = IntPtr.Zero;
 			}
 		}
+	}
+
+	public class PaddleConfigDefaults
+    {
+		public bool EnableGLog { get; set; } = false;
+
+		public bool UseMkldnn { get; set; } = true;
+		public int MkldnnCacheCapacity { get; set; } = 10;
+
+		public int CpuMathThreadCount { get; set; } = 0;
+
+		public bool MemoryOptimized { get; set; } = true;
+
+		public bool ProfileEnabled { get; set; } = false;
+
+		public bool UseGpu { get; set; } = false;
+		public int InitialGpuMemoryMb { get; set; } = 500;
+		public int GpuDeviceId { get; set; } = 0;
+		public bool EnableGpuMultiStream { get; set; } = true;
 	}
 }

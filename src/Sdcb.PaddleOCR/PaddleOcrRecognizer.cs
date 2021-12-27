@@ -49,6 +49,11 @@ namespace Sdcb.PaddleOCR
 
 		public PaddleOcrRecognizerResult Run(Mat src)
 		{
+			if (src.Empty())
+			{
+				throw new ArgumentException("src size should not be 0, wrong input picture provided?");
+			}
+
 			if (src.Channels() != 3)
 			{
 				throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
@@ -77,7 +82,7 @@ namespace Sdcb.PaddleOCR
 				int lastIndex = 0;
 				float score = 0;
 
-				GCHandle dataHandle;
+				GCHandle dataHandle = default;
 				try
 				{
 					dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
