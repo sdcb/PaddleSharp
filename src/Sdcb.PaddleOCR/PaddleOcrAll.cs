@@ -52,7 +52,7 @@ namespace Sdcb.PaddleOCR
                 {
                     using Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[rect.BoundingRect()];
                     using Mat cls = Enable180Classification ? Classifier.Run(roi) : roi;
-                    PaddleOcrRecognizerResult result = Recognizer.Run(roi);
+                    PaddleOcrRecognizerResult result = Recognizer.Run(cls);
                     PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
                     //Util.HorizontalRun(true, Image(roi), Image(cls), result.Text, result.Score, rect.Angle, rect.Size.Width > rect.Size.Height).Dump();
                     return region;
