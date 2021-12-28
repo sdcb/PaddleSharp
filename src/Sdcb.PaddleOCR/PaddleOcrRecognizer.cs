@@ -3,7 +3,7 @@ using Sdcb.PaddleInference;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Sdcb.PaddleOCR
@@ -49,6 +49,11 @@ namespace Sdcb.PaddleOCR
 
 		public PaddleOcrRecognizerResult Run(Mat src)
 		{
+			if (src.Empty())
+			{
+				throw new ArgumentException("src size should not be 0, wrong input picture provided?");
+			}
+
 			if (src.Channels() != 3)
 			{
 				throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
@@ -60,7 +65,7 @@ namespace Sdcb.PaddleOCR
 			using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
 			{
 				input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
-				float[] data = ExtractMat(normalized);
+				float[] data = PaddleOcrDetector.ExtractMat(normalized);
 				input.SetData(data);
 			}
 			if (!_p.Run())
@@ -77,39 +82,34 @@ namespace Sdcb.PaddleOCR
 				int lastIndex = 0;
 				float score = 0;
 
-				for (int n = 0; n < shape[1]; ++n)
+				GCHandle dataHandle = default;
+				try
 				{
-					float[] matArray = new float[shape[2]];
-					Array.Copy(data, n * shape[2], matArray, 0, matArray.Length);
-					using Mat mat = new Mat(1, shape[2], MatType.CV_32FC1, matArray);
-					int[] maxIdx = new int[2];
-					mat.MinMaxIdx(out double _, out double maxVal, new int[0], maxIdx);
+					dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
+					IntPtr dataPtr = dataHandle.AddrOfPinnedObject();
+					int len = shape[2];
 
-					if (maxIdx[1] > 0 && (!(n > 0 && maxIdx[1] == lastIndex)))
+					for (int n = 0; n < shape[1]; ++n)
 					{
-						score += (float)maxVal;
-						sb.Append(GetLabelByIndex(maxIdx[1]));
+						using Mat mat = new Mat(1, len, MatType.CV_32FC1, dataPtr + n * len * sizeof(float));
+						int[] maxIdx = new int[2];
+						mat.MinMaxIdx(out double _, out double maxVal, new int[0], maxIdx);
+
+						if (maxIdx[1] > 0 && (!(n > 0 && maxIdx[1] == lastIndex)))
+						{
+							score += (float)maxVal;
+							sb.Append(GetLabelByIndex(maxIdx[1]));
+						}
+						lastIndex = maxIdx[1];
 					}
-					lastIndex = maxIdx[1];
 				}
+				finally
+				{
+					dataHandle.Free();
+				}
+
 				return new(sb.ToString(), score / sb.Length);
 			}
-		}
-
-		private unsafe static float[] ExtractMat(Mat src)
-		{
-			int rows = src.Rows;
-			int cols = src.Cols;
-			float[] result = new float[rows * cols * 3];
-			fixed (float* data = result)
-			{
-				for (int i = 0; i < src.Channels(); ++i)
-				{
-					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, (IntPtr)(data + i * rows * cols));
-					Cv2.ExtractChannel(src, dest, i);
-				}
-			}
-			return result;
 		}
 
 		private static Mat ResizePadding(Mat src)

@@ -28,12 +28,21 @@ namespace Sdcb.PaddleOCR
 			Recognizer = new(recognitionModelDir, labelFilePath);
 		}
 
-		public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier classifier, PaddleOcrRecognizer recognizer, string labelFilePath)
+		public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier classifier, PaddleOcrRecognizer recognizer)
 		{
 			Detector = detector;
 			Classifier = classifier;
 			Recognizer = recognizer;
 		}
+
+		public PaddleOcrAll Clone()
+        {
+			return new PaddleOcrAll(Detector.Clone(), Classifier.Clone(), Recognizer.Clone())
+			{
+				AllowRotateDetection = AllowRotateDetection, 
+				Enable180Classification = Enable180Classification,
+			};
+        }
 
 		public PaddleOcrResult Run(Mat src)
 		{
@@ -45,6 +54,7 @@ namespace Sdcb.PaddleOCR
 					using Mat cls = Enable180Classification ? Classifier.Run(roi) : roi;
 					PaddleOcrRecognizerResult result = Recognizer.Run(roi);
 					PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
+					//Util.HorizontalRun(true, Image(roi), Image(cls), result.Text, result.Score, rect.Angle, rect.Size.Width > rect.Size.Height).Dump();
 					return region;
 				})
 				.ToArray());

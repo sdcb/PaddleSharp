@@ -36,13 +36,23 @@ namespace Sdcb.PaddleOCR
 
 		public Mat Run(Mat src)
 		{
+			if (src.Empty())
+			{
+				throw new ArgumentException("src size should not be 0, wrong input picture provided?");
+			}
+
+			if (src.Channels() != 3)
+			{
+				throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
+			}
+
 			using Mat resized = ResizePadding(src);
 			using Mat normalized = Normalize(resized);
 
 			using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
 			{
 				input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
-				float[] data = ExtractMat(normalized);
+				float[] data = PaddleOcrDetector.ExtractMat(normalized);
 				input.SetData(data);
 			}
 			if (!_p.Run())
@@ -73,22 +83,6 @@ namespace Sdcb.PaddleOCR
 
 				return src;
 			}
-		}
-
-		private unsafe static float[] ExtractMat(Mat src)
-		{
-			int rows = src.Rows;
-			int cols = src.Cols;
-			float[] result = new float[rows * cols * 3];
-			fixed (float* data = result)
-			{
-				for (int i = 0; i < src.Channels(); ++i)
-				{
-					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, (IntPtr)(data + i * rows * cols));
-					Cv2.ExtractChannel(src, dest, i);
-				}
-			}
-			return result;
 		}
 
 		private static (int channel, int height, int width) shape = (3, 48, 192);

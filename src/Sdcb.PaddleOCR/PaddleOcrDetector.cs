@@ -1,8 +1,8 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleInference;
 using System;
-using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleOCR
 {
@@ -174,19 +174,26 @@ namespace Sdcb.PaddleOCR
 				src.Clone();
 		}
 
-        private unsafe static float[] ExtractMat(Mat src)
+        internal static float[] ExtractMat(Mat src)
 		{
 			int rows = src.Rows;
 			int cols = src.Cols;
 			float[] result = new float[rows * cols * 3];
-			fixed (float* data = result)
+			GCHandle resultHandle = default;
+			try
 			{
+				resultHandle = GCHandle.Alloc(result, GCHandleType.Pinned);
+				IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
 				for (int i = 0; i < src.Channels(); ++i)
 				{
-					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, (IntPtr)(data + i * rows * cols));
+					using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
 					Cv2.ExtractChannel(src, dest, i);
 				}
 			}
+			finally
+            {
+				resultHandle.Free();
+            }
 			return result;
 		}
 

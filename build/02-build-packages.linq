@@ -36,5 +36,3 @@ void Build(string project)
 	DotNetRun($@"pack ..\src\{project}\{project}.csproj -p:Version={Version} -c Release -o .\nupkgs".Dump());
 	Refresh();
 }
-
-//string VersionSuffixExpression() => string.IsNullOrEmpty(VersionSuffix) ? "" : $"--version-suffix {VersionSuffix}";
