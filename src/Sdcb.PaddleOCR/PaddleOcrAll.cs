@@ -11,7 +11,7 @@ namespace Sdcb.PaddleOCR
         public PaddleOcrClassifier Classifier { get; }
         public PaddleOcrRecognizer Recognizer { get; }
 
-        public bool Enable180Classification { get; set; } = false;
+        public bool Enable180Classification { get; set; } = true;
         public bool AllowRotateDetection { get; set; } = true;
 
         public PaddleOcrAll(string modelPath, string labelFilePath)
