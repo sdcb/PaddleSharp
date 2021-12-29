@@ -1,9 +1,6 @@
-# PaddleSharp
+# PaddleSharp [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
 💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
-
-QQ group of C#/.NET computer vision technical communicate(C#/.NET计算机视觉技术交流群): **579060605**
-![](./assets/qq.png)
 
 ## NuGet Packages/Docker Images
 
@@ -133,3 +130,6 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
     }
 }
 ```
+
+QQ group of C#/.NET computer vision technical communicate(C#/.NET计算机视觉技术交流群): **579060605**
+![](./assets/qq.png)
