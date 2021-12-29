@@ -2,6 +2,9 @@
 
 💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
 
+QQ group of C#/.NET computer vision technical communicate(C#/.NET计算机视觉技术交流群): **579060605**
+![](./assets/qq.png)
+
 ## NuGet Packages/Docker Images
 
 | NuGet Package                          | Version                                                                                                                                                  | Description                                                |
@@ -13,9 +16,9 @@
 
 **Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1) to development:
 
-| Docker Images                               | Version                                                                                | Description                                                                  |
-| ------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| sdflysha/ubuntu20-dotnet6-paddleocr2.2.1    | [![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)    | PaddleOCR 2.2.1, OpenCV 4.5.3, based on official Ubuntu 20.04 .NET 6 Runtime |
+| Docker Images                               | Version                                                                                                                                                        | Description                                                                  |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| sdflysha/ubuntu20-dotnet6-paddleocr2.2.1    | [![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6-paddleocr2.2.1)       | PaddleOCR 2.2.1, OpenCV 4.5.3, based on official Ubuntu 20.04 .NET 6 Runtime |
 | sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1 | [![Docker](https://img.shields.io/docker/v/sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1)](https://hub.docker.com/r/sdflysha/ubuntu20-dotnet6sdk-paddleocr2.2.1) | PaddleOCR 2.2.1, OpenCV 4.5.3, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 # Usage
