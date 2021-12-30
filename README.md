@@ -1,6 +1,6 @@
 # PaddleSharp [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
-💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
+💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support 14 languages model download on-demand, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
 
 ## NuGet Packages/Docker Images
 
@@ -21,25 +21,17 @@
 # Usage
 
 ## Windows: Detection and Recognition(All)
-1. Pre-condition
-
-Please ensure the [latest Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) was installed in `Windows`(typically it should automatically installed if you have `Visual Studio` installed)
-Otherwise, it will failed with following error(Windows only):
+1. Install NuGet Packages:
 ```
-DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
-```
-
-2. Install NuGet Packages:
-```ps
-dotnet add package Sdcb.PaddleInference
-dotnet add package Sdcb.PaddleInference.runtime.win64.mkl
-dotnet add package Sdcb.PaddleOCR
-dotnet add package Sdcb.PaddleOCR.KnownModels
-dotnet add package OpenCvSharp4
-dotnet add package OpenCvSharp4.runtime.win
+Sdcb.PaddleInference
+Sdcb.PaddleInference.runtime.win64.mkl
+Sdcb.PaddleOCR
+Sdcb.PaddleOCR.KnownModels
+OpenCvSharp4
+OpenCvSharp4.runtime.win
 ```
 
-3. Using following C# code to get result:
+1. Using following C# code to get result:
 ```csharp
 OCRModel model = KnownOCRModel.PPOcrV2;
 await model.EnsureAll();
@@ -131,5 +123,86 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 }
 ```
 
+# Language supports
+
+| Language             | 中文名             | Code                               |
+| -------------------- | ------------------ | ---------------------------------- |
+| Chinese              | 简体中文           | `KnownOCRModel.PPOcrV2`            |
+| Chinese Server       | 简体中文(服务器版) | `KnownOCRModel.PPOcrServerV2`      |
+| English              | 英文               | `KnownOCRModel.EnglishMobileV2`    |
+| Tranditional Chinese | 繁体中文           | `KnownOCRModel.EnglishMobileV2`    |
+| French               | 法文               | `KnownOCRModel.FrenchMobileV2`     |
+| German               | 德文               | `KnownOCRModel.GermanMobileV2`     |
+| Korean               | 韩文               | `KnownOCRModel.KoreanMobileV2`     |
+| Japanese             | 日文               | `KnownOCRModel.JapaneseMobileV2`   |
+| Telugu               | 泰卢固文           | `KnownOCRModel.TeluguMobileV2`     |
+| Kannada              | 卡纳达文           | `KnownOCRModel.KannadaMobileV2`    |
+| Tamil                | 泰米尔文           | `KnownOCRModel.TamilMobileV2`      |
+| Latin                | 拉丁文             | `KnownOCRModel.LatinMobileV2`      |
+| Arabic               | 阿拉伯字母         | `KnownOCRModel.ArabicMobileV2`     |
+| Cyrillic             | 斯拉夫字母         | `KnownOCRModel.CyrillicMobileV2`   |
+| Devanagari           | 梵文字母           | `KnownOCRModel.DevanagariMobileV2` |
+
+Just replace the `KnownOCRModel.PPOcrV2` in demo code with your speicific language in `Code` column above, then you can use the language.
+
+# Technical details
+
+There is 3 steps to do OCR:
+1. Detection - Detect text's position, angle and area (`PaddleOCRDetector`)
+2. Classification - Determin whether text should rotate 180 degreee.
+3. Recognization - Recognize the area into text
+
+# Optimize parameters and performance hints
+## PaddleOcrAll.Enable180Classification
+Default value: `true`
+
+This directly effect the step 2, set to `false` can skip this step, which will unable to detect text from right to left(which should be acceptable because most text direction is from left to right).
+
+Close this option can make the full process about  `~10%` faster.
+
+
+## PaddleOcrAll.AllowRotateDetection
+Default value: `true`
+
+This allows detect any rotated texts. If your subject is 0 degree text (like scaned table or screenshot), you can set this parameter to `false`, which will improve OCR accurancy and little bit performance.
+
+
+## PaddleOcrAll.Detector.MaxSize
+Default value: `2048`
+
+This effect the the max size of step #1, lower this value can improve performance and reduce memory usage, but will also lower the accurancy.
+
+You can also set this value to `null`, in that case, images will not scale-down to detect, performance will drop and memory will high, but should able to get better accurancy.
+
+
+## PaddleConfig.Defaults.UseGpu
+Default value: `false`
+
+Enable GPU support can significantly improve the throughput and lower the CPU usage.
+
+However it's pretty complexed to configure it properly:
+1. Do **not** install the package: `Sdcb.PaddleInference.runtime.win64.mkl`
+2. Instead, download the latest GPU support C-library package from [paddle website](https://paddle-inference.readthedocs.io/en/latest/user_guides/download_lib.html#id3)
+3. Extract all dynamic libraries(.dll/.so) from package to one specific folder, then add this folder path to `PATH` or `LD_LIBRARY_PATH`(linux) environment variable.
+4. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+5. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+6. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+
+After these steps completed, you can try specify `PaddleConfig.Defaults.UseGpu = true` in begin of your code and then enjoy😁.
+
+
+# FAQ
+## Why my code runs good in my windows machine, but DllNotFoundException in other machine:
+Please ensure the [latest Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) was installed in `Windows`(typically it should automatically installed if you have `Visual Studio` installed)
+Otherwise, it will failed with following error(Windows only):
+```
+DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
+```
+
+## How can I improve performance?
+Please review the `Technical details` section and read the `Optimize parameters and performance hints` section.
+
+
+# Contact
 QQ group of C#/.NET computer vision technical communicate(C#/.NET计算机视觉技术交流群): **579060605**
 ![](./assets/qq.png)
