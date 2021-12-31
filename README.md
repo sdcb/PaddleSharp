@@ -180,13 +180,13 @@ Default value: `false`
 
 Enable GPU support can significantly improve the throughput and lower the CPU usage.
 
-However it's pretty complexed to configure it properly:
-1. Do **not** install the package: `Sdcb.PaddleInference.runtime.win64.mkl`
-2. Instead, download the latest GPU support C-library package from [paddle website](https://paddle-inference.readthedocs.io/en/latest/user_guides/download_lib.html#id3)
-3. Extract all dynamic libraries(.dll/.so) from package to one specific folder, then add this folder path to `PATH` or `LD_LIBRARY_PATH`(linux) environment variable.
-4. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
-5. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
-6. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+Steps to use GPU in windows:
+1. (for windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both.
+2. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+3. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+4. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
+
+If you're using Linux, you need to compile your own OpenCvSharp4 environment following the [docker build scripts](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile) follow the CUDA/cuDNN/TensorRT configuration tasks.
 
 After these steps completed, you can try specify `PaddleConfig.Defaults.UseGpu = true` in begin of your code and then enjoy😁.
 
