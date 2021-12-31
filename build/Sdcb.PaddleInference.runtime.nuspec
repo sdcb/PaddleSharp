@@ -3,17 +3,17 @@
     <metadata>
         <id>Sdcb.PaddleInference.runtime.{titleRid}</id>
         <version>2.2.1</version>
-        <title>PaddleInference native bindings for {rid}</title>
+        <title>PaddleInference native bindings for {titleRid}</title>
         <authors>sdcb</authors>
         <license type="expression">Apache-2.0</license>
         <projectUrl>https://github.com/sdcb/PaddleSharp</projectUrl>
-        <iconUrl>https://avatars.githubusercontent.com/u/23534030?s=200</iconUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Native binding for paddle_inference_c to work on {rid}.</description>
-        <summary>Native binding for paddle_inference_c to work on {rid}.</summary>
+        <icon>images\icon.jpg</icon>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>Native binding for paddle_inference_c to work on {titleRid}.</description>
+        <summary>Native binding for paddle_inference_c to work on {titleRid}.</summary>
         <releaseNotes></releaseNotes>
         <copyright>Copyright 2021</copyright>
-        <tags>AI Paddle OCR PaddleOCR</tags>
+        <tags>AI Paddle OCR PaddleOCR Sdcb linqpad-samples</tags>
         <repository type="git" url="https://github.com/sdcb/PaddleSharp.git" />
         <dependencies>
             <group targetFramework="net461"></group>
@@ -25,5 +25,6 @@
         </frameworkAssemblies>
     </metadata>
     <files>
+        <file src="..\icon.jpg" target="images\" />
     </files>
 </package>

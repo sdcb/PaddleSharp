@@ -33,6 +33,6 @@ object BuildTable()
 void Publish(string path)
 {
 	string nugetApiUrl = "nuget.org";
-	NuGetRun($@"push {path} -Source {nugetApiUrl}");
+	NuGetRun($@"push {path} -Source {nugetApiUrl}".Dump());
 	Refresh();
 }

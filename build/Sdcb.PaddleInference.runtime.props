@@ -2,6 +2,6 @@
 	<PropertyGroup>
 		<PaddleInferenceDlls>$(MSBuildThisFileDirectory)..\..\runtimes</PaddleInferenceDlls>
 	</PropertyGroup>
-	<ItemGroup Condition="!$(TargetFramework.Contains('netstandard')) And !$(TargetFramework.Contains('netcoreapp')) And !$(TargetFramework.Contains('net5')) And !$(TargetFramework.Contains('net6'))">
+	<ItemGroup Condition="$(TargetFrameworkVersion.StartsWith('v4')) Or $(TargetFramework.StartsWith('net4'))">
 	</ItemGroup>
 </Project>

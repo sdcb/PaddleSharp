@@ -6,3 +6,4 @@
 /**/bin
 /build/linux-x64
 /build/win-64
+/build/win64.cuda11_cudnn8_tr7

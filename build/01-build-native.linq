@@ -14,7 +14,10 @@ async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
 	//await new LinuxNuGetSource().Process(QueryCancelToken);
-	await new WindowsNugetSource().Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_mkl/paddle_inference_c.zip"))
+	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr7", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.0_cudnn8/paddle_inference_c.zip"))
+		.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)
@@ -37,7 +40,7 @@ static string BuildNuspec(string[] libs, string rid, string titleRid)
 				new XElement(XName.Get("Link", ns), @$"dll\{platform}\{x}"),
 				new XElement(XName.Get("CopyToOutputDirectory", ns), "PreserveNewest")))
 				);
-		props.Save(@$"./{rid}/Sdcb.PaddleInference.runtime.{titleRid}.props");
+		props.Save(@$"./{titleRid}/Sdcb.PaddleInference.runtime.{titleRid}.props");
 	}
 
 	// nuspec
@@ -54,20 +57,20 @@ static string BuildNuspec(string[] libs, string rid, string titleRid)
 		XElement files = nuspec.XPathSelectElement("/p:package/p:files", nsr);
 		files.Add(libs.Select(x => new XElement(
 			XName.Get("file", ns),
-			new XAttribute("src", x),
+			new XAttribute("src", x.Replace($@"{titleRid}\", "")),
 			new XAttribute("target", @$"runtimes\{rid}\native"))));
 		files.Add(new[] { "net", "netstandard", "netcoreapp" }.Select(x => new XElement(
 			XName.Get("file", ns),
 			new XAttribute("src", $"Sdcb.PaddleInference.runtime.{titleRid}.props"),
 			new XAttribute("target", @$"build\{x}\Sdcb.PaddleInference.runtime.{titleRid}.props"))));
 
-		string destinationFile = @$"./{rid}/{rid}.nuspec";
+		string destinationFile = @$"./{titleRid}/{rid}.nuspec";
 		nuspec.Save(destinationFile);
 		return destinationFile;
 	}
 }
 
-public record WindowsNugetSource() : NupkgBuildSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_mkl/paddle_inference_c.zip"))
+public record WindowsNugetSource(string rid, string titleRid, string libName, Uri uri) : NupkgBuildSource(rid, titleRid, libName, uri)
 {
 	protected override async Task Decompress(string localZipFile, CancellationToken cancellationToken)
 	{
@@ -150,7 +153,7 @@ public record LinuxNuGetSource() : NupkgBuildSource("linux-x64", "linux64.mkl", 
 
 public abstract record NupkgBuildSource(string rid, string titleRid, string libName, Uri uri)
 {
-	public string CLibFilePath => $@"./{rid}/bin/{libName}";
+	public string CLibFilePath => $@"./{titleRid}/bin/{libName}";
 	public string PlatformDir => Path.GetDirectoryName(CLibFilePath);
 	public string NuGetPath => $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{Version}.nupkg";
 
@@ -176,21 +179,24 @@ public abstract record NupkgBuildSource(string rid, string titleRid, string libN
 
 	public async Task Process(CancellationToken cancellationToken)
 	{
-		Console.WriteLine($"processing {rid}...");
+		Console.WriteLine($"processing {titleRid}...");
 		if (!File.Exists(CLibFilePath))
 		{
 			string localZipFile = await EnsurePackage(cancellationToken);
 			await Decompress(localZipFile, cancellationToken);
 			File.Delete(localZipFile);
 		}
-		string[] libs = GetDlls();		
+		string[] libs = GetDlls();
 		
 		string nugetExePath = await EnsureNugetExe(cancellationToken);
 
 		string nuspecPath = BuildNuspec(libs, rid, titleRid);
 		if (!File.Exists(NuGetPath))
 		{
+			string iconDestPath = @$".\{titleRid}\icon.jpg";
+			if (!File.Exists(iconDestPath)) File.Copy(@$".\icon.jpg", iconDestPath);
 			NuGetRun($@"pack {nuspecPath} -Version {Version} -OutputDirectory .\nupkgs".Dump());
+			File.Delete(@$".\{titleRid}\icon.jpg");
 		}
 		else
 		{
