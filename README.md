@@ -1,6 +1,6 @@
 # PaddleSharp [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
-💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support 14 languages model download on-demand, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
+💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support 14 OCR languages model download on-demand, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
 
 ## NuGet Packages/Docker Images
 
