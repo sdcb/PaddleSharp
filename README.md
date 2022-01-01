@@ -45,7 +45,11 @@ using (HttpClient http = new HttpClient())
     sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
 }
 
-using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
+using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
+{
+    AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
+    Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+})
 {
     // Load local file by following code:
     // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
