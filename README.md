@@ -123,6 +123,7 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
     using (Mat visualized = PaddleOcrDetector.Visualize(src, rects, Scalar.Red, thickness: 2))
     {
         string outputFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "output.jpg");
+        Console.WriteLine("OutputFile: " + outputFile);
         visualized.ImWrite(outputFile);
     }
 }
