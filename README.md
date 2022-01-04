@@ -1,6 +1,6 @@
 # PaddleSharp [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
-💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support 14 languages model download on-demand, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
+💗.NET Wrapper for `PaddleInference` C API, include `PaddleOCR`, support 14 OCR languages model download on-demand, support **Windows**(x64) and **Linux**(Ubuntu-20.04 x64).
 
 ## NuGet Packages/Docker Images
 
@@ -45,7 +45,11 @@ using (HttpClient http = new HttpClient())
     sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
 }
 
-using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
+using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
+{
+    AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
+    Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+})
 {
     // Load local file by following code:
     // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
@@ -119,6 +123,7 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
     using (Mat visualized = PaddleOcrDetector.Visualize(src, rects, Scalar.Red, thickness: 2))
     {
         string outputFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "output.jpg");
+        Console.WriteLine("OutputFile: " + outputFile);
         visualized.ImWrite(outputFile);
     }
 }
