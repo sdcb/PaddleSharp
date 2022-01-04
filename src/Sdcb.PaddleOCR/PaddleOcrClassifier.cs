@@ -34,16 +34,16 @@ namespace Sdcb.PaddleOCR
             _p.Dispose();
         }
 
-        public Mat Run(Mat src)
+        public bool ShouldRotate180(Mat src)
         {
             if (src.Empty())
             {
                 throw new ArgumentException("src size should not be 0, wrong input picture provided?");
             }
 
-            if (src.Channels() != 3)
+            if (src.Channels() switch { 3 or 1 => true, _ => false })
             {
-                throw new NotSupportedException($"{nameof(src)} channel must be 3, provided {src.Channels()}.");
+                throw new NotSupportedException($"{nameof(src)} channel must be 3 or 1, provided {src.Channels()}.");
             }
 
             using Mat resized = ResizePadding(src);
@@ -74,13 +74,30 @@ namespace Sdcb.PaddleOCR
                     }
                 }
 
-                if (label % 2 == 1 && score > RotateThreshold)
-                {
-                    Mat dest = new();
-                    Cv2.Rotate(src, dest, RotateFlags.Rotate180);
-                    return dest;
-                }
+                return label % 2 == 1 && score > RotateThreshold;
+            }
+        }
 
+        public Mat Run(Mat src)
+        {
+            if (src.Empty())
+            {
+                throw new ArgumentException("src size should not be 0, wrong input picture provided?");
+            }
+
+            if (src.Channels() switch { 3 or 1 => true, _ => false })
+            {
+                throw new NotSupportedException($"{nameof(src)} channel must be 3 or 1, provided {src.Channels()}.");
+            }
+
+            if (ShouldRotate180(src))
+            {
+                Mat dest = new();
+                Cv2.Rotate(src, dest, RotateFlags.Rotate180);
+                return dest;
+            }
+            else
+            {
                 return src;
             }
         }
