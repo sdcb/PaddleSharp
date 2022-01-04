@@ -29,6 +29,7 @@ namespace Sdcb.PaddleOCR.KnownModels
             ClassifierModelUris = classifierModelUris;
             RecognitionModelUris = recognitionModelUris;
             KeyUris = keyUris;
+            RootDirectory = Path.Combine(GlobalModelDirectory, Name);
         }
 
         public OCRModel(string name, Uri detectionModelUri, Uri classifierModelUri, Uri recognitionModelUri, Uri[] keyUris)
@@ -41,7 +42,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         public Uri[] ClassifierModelUris { get; }
         public Uri[] RecognitionModelUris { get; }
         public Uri[] KeyUris { get; }
-        public string RootDirectory => Path.Combine(GlobalModelDirectory, Name);
+        public string RootDirectory { get; }
 
         private async Task EnsureModelFile(Uri[] uris, string prefix, CancellationToken cancellationToken = default)
         {
@@ -104,7 +105,7 @@ namespace Sdcb.PaddleOCR.KnownModels
             throw new Exception($"Failed to download {localFile} from all uris: {string.Join(", ", uris.Select(x => x.ToString()))}");
         }
 
-        public static readonly string GlobalModelDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "paddleocr-models");
+        public static string GlobalModelDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "paddleocr-models");
 
         public string DetectionDirectory => Path.Combine(RootDirectory, "det");
         public string ClassifierDirectory => Path.Combine(RootDirectory, "cls");
