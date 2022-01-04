@@ -1,10 +1,10 @@
-<Query Kind="Program">
+<Query Kind="Statements">
   <NuGetReference>OpenCvSharp4</NuGetReference>
   <NuGetReference>OpenCvSharp4.runtime.win</NuGetReference>
-  <NuGetReference>Sdcb.PaddleInference</NuGetReference>
+  <NuGetReference Prerelease="true">Sdcb.PaddleInference</NuGetReference>
   <NuGetReference>Sdcb.PaddleInference.runtime.win64.mkl</NuGetReference>
-  <NuGetReference>Sdcb.PaddleOCR</NuGetReference>
-  <NuGetReference>Sdcb.PaddleOCR.KnownModels</NuGetReference>
+  <NuGetReference Prerelease="true">Sdcb.PaddleOCR</NuGetReference>
+  <NuGetReference Prerelease="true">Sdcb.PaddleOCR.KnownModels</NuGetReference>
   <Namespace>OpenCvSharp</Namespace>
   <Namespace>Sdcb.PaddleInference</Namespace>
   <Namespace>Sdcb.PaddleOCR</Namespace>
@@ -14,22 +14,32 @@
   <Namespace>System.Windows.Forms</Namespace>
 </Query>
 
-async Task Main()
-{
-	await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
-	using PaddleOcrAll all = new (KnownOCRModel.PPOcrV2.RootDirectory, KnownOCRModel.PPOcrV2.KeyPath);
-	all.Dump();
-	using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "xdr5480.jpg"));
+IOCRModel model = await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
+//PaddleConfig.EnableMkldnnByDefault = false;
+//PaddleConfig.UseGpuByDefault = true;
+PaddleConfig.Defaults.UseGpu = false;
+PaddleConfig.Defaults.UseMkldnn = true;
+	
+
+using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "xdr5480.jpg"));
 	//using Mat src = Cv2.ImDecode(GetClipboardImage(), ImreadModes.Color);
-	string result = null;
-	var sw = Stopwatch.StartNew();
-	for (int i = 0; i < 10; ++i)
-	{
-		result = all.Run(src).Text;
-	}
-	sw.ElapsedMilliseconds.Dump("elapsed");
-	Console.WriteLine(result);
-}
+
+
+using PaddleOcrAll all = new(model.DetectionDirectory, model.ClassifierDirectory, model.RecognitionDirectory, model.KeyPath)
+				   {
+					   Enable180Classification = true,
+					   AllowRotateDetection = true,
+				   };
+
+using Mat scaled = src.Resize(Size.Zero, 1, 1);
+var sw = Stopwatch.StartNew();
+PaddleOcrResult result = all.Run(scaled);
+Array.Reverse(result.Regions);
+sw.ElapsedMilliseconds.Dump();
+
+Util.HorizontalRun(false, Image(PaddleOcrDetector.Visualize(scaled, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2)), result.Regions
+	.OrderBy(x => x.Rect.Center.Y)
+	.Select(x => x.Text)).Dump();
 
 byte[] GetClipboardImage()
 {
@@ -37,3 +47,5 @@ byte[] GetClipboardImage()
 	Clipboard.GetImage().Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
 	return ms.ToArray();
 }
+
+object Image(Mat src) => Util.Image(src.ToBytes(), Util.ScaleMode.Unscaled);
