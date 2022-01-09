@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Sdcb.PaddleInference
 {
@@ -166,7 +167,7 @@ namespace Sdcb.PaddleInference
 
         public bool GLogEnabled
         {
-            get => PaddleNative.PD_ConfigGlogInfoDisabled() == 0;
+            get => PaddleNative.PD_ConfigGlogInfoDisabled(_ptr) == 0;
             set
             {
                 if (!value)
@@ -183,17 +184,7 @@ namespace Sdcb.PaddleInference
         public bool MemoryOptimized
         {
             get => PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0;
-            set
-            {
-                if (value)
-                {
-                    PaddleNative.PD_ConfigEnableMemoryOptim(_ptr);
-                }
-                else if (PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0)
-                {
-                    Console.WriteLine($"Warn: Memory optimized cannot disabled after enabled.");
-                }
-            }
+            set => PaddleNative.PD_ConfigEnableMemoryOptim(_ptr, (sbyte)(value ? 1 : 0));
         }
 
         public bool IsMemoryModel => PaddleNative.PD_ConfigModelFromMemory(_ptr) != 0;
@@ -289,13 +280,19 @@ namespace Sdcb.PaddleInference
             PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId);
         }
 
-        public void SetModel(string programPath, string paramsPath)
+        public unsafe void SetModel(string programPath, string paramsPath)
         {
             if (programPath == null) throw new ArgumentNullException(nameof(programPath));
             if (paramsPath == null) throw new ArgumentNullException(nameof(paramsPath));
             if (!File.Exists(programPath)) throw new FileNotFoundException("programPath not found", programPath);
             if (!File.Exists(paramsPath)) throw new FileNotFoundException("paramsPath not found", paramsPath);
-            PaddleNative.PD_ConfigSetModel(_ptr, programPath, paramsPath);
+            byte[] programBytes = Encoding.UTF8.GetBytes(programPath);
+            byte[] paramsBytes = Encoding.UTF8.GetBytes(paramsPath);
+            fixed (byte* programPtr = programBytes)
+            fixed (byte* paramsPtr = paramsBytes)
+            {
+                PaddleNative.PD_ConfigSetModel(_ptr, (IntPtr)programPtr, (IntPtr)paramsPtr);
+            }
         }
 
         public string? ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).UTF8PtrToString();

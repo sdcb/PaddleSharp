@@ -2,7 +2,7 @@
   <NuGetReference>OpenCvSharp4</NuGetReference>
   <NuGetReference>OpenCvSharp4.runtime.win</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleInference</NuGetReference>
-  <NuGetReference>Sdcb.PaddleInference.runtime.win64.mkl</NuGetReference>
+  <NuGetReference>Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleOCR</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleOCR.KnownModels</NuGetReference>
   <Namespace>OpenCvSharp</Namespace>
@@ -15,27 +15,23 @@
 </Query>
 
 IOCRModel model = await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
-//PaddleConfig.EnableMkldnnByDefault = false;
-//PaddleConfig.UseGpuByDefault = true;
-PaddleConfig.Defaults.UseGpu = false;
+PaddleConfig.Defaults.UseGpu = true;
 PaddleConfig.Defaults.UseMkldnn = true;
 	
 
 using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "xdr5480.jpg"));
-	//using Mat src = Cv2.ImDecode(GetClipboardImage(), ImreadModes.Color);
-
+//using Mat src = Cv2.ImDecode(GetClipboardImage(), ImreadModes.Color);
 
 using PaddleOcrAll all = new(model.DetectionDirectory, model.ClassifierDirectory, model.RecognitionDirectory, model.KeyPath)
-				   {
-					   Enable180Classification = true,
-					   AllowRotateDetection = true,
-				   };
+{
+   Enable180Classification = true,
+   AllowRotateDetection = true,
+};
 
 using Mat scaled = src.Resize(Size.Zero, 1, 1);
 var sw = Stopwatch.StartNew();
 PaddleOcrResult result = all.Run(scaled);
-Array.Reverse(result.Regions);
-sw.ElapsedMilliseconds.Dump();
+sw.ElapsedMilliseconds.Dump("elapsed");
 
 Util.HorizontalRun(false, Image(PaddleOcrDetector.Visualize(scaled, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2)), result.Regions
 	.OrderBy(x => x.Rect.Center.Y)
