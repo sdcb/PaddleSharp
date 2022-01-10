@@ -54,7 +54,7 @@ namespace Sdcb.PaddleInference
             return c;
         }
 
-        private static PaddleConfig CreateDefault()
+        public static PaddleConfig CreateDefault()
         {
             var c = new PaddleConfig();
 
@@ -99,7 +99,7 @@ namespace Sdcb.PaddleInference
             }
 
 #if LINQPAD
-			AddLibPathToEnvironment(@"C:\_\3rd\paddle\dll");
+			SearchPathLoad();
 #elif NET6_0_OR_GREATER
             SearchPathLoad();
 #elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER
@@ -114,10 +114,10 @@ namespace Sdcb.PaddleInference
             string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
                 .Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
                 .FileName)!;
-            AddLibPathToEnvironment(mkldnnPath);
+            PaddleNative.AddLibPathToEnvironment(mkldnnPath);
         }
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || LINQPAD
         private static void SearchPathLoad()
         {
             string? dirs = (string?)AppContext.GetData("NATIVE_DLL_SEARCH_DIRECTORIES");
@@ -135,11 +135,13 @@ namespace Sdcb.PaddleInference
                         .FirstOrDefault(dir => File.Exists(Path.Combine(dir, libName)));
                     if (libPath != null)
                     {
-                        AddLibPathToEnvironment(libPath);
+                        PaddleNative.AddLibPathToEnvironment(libPath);
                     }
                     else
                     {
+#if !LINQPAD
                         Console.WriteLine($"Warn: {libName} not found from {dirs}, fallback to use auto load.");
+#endif
                         AutoLoad();
                     }
                 }
@@ -150,17 +152,6 @@ namespace Sdcb.PaddleInference
             }
         }
 #endif
-
-        private static void AddLibPathToEnvironment(string libPath)
-        {
-#if NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER
-            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-#else
-			const bool isWindows = true;
-#endif
-            string envId = isWindows ? "PATH" : "LD_LIBRARY_PATH";
-            Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + libPath);
-        }
 
         public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
 

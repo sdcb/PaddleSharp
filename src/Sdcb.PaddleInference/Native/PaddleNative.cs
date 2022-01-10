@@ -5,6 +5,17 @@ namespace Sdcb.PaddleInference.Native
 {
     public class PaddleNative
     {
+        internal static void AddLibPathToEnvironment(string libPath)
+        {
+#if NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
+			const bool isWindows = true;
+#endif
+            string envId = isWindows ? "PATH" : "LD_LIBRARY_PATH";
+            Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + libPath);
+        }
+
         private unsafe struct PdStringArray
         {
 #pragma warning disable CS0649
@@ -80,11 +91,11 @@ namespace Sdcb.PaddleInference.Native
         }
 
         public const string PaddleInferenceCLib =
-#if NET461_OR_GREATER
-			@"dll\x64\paddle_inference_c.dll";
-#elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER
-            @"paddle_inference_c";
-#endif
+            #if NET461_OR_GREATER
+                @"dll\x64\paddle_inference_c.dll";
+            #elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER || LINQPAD
+                @"paddle_inference_c";
+            #endif
 
 
         /// <summary>Create a paddle config</summary>
