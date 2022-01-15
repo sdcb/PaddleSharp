@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <LangVersion>10</LangVersion>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Sdcb;AI;Paddle;OCR;PaddleOCR</PackageTags>
+    <PackageTags>Sdcb;AI;Paddle;PaddleDetection;yolo;PicoDet;</PackageTags>
     <VersionPrefix>2.2.1</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
-    <Description>Awesome multilingual OCR toolkits based on PaddlePaddle (practical ultra lightweight OCR system, support 80+ languages recognition)</Description>
+    <Description>Object Detection toolkit based on PaddlePaddle. It supports object detection, instance segmentation, multiple object tracking and real-time multi-person keypoint detection.</Description>
     <Authors>sdcb</Authors>
   </PropertyGroup>
 
@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.5.5.20211231" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
   <ItemGroup>
