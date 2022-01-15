@@ -31,19 +31,37 @@ namespace Sdcb.PaddleInference
 
         public static PaddleConfig FromModelDir(string modelDir)
         {
-            PaddleConfig c = CreateDefault();
-            c.SetModel(
-                Path.Combine(modelDir, "inference.pdmodel"),
-                Path.Combine(modelDir, "inference.pdiparams"));
-            return c;
+            if (!Directory.Exists(modelDir))
+            {
+                throw new DirectoryNotFoundException(modelDir);
+            }
+
+            string[] allowedPrefixes = new[]
+            {
+                "inference", 
+                "model", 
+            };
+
+            foreach (string prefix in allowedPrefixes)
+            {
+                string pdmodel = Path.Combine(modelDir, prefix + ".pdmodel");
+                string pdiparams = Path.Combine(modelDir, prefix + ".pdiparams");
+
+                if (File.Exists(pdmodel) && File.Exists(pdiparams))
+                {
+                    PaddleConfig c = CreateDefault();
+                    c.SetModel(pdmodel, pdiparams);
+                    return c;
+                }
+            }
+
+            throw new FileNotFoundException($"Model file not find in model dir: {modelDir}");
         }
 
         public static PaddleConfig FromModelFiles(string programPath, string paramsPath)
         {
             PaddleConfig c = CreateDefault();
-            c.SetModel(
-                programPath,
-                paramsPath);
+            c.SetModel(programPath, paramsPath);
             return c;
         }
 
