@@ -306,6 +306,62 @@ namespace Sdcb.PaddleDetection
 
 			return dest.Select(x => x / denominator).ToArray();
 		}
-	}
 
+		public static Mat Visualize(Mat src, IEnumerable<DetectionResult> results, int labelCount)
+		{
+			Mat dest = src.Clone();
+			Scalar[] colors = GenerateColorMapToScalar().Take(labelCount).ToArray();
+			foreach (DetectionResult r in results)
+			{
+				if (r.Confidence < 0.5f) continue;
+				Scalar roiColor = colors[r.LabelId];
+
+				if (r.IsRBox)
+				{
+					for (int k = 0; k < 4; ++k)
+					{
+						Point pt1 = new(r.RectArray[(k * 2) % 8], r.RectArray[(k * 2 + 1) % 8]);
+						Point pt2 = new(r.RectArray[(k * 2 + 2) % 8], r.RectArray[(k * 2 + 3) % 8]);
+						dest.Line(pt1, pt2, roiColor, thickness: 2);
+					}
+				}
+				else
+				{
+					dest.Rectangle(r.Rect, roiColor, thickness: 2);
+				}
+
+				string text = $"{r.LabelName}:{r.Confidence:F2}";
+				HersheyFonts fontFace = HersheyFonts.HersheyComplexSmall;
+				double fontScale = 0.8;
+				int thinkness = 1;
+				Size textSize = Cv2.GetTextSize(text, fontFace, fontScale, thinkness, out int baseLine);
+
+				Point topLeft = new(r.RectArray[0], r.RectArray[1]);
+				Rect textBack = new(topLeft.X, topLeft.Y - textSize.Height, textSize.Width, textSize.Height);
+				dest.Rectangle(textBack, roiColor, thickness: -1);
+				dest.PutText(text, topLeft, fontFace, fontScale, Scalar.White, thinkness);
+			}
+			return dest;
+
+			static IEnumerable<Scalar> GenerateColorMapToScalar()
+			{
+				for (int i = 0; ; ++i)
+				{
+					int j = 0;
+					int lab = i;
+					Vec3i r = new();
+					while (lab != 0)
+					{
+						r.Item0 |= (((lab >> 0) & 1) << (7 - j));
+						r.Item1 |= (((lab >> 1) & 1) << (7 - j));
+						r.Item2 |= (((lab >> 2) & 1) << (7 - j));
+						++j;
+						lab >>= 3;
+					}
+
+					yield return new Scalar(r.Item0, r.Item1, r.Item2);
+				}
+			}
+		}
+	}
 }
