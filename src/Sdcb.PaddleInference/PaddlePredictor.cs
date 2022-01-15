@@ -17,7 +17,7 @@ namespace Sdcb.PaddleInference
             _ptr = predictorPointer;
         }
 
-        public PaddlePredictor Clone() => new PaddlePredictor(PaddleNative.PD_PredictorClone(_ptr));
+        public PaddlePredictor Clone() => new(PaddleNative.PD_PredictorClone(_ptr));
 
         public string[] InputNames
         {

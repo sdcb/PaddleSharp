@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CA1401: P/Invokes 应该是不可见的
+dotnet_diagnostic.CA1401.severity = silent
+
+# IDE0063: 使用简单的 "using" 语句
+dotnet_diagnostic.IDE0063.severity = none

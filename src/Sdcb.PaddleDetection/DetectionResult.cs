@@ -13,7 +13,7 @@ namespace Sdcb.PaddleDetection
 		public bool IsRBox => RectArray.Length == 8;
 		public Rect Rect => !IsRBox ? Rect.FromLTRB(RectArray[0], RectArray[1], RectArray[2], RectArray[3]) : throw new NotSupportedException();
 
-		public DetectionResult WithRect(Rect rect) => new DetectionResult(rect, LabelId, LabelName, Confidence);
+		public DetectionResult WithRect(Rect rect) => new (rect, LabelId, LabelName, Confidence);
 
 		public DetectionResult(int[] rectArray, int labelId, string labelName, float confidence)
 		{

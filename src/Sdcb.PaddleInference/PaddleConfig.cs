@@ -17,7 +17,7 @@ namespace Sdcb.PaddleInference
             _ptr = PaddleNative.PD_ConfigCreate();
         }
 
-        public static readonly PaddleConfigDefaults Defaults = new PaddleConfigDefaults();
+        public static readonly PaddleConfigDefaults Defaults = new();
 
         public PaddleConfig(IntPtr configPointer)
         {

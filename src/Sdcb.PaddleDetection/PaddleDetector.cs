@@ -135,7 +135,7 @@ namespace Sdcb.PaddleDetection
 					float[] outputData = (float[])outputs[0].Data;
 					if (isRbox)
 					{
-						int classId = (int)MathF.Round(outputData[0 + j * 10]);
+						int classId = (int)MathUtil.Round(outputData[0 + j * 10]);
 						float score = outputData[1 + j * 10];
 						int x1 = (int)(outputData[2 + j * 10] * r.Width);
 						int y1 = (int)(outputData[3 + j * 10] * r.Height);
@@ -149,7 +149,7 @@ namespace Sdcb.PaddleDetection
 					}
 					else
 					{
-						int classId = (int)MathF.Round(outputData[0 + j * 6]);
+						int classId = (int)MathUtil.Round(outputData[0 + j * 6]);
 						float score = outputData[1 + j * 6];
 						int xmin = (int)(outputData[2 + j * 6] * r.Width);
 						int ymin = (int)(outputData[3 + j * 6] * r.Height);
@@ -214,8 +214,8 @@ namespace Sdcb.PaddleDetection
 			for (int i = 0; i < fpnStride.Length; ++i)
 			{
 				Size featureSize = new(
-					(int)MathF.Ceiling(1.0f * inputSize.Width / fpnStride[i]),
-					(int)MathF.Ceiling(1.0f * inputSize.Height / fpnStride[i]));
+					(int)MathUtil.Ceiling(1.0f * inputSize.Width / fpnStride[i]),
+					(int)MathUtil.Ceiling(1.0f * inputSize.Height / fpnStride[i]));
 
 				for (int f = 0; f < featureSize.Width * featureSize.Height; ++f)
 				{
@@ -300,7 +300,7 @@ namespace Sdcb.PaddleDetection
 			float denominator = 0;
 			for (int i = 0; i < src.Length; ++i)
 			{
-				dest[i] = MathF.Exp(src[i] - alpha);
+				dest[i] = MathUtil.Exp(src[i] - alpha);
 				denominator += dest[i];
 			}
 
@@ -334,7 +334,7 @@ namespace Sdcb.PaddleDetection
 				HersheyFonts fontFace = HersheyFonts.HersheyComplexSmall;
 				double fontScale = 0.8;
 				int thinkness = 1;
-				Size textSize = Cv2.GetTextSize(text, fontFace, fontScale, thinkness, out int baseLine);
+				Size textSize = Cv2.GetTextSize(text, fontFace, fontScale, thinkness, out int _);
 
 				Point topLeft = new(r.RectArray[0], r.RectArray[1]);
 				Rect textBack = new(topLeft.X, topLeft.Y - textSize.Height, textSize.Width, textSize.Height);

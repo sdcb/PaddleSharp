@@ -96,8 +96,7 @@ namespace Sdcb.PaddleInference.Native
                 @"dll\x64\paddle_inference_c.dll";
             #elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER || LINQPAD
                 @"paddle_inference_c";
-            #endif
-
+#endif
 
         /// <summary>Create a paddle config</summary>
         /// <returns>new config.</returns>

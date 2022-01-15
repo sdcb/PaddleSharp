@@ -7,8 +7,8 @@ namespace Sdcb.PaddleDetection.Preprocesses
 {
     internal class Preprocessor
 	{
-		private Dictionary<string, PreprocessOperation> Operations = new();
-		private InitializeOperation InitializeOperation;
+		private readonly Dictionary<string, PreprocessOperation> Operations = new();
+		private readonly InitializeOperation InitializeOperation;
 
 		public IEnumerable<PreprocessOperation> GetOperations()
 		{

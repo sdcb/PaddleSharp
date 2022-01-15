@@ -20,7 +20,7 @@ namespace Sdcb.PaddleDetection.Preprocesses
 				IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
 				for (int i = 0; i < channels; ++i)
 				{
-					using Mat cmat = new Mat(
+					using Mat cmat = new(
 						src.Height, src.Width,
 						MatType.CV_32FC1,
 						resultPtr + i * size.Width * size.Height * sizeof(float));
