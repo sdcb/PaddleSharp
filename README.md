@@ -4,7 +4,7 @@
 
 [PaddleOCR](./docs/ocr.md) support 14 OCR languages model download on-demand, allow rotated text angle detection, 180 degree text detection.
 
-[PaddleDetection](./docs/detection.md) support normal detection model and Yolo model.
+[PaddleDetection](./docs/detection.md) support PPYolo detection model and PicoDet model.
 
 ## NuGet Packages/Docker Images
 
