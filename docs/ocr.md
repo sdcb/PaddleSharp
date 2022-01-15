@@ -2,47 +2,47 @@
 
 ## Windows: Detection and Recognition(All)
 1. Install NuGet Packages:
-```
-Sdcb.PaddleInference
-Sdcb.PaddleInference.runtime.win64.mkl
-Sdcb.PaddleOCR
-Sdcb.PaddleOCR.KnownModels
-OpenCvSharp4
-OpenCvSharp4.runtime.win
-```
+   ```
+   Sdcb.PaddleInference
+   Sdcb.PaddleInference.runtime.win64.mkl
+   Sdcb.PaddleOCR
+   Sdcb.PaddleOCR.KnownModels
+   OpenCvSharp4
+   OpenCvSharp4.runtime.win
+   ```
 
-1. Using following C# code to get result:
-```csharp
-OCRModel model = KnownOCRModel.PPOcrV2;
-await model.EnsureAll();
-
-byte[] sampleImageData;
-string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
-using (HttpClient http = new HttpClient())
-{
-    Console.WriteLine("Download sample image from: " + sampleImageUrl);
-    sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
-}
-
-using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
-{
-    AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
-    Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
-})
-{
-    // Load local file by following code:
-    // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
-    using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
-    {
-        PaddleOcrResult result = all.Run(src);
-        Console.WriteLine("Detected all texts: \n" + result.Text);
-        foreach (PaddleOcrResultRegion region in result.Regions)
-        {
-            Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize: {region.Rect.Size}, Angle: {region.Rect.Angle}");
-        }
-    }
-}
-```
+2. Using following C# code to get result:
+   ```csharp
+   OCRModel model = KnownOCRModel.PPOcrV2;
+   await model.EnsureAll();
+   
+   byte[] sampleImageData;
+   string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
+   using (HttpClient http = new HttpClient())
+   {
+       Console.WriteLine("Download sample image from: " + sampleImageUrl);
+       sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
+   }
+   
+   using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
+   {
+       AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
+       Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+   })
+   {
+       // Load local file by following code:
+       // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
+       using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+       {
+           PaddleOcrResult result = all.Run(src);
+           Console.WriteLine("Detected all texts: \n" + result.Text);
+           foreach (PaddleOcrResultRegion region in result.Regions)
+           {
+               Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize:    {region.Rect.Size}, Angle: {region.Rect.Angle}");
+           }
+       }
+   }
+   ```
 
 ## Linux(Ubuntu 20.04): Detection and Recognition(All)
 1. Use `sdflysha/ubuntu20-dotnet6-paddleocr2.2.1:20211223` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
@@ -159,32 +159,10 @@ This effect the the max size of step #1, lower this value can improve performanc
 
 You can also set this value to `null`, in that case, images will not scale-down to detect, performance will drop and memory will high, but should able to get better accurancy.
 
-
 ## PaddleConfig.Defaults.UseGpu
 Default value: `false`
 
-Enable GPU support can significantly improve the throughput and lower the CPU usage.
-
-Steps to use GPU in windows:
-1. (for windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both.
-2. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
-3. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
-4. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
-
-You can refer this blog page for GPU in Windows: [关于PaddleSharp GPU使用 常见问题记录](https://www.cnblogs.com/cuichaohui/p/15766519.html)
-
-If you're using Linux, you need to compile your own OpenCvSharp4 environment following the [docker build scripts](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile) follow the CUDA/cuDNN/TensorRT configuration tasks.
-
-After these steps completed, you can try specify `PaddleConfig.Defaults.UseGpu = true` in begin of your code and then enjoy😁.
-
-
-# FAQ
-## Why my code runs good in my windows machine, but DllNotFoundException in other machine:
-Please ensure the [latest Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) was installed in `Windows`(typically it should automatically installed if you have `Visual Studio` installed)
-Otherwise, it will failed with following error(Windows only):
-```
-DllNotFoundException: Unable to load DLL 'paddle_inference_c' or one of its dependencies (0x8007007E)
-```
+If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
 
 ## How can I improve performance?
-Please review the `Technical details` section and read the `Optimize parameters and performance hints` section.
+Please review the `Technical details` section and read the `Optimize parameters and performance hints` section, or UseGpu.
