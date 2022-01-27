@@ -110,7 +110,7 @@ namespace Sdcb.PaddleInference
             return c;
         }
 
-        public static Encoding PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
+        public static readonly Encoding PaddleEncoding;
 
         static PaddleConfig()
         {
@@ -123,6 +123,7 @@ namespace Sdcb.PaddleInference
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             }
+            PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
 
 #if LINQPAD
 			SearchPathLoad();
