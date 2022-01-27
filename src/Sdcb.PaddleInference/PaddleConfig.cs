@@ -1,6 +1,7 @@
 ﻿using Sdcb.PaddleInference.Native;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -109,11 +110,18 @@ namespace Sdcb.PaddleInference
             return c;
         }
 
+        public static Encoding PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
+
         static PaddleConfig()
         {
             if (IntPtr.Size == 4)
             {
                 throw new PlatformNotSupportedException("Paddle Inference does not support 32bit platform.");
+            }
+
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             }
 
 #if LINQPAD
@@ -295,8 +303,8 @@ namespace Sdcb.PaddleInference
             if (paramsPath == null) throw new ArgumentNullException(nameof(paramsPath));
             if (!File.Exists(programPath)) throw new FileNotFoundException("programPath not found", programPath);
             if (!File.Exists(paramsPath)) throw new FileNotFoundException("paramsPath not found", paramsPath);
-            byte[] programBytes = Encoding.UTF8.GetBytes(programPath);
-            byte[] paramsBytes = Encoding.UTF8.GetBytes(paramsPath);
+            byte[] programBytes = PaddleEncoding.GetBytes(programPath);
+            byte[] paramsBytes = PaddleEncoding.GetBytes(paramsPath);
             fixed (byte* programPtr = programBytes)
             fixed (byte* paramsPtr = paramsBytes)
             {
@@ -304,8 +312,8 @@ namespace Sdcb.PaddleInference
             }
         }
 
-        public string? ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).UTF8PtrToString();
-        public string? ParamsPath => PaddleNative.PD_ConfigGetParamsFile(_ptr).UTF8PtrToString();
+        public string? ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).ANSIToString();
+        public string? ParamsPath => PaddleNative.PD_ConfigGetParamsFile(_ptr).ANSIToString();
 
         public unsafe void SetMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
         {
