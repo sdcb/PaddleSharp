@@ -106,7 +106,7 @@ namespace Sdcb.PaddleInference.Native
 
             public override string? ToString()
             {
-                return Data.ANSIToString((int)Length);
+                return Data.ANSIToString((int)Length - 1);
             }
         }
     }
