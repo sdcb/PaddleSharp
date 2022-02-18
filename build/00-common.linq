@@ -4,7 +4,7 @@
   <IncludeUncapsulator>false</IncludeUncapsulator>
 </Query>
 
-const string Version = "2.2.2";
+const string Version = "2.2.2-preview-1";
 
 async Task Main()
 {

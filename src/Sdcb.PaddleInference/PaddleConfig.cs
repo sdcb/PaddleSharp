@@ -277,6 +277,26 @@ namespace Sdcb.PaddleInference
 
         public float FractionOfGpuMemoryForPool => PaddleNative.PD_ConfigFractionOfGpuMemoryForPool(_ptr);
 
+        public unsafe string? Summary
+        {
+            get
+            {
+                IntPtr summaryPtr = default;
+                try
+                {
+                    summaryPtr = PaddleNative.PD_ConfigSummary(_ptr);
+                    return ((PaddleNative.PdCStr*)summaryPtr)->ToString();
+                }
+                finally
+                {
+                    if (summaryPtr != IntPtr.Zero)
+                    {
+                        PaddleNative.PD_CstrDestroy(summaryPtr);
+                    }
+                }
+            }
+        }
+
         public bool EnableGpuMultiStream
         {
             get => PaddleNative.PD_ConfigThreadLocalStreamEnabled(_ptr) != 0;

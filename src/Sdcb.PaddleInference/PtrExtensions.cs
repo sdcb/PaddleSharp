@@ -34,5 +34,13 @@ namespace Sdcb.PaddleInference
                 length++;
             return new string(psbyte, 0, length, PaddleConfig.PaddleEncoding);
         }
+
+        public unsafe static string? ANSIToString(this IntPtr ptr, int length)
+        {
+            if (ptr == IntPtr.Zero)
+                return null;
+            sbyte* psbyte = (sbyte*)ptr;
+            return new string(psbyte, 0, length, PaddleConfig.PaddleEncoding);
+        }
     }
 }
