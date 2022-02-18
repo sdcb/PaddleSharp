@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal as builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV OPENCV_VERSION=4.5.3
+ENV OPENCV_VERSION=4.5.5
 
 WORKDIR /
 
@@ -89,7 +89,7 @@ RUN cd opencv && mkdir build && cd build && \
     .. && make -j$(nproc) && make install && ldconfig
 
 # Download OpenCvSharp
-RUN git clone https://github.com/shimat/opencvsharp.git && cd opencvsharp
+RUN git clone https://github.com/shimat/opencvsharp.git && cd opencvsharp && git checkout b4404d6d379807c682be14fcd1c77be7a7897bbb
 
 # Install the Extern lib.
 RUN mkdir /opencvsharp/make && cd /opencvsharp/make && \
@@ -99,7 +99,7 @@ RUN mkdir /opencvsharp/make && cd /opencvsharp/make && \
     rm -rf /opencv_contrib && \
     cp /opencvsharp/make/OpenCvSharpExtern/libOpenCvSharpExtern.so /usr/lib/
 
-RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.2.1/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz && \
+RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.2.2/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz && \
     tar -xzf /paddle_inference_c.tgz && \
     find /paddle_inference_c -mindepth 2 -name *.so* -print0 | xargs -0 -I {} mv {} /usr/lib && \
     ls /usr/lib/*.so* && \
