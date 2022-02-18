@@ -6,8 +6,8 @@ namespace Sdcb.PaddleOCR.KnownModels
     {
         private static readonly Uri[] ChineseKeyUris = new[]
         {
-            new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.3/ppocr/utils/ppocr_keys_v1.txt"), /* Gitee */
             new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/ppocr_keys_v1.txt"), /* Github */
+            new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.3/ppocr/utils/ppocr_keys_v1.txt"), /* Gitee */
         };
 
         public static OCRModel PPOcrV2 = new OCRModel("ppocr-v2",
