@@ -54,6 +54,7 @@ If you're using Linux, you need to compile your own OpenCvSharp4 environment fol
 After these steps completed, you can try specify `PaddleConfig.Defaults.UseGpu = true` in begin of your code and then enjoy😁.
 
 # Thanks & Sponsors
+* 深圳-钱文松
 * iNeuOS工业互联网操作系统：http://www.ineuos.net
 
 # Contact
