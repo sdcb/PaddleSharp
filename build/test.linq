@@ -17,7 +17,7 @@
 IOCRModel model = await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
 PaddleConfig.Defaults.UseGpu = false;
 PaddleConfig.Defaults.UseMkldnn = true;
-
+PaddleConfig.Defaults.CpuMathThreadCount = 2;
 using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "xdr5480.jpg"));
 //using Mat src = Cv2.ImDecode(GetClipboardImage(), ImreadModes.Color);
 
