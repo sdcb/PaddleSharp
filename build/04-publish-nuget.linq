@@ -33,6 +33,7 @@ object BuildTable()
 void Publish(string path)
 {
 	string nugetApiUrl = "nuget.org";
-	NuGetRun($@"push {path} -Source {nugetApiUrl}".Dump());
+	string nugetApiKey = Util.GetPassword("nuget-api-key");
+	NuGetRun($@"push {path} {nugetApiKey} -Source {nugetApiUrl}".Dump());
 	Refresh();
 }
