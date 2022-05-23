@@ -94,6 +94,27 @@ namespace Sdcb.PaddleInference.Native
         [DllImport(PaddleInferenceCLib)]
         public static extern sbyte PD_ConfigUseGpu(IntPtr pd_config);
 
+        /// <summary>Turn on ONNXRuntime.</summary>
+        /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
+        [DllImport(PaddleInferenceCLib)]
+        public static extern void PD_ConfigEnableONNXRuntime(IntPtr pd_config);
+
+        /// <summary>Turn off ONNXRuntime.</summary>
+        /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
+        [DllImport(PaddleInferenceCLib)]
+        public static extern void PD_ConfigDisableONNXRuntime(IntPtr pd_config);
+
+        /// <summary>A boolean state telling whether the ONNXRutnime is turned on.</summary>
+        /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
+        /// <returns>Whether the ONNXRuntime is turned on.</returns>
+        [DllImport(PaddleInferenceCLib)]
+        public static extern sbyte PD_ConfigONNXRuntimeEnabled(IntPtr pd_config);
+
+        /// <summary>Turn on ONNXRuntime Optimization.</summary>
+        /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
+        [DllImport(PaddleInferenceCLib)]
+        public static extern void PD_ConfigEnableORTOptimization(IntPtr pd_config);
+
         /// <summary>Turn on XPU.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
         /// <param name="l3_workspace_size">The size of the video memory allocated by the l3         cache, the maximum is 16M.</param>
