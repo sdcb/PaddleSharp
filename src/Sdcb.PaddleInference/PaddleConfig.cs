@@ -39,8 +39,8 @@ namespace Sdcb.PaddleInference
 
             string[] allowedPrefixes = new[]
             {
-                "inference", 
-                "model", 
+                "inference",
+                "model",
             };
 
             foreach (string prefix in allowedPrefixes)
@@ -313,6 +313,8 @@ namespace Sdcb.PaddleInference
             }
         }
 
+        public bool Valid => PaddleNative.PD_ConfigIsValid(_ptr) != 0;
+
         public void EnableUseGpu(int initialMemoryMB, int deviceId)
         {
             PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId);
@@ -362,6 +364,15 @@ namespace Sdcb.PaddleInference
             finally
             {
                 _ptr = IntPtr.Zero;
+            }
+        }
+
+        public unsafe void DeletePass(string passName)
+        {
+            byte[] passNameBytes = PaddleEncoding.GetBytes(passName);
+            fixed (byte* ptr = passNameBytes)
+            {
+                PaddleNative.PD_ConfigDeletePass(_ptr, (IntPtr)ptr);
             }
         }
 

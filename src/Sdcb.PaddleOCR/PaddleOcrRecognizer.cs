@@ -17,7 +17,7 @@ namespace Sdcb.PaddleOCR
         {
         }
 
-        public PaddleOcrRecognizer(PaddleConfig config, IReadOnlyList<string> labels) : this(config.CreatePredictor(), labels)
+        public PaddleOcrRecognizer(PaddleConfig config, IReadOnlyList<string> labels) : this(CreatePredictor(config), labels)
         {
         }
 
@@ -25,6 +25,12 @@ namespace Sdcb.PaddleOCR
         {
             _p = predictor;
             _labels = labels;
+        }
+
+        private static PaddlePredictor CreatePredictor(PaddleConfig config)
+        {
+            config.DeletePass("matmul_transpose_reshape_fuse_pass");
+            return config.CreatePredictor();
         }
 
         public PaddleOcrRecognizer Clone()
