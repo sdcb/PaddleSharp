@@ -13,6 +13,8 @@ namespace Sdcb.PaddleOCR
         private readonly PaddlePredictor _p;
         private readonly IReadOnlyList<string> _labels;
 
+        public int Height { get; set; } = 32;
+
         public PaddleOcrRecognizer(string modelDir, string labelFilePath) : this(PaddleConfig.FromModelDir(modelDir), File.ReadAllLines(labelFilePath))
         {
         }
@@ -65,7 +67,7 @@ namespace Sdcb.PaddleOCR
                 throw new NotSupportedException($"{nameof(src)} channel must be 3 or 1, provided {src.Channels()}.");
             }
 
-            using Mat resized = ResizePadding(src);
+            using Mat resized = ResizePadding(src, Height);
             using Mat normalized = Normalize(resized);
 
             using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
@@ -118,11 +120,10 @@ namespace Sdcb.PaddleOCR
             }
         }
 
-        private static Mat ResizePadding(Mat src)
+        private static Mat ResizePadding(Mat src, int height)
         {
             Size size = src.Size();
             float whRatio = 1.0f * size.Width / size.Height;
-            int height = 32;
             int width = (int)Math.Ceiling(height * whRatio);
 
             return src.Resize(new Size(width, height));

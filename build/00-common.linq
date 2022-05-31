@@ -4,7 +4,7 @@
   <IncludeUncapsulator>false</IncludeUncapsulator>
 </Query>
 
-const string Version = "2.3.0-preview1";
+const string Version = "2.3.0-preview2";
 
 async Task Main()
 {
@@ -20,7 +20,7 @@ async Task SetupAsync(CancellationToken cancellationToken = default)
 
 static void NuGetRun(string args) => Run(@".\nuget.exe", args);
 static void DotNetRun(string args) => Run("dotnet", args);
-static void Run(string exe, string args) => Util.Cmd(exe, args, Encoding.GetEncoding("gb2312"));
+static void Run(string exe, string args) => Util.Cmd(exe, args, Encoding.GetEncoding("utf-8"));
 string[] Projects = new[]
 {
 	"Sdcb.PaddleInference",

@@ -169,5 +169,17 @@ namespace Sdcb.PaddleOCR.KnownModels
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/devanagari_dict.txt"), /* Github */
                 new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/devanagari_dict.txt"), /* Gitee */
             });
+
+        public static OCRModel PPOcrV3 = new OCRModel("ppocr-v3",
+           new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"),
+           new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
+           new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_infer.tar"),
+           ChineseKeyUris);
+
+        public static OCRModel EnglishPPOcrV3 = new OCRModel("en-ppocr-v3",
+           new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar"),
+           new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
+           new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_rec_infer.tar"),
+           ChineseKeyUris);
     }
 }
