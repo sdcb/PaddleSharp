@@ -22,8 +22,8 @@ async Task Main()
 		.Process(QueryCancelToken);
 	await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr7", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.0/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.0_cudnn8/paddle_inference_c.zip"))
 		.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr8", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.0/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.2_cudnn8/paddle_inference_c.zip"))
-		.Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr8", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.0/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.2_cudnn8/paddle_inference_c.zip"))
+	//	.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)

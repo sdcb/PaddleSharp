@@ -2,7 +2,7 @@
   <NuGetReference>OpenCvSharp4</NuGetReference>
   <NuGetReference>OpenCvSharp4.runtime.win</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleInference</NuGetReference>
-  <NuGetReference>Sdcb.PaddleInference.runtime.win64.mkl</NuGetReference>
+  <NuGetReference Prerelease="true">Sdcb.PaddleInference.runtime.win64.mkl</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleOCR</NuGetReference>
   <NuGetReference Prerelease="true">Sdcb.PaddleOCR.KnownModels</NuGetReference>
   <Namespace>OpenCvSharp</Namespace>
@@ -14,7 +14,7 @@
   <Namespace>System.Windows.Forms</Namespace>
 </Query>
 
-IOCRModel model = await KnownOCRModel.PPOcrV2.EnsureAll(QueryCancelToken);
+IOCRModel model = await KnownOCRModel.PPOcrV3.EnsureAll(QueryCancelToken);
 PaddleConfig.Defaults.UseGpu = false;
 PaddleConfig.Defaults.UseMkldnn = true;
 PaddleConfig.Defaults.CpuMathThreadCount = 2;
