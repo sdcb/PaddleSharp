@@ -119,17 +119,19 @@ namespace Sdcb.PaddleInference
                 throw new PlatformNotSupportedException("Paddle Inference does not support 32bit platform.");
             }
 
+#if NETSTANDARD || NET6_0_OR_GREATER
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             }
+#endif
             PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
 
 #if LINQPAD
 			SearchPathLoad();
 #elif NET6_0_OR_GREATER
             SearchPathLoad();
-#elif NETSTANDARD2_0_OR_GREATER || NET461_OR_GREATER
+#elif NETSTANDARD2_0_OR_GREATER || NET45_OR_GREATER
 			AutoLoad();
 #endif
         }

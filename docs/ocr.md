@@ -45,11 +45,9 @@
    ```
 
 ## Linux(Ubuntu 20.04): Detection and Recognition(All)
-1. Use `sdflysha/ubuntu20-dotnet6-paddleocr2.2.1:20211223` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
+1. Use `sdflysha/sdflysha/dotnet6-paddle:2.3.0-ubuntu20` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
 
-The build steps for `ubuntu20-dotnet6-paddleocr` was described [here](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile).
-
-And also, we also provided another dotnet6-sdk `Dockerfile`, described [here](./build/docker/ubuntu20-dotnet6sdk-paddleocr2.2.1/Dockerfile).
+The build steps for `sdflysha/dotnet6-paddle:2.3.0-ubuntu20` was described [here](./build/docker/dotnet6-paddle/Dockerfile).
 
 2. Install NuGet Packages:
 ```ps
@@ -57,7 +55,6 @@ dotnet add package Sdcb.PaddleInference
 dotnet add package Sdcb.PaddleOCR
 dotnet add package Sdcb.PaddleOCR.KnownModels
 dotnet add package OpenCvSharp4
-dotnet add package OpenCvSharp4.runtime.ubuntu.18.04-x64
 ```
 
 Please aware in `Linux`, the native binding library is not required, instead, you should compile your own `OpenCV`/`PaddleInference` library, or just use the `Docker` image.

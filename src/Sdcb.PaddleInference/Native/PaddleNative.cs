@@ -92,7 +92,7 @@ namespace Sdcb.PaddleInference.Native
         }
 
         public const string PaddleInferenceCLib =
-            #if NET461_OR_GREATER
+            #if NET45_OR_GREATER
                 @"dll\x64\paddle_inference_c.dll";
             #elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER || LINQPAD
                 @"paddle_inference_c";
