@@ -32,3 +32,10 @@ jobs:
           cd ./build/docker/dotnet6-paddle
           docker build . -t sdflysha/dotnet6-paddle:2.3.0-ubuntu20
           docker push sdflysha/dotnet6-paddle:2.3.0-ubuntu20
+      - uses: kohlerdominik/docker-run-action@v1
+        with:
+          image: sdflysha/dotnet6-paddle:2.3.0-ubuntu20
+          volumes: ${{ github.workspace }}:/workspace
+          run: |
+            uname -a
+            dotnet test -c Release
