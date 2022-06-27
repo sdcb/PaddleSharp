@@ -29,9 +29,13 @@ jobs:
       - name: Build docker image
         run: |
           docker login 
-          cd ./build/docker/dotnet6-paddle
+          cd ${{ github.workspace }}:/workspace/build/docker/dotnet6-paddle
           docker build . -t sdflysha/dotnet6-paddle:2.3.0-ubuntu20
           docker push sdflysha/dotnet6-paddle:2.3.0-ubuntu20
+          cd ${{ github.workspace }}:/workspace/build/docker/dotnet6sdk-paddle
+          docker build . -t sdflysha/dotnet6-paddle:2.3.0-ubuntu20
+          docker push sdflysha/dotnet6-paddle:2.3.0-ubuntu20
+          docker push sdflysha/dotnet6sdk-paddle:2.3.0-ubuntu20
       - uses: kohlerdominik/docker-run-action@v1
         with:
           image: sdflysha/dotnet6sdk-paddle:2.3.0-ubuntu20
