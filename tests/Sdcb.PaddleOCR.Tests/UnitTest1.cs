@@ -12,7 +12,7 @@ namespace Sdcb.PaddleOCR.Tests
             await model.EnsureAll();
 
             byte[] sampleImageData;
-            string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450Ò×Õ¹Turbo°æ-3840px_03.jpg";
+            string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
             using (HttpClient http = new HttpClient())
             {
                 Console.WriteLine("Download sample image from: " + sampleImageUrl);
