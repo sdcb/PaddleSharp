@@ -28,19 +28,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build runtime container
-        run: |
-          cd ${{ github.workspace }}/build/docker/dotnet6-paddle
-          docker build . -t sdflysha/dotnet6-paddle:$tag
-          docker push sdflysha/dotnet6-paddle:$tag
-      - name: Build sdk container
-        run: |
-          cd ${{ github.workspace }}/build/docker/dotnet6sdk-paddle
-          docker build . -t sdflysha/dotnet6sdk-paddle:$tag
-          docker push sdflysha/dotnet6sdk-paddle:$tag
+      #- name: Build runtime container
+      #  run: |
+      #    cd ${{ github.workspace }}/build/docker/dotnet6-paddle
+      #    docker build . -t sdflysha/dotnet6-paddle:$tag
+      #    docker push sdflysha/dotnet6-paddle:$tag
+      #- name: Build sdk container
+      #  run: |
+      #    cd ${{ github.workspace }}/build/docker/dotnet6sdk-paddle
+      #    docker build . -t sdflysha/dotnet6sdk-paddle:$tag
+      #    docker push sdflysha/dotnet6sdk-paddle:$tag
       - uses: kohlerdominik/docker-run-action@v1
         with:
-          image: sdflysha/dotnet6sdk-paddle:$tag
+          image: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
           volumes: ${{ github.workspace }}:/workspace
           run: |
             dotnet test -c Release
