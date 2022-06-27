@@ -33,7 +33,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR", "src\Sdcb.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.KnownModels", "src\Sdcb.PaddleOCR.KnownModels\Sdcb.PaddleOCR.KnownModels.csproj", "{5998A9C2-F7F8-4623-8FCF-315B7FE6EB1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleDetection", "src\Sdcb.PaddleDetection\Sdcb.PaddleDetection.csproj", "{3C7FF86D-81F2-4675-B41E-B3B36E744F62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleDetection", "src\Sdcb.PaddleDetection\Sdcb.PaddleDetection.csproj", "{3C7FF86D-81F2-4675-B41E-B3B36E744F62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-workflows", "{6921A5C2-A45B-48D7-BA1B-EAF1A5E1A1EB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-linux-docker.yml = .github\workflows\build-linux-docker.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
