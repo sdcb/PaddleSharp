@@ -8,11 +8,11 @@ namespace Sdcb.PaddleOCR.Tests
         [Fact]
         public async Task FastCheckOCR()
         {
-            OCRModel model = KnownOCRModel.PPOcrV3;
+            OCRModel model = KnownOCRModel.EnglishPPOcrV3;
             await model.EnsureAll();
 
             byte[] sampleImageData;
-            string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
+            string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
             using (HttpClient http = new HttpClient())
             {
                 Console.WriteLine("Download sample image from: " + sampleImageUrl);
