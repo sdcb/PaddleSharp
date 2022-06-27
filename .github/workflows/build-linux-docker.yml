@@ -1,4 +1,6 @@
 name: main
+on:
+  workflow_dispatch:
 
 jobs:
   ubuntu-latest:
