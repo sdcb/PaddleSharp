@@ -24,10 +24,10 @@ jobs:
       - name: Build code
         run: |
           dotnet build -c Release
-      - uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+      #- uses: docker/login-action@v2
+      #  with:
+      #    username: ${{ secrets.DOCKER_USERNAME }}
+      #    password: ${{ secrets.DOCKER_TOKEN }}
       #- name: Build runtime container
       #  run: |
       #    cd ${{ github.workspace }}/build/docker/dotnet6-paddle
@@ -43,4 +43,5 @@ jobs:
           image: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
           volumes: ${{ github.workspace }}:/workspace
           run: |
+            cd /workspace
             dotnet test -c Release
