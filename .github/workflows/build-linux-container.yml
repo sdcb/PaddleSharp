@@ -1,19 +1,19 @@
-name: main
+name: build-linux-container
 on:
   workflow_dispatch:
 
 jobs:
-  ubuntu-latest:
+  ubuntu-20.04:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Build
         run: |
-          cd .\build\docker\dotnet6-paddle
+          cd ./build/docker/dotnet6-paddle
           docker build . -t sdflysha/dotnet6-paddle:2.3.0-ubuntu20
           docker push sdflysha/dotnet6-paddle:2.3.0-ubuntu20
       - name: Build-SDK
         run: |
-          cd .\build\docker\dotnet6sdk-paddle
+          cd ./build/docker/dotnet6sdk-paddle
           docker build . -t sdflysha/dotnet6sdk-paddle:2.3.0-ubuntu20
           docker push sdflysha/dotnet6sdk-paddle:2.3.0-ubuntu20
