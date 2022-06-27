@@ -17,7 +17,7 @@
    await model.EnsureAll();
    
    byte[] sampleImageData;
-   string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
+   string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
    using (HttpClient http = new HttpClient())
    {
        Console.WriteLine("Download sample image from: " + sampleImageUrl);
@@ -83,7 +83,7 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 // OpenCvSharp4.runtime.win (required in Windows)
 // OpenCvSharp4.runtime.linux18.04 (required in Linux)
 byte[] sampleImageData;
-string sampleImageUrl = @"https://www.tp-link.com.cn/content/images/detail/2164/TL-XDR5450易展Turbo版-3840px_03.jpg";
+string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
 using (HttpClient http = new HttpClient())
 {
     Console.WriteLine("Download sample image from: " + sampleImageUrl);

@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		docs\detection.md = docs\detection.md
+		docs\ocr.md = docs\ocr.md
 		README.md = README.md
 	EndProjectSection
 EndProject
