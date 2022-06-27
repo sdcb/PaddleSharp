@@ -40,6 +40,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 		.github\workflows\build-linux-container.yml = .github\workflows\build-linux-container.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{3C8D6738-0E9A-4BDD-AB62-26B854B055F9}"
+	ProjectSection(SolutionItems) = preProject
+		build\docker\dotnet6-paddle\Dockerfile = build\docker\dotnet6-paddle\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +76,7 @@ Global
 		{A80CAB18-32B8-4E2E-B639-F7285C4C8559} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{5998A9C2-F7F8-4623-8FCF-315B7FE6EB1E} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{3C7FF86D-81F2-4675-B41E-B3B36E744F62} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+		{3C8D6738-0E9A-4BDD-AB62-26B854B055F9} = {D2A95EF6-DE13-4070-B359-CC6F6FD49A07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
