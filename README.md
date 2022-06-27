@@ -21,10 +21,10 @@
 
 **Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle2.2.2) to development:
 
-| Docker Images                         | Version                                                                                                                                            | Description                                                                        |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| sdflysha/dotnet6-focal-paddle2.2.2    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-focal-paddle2.2.2)](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle2.2.2)       | PaddleInference 2.2.2, OpenCV 4.5.5, based on official Ubuntu 20.04 .NET 6 Runtime |
-| sdflysha/dotnet6sdk-focal-paddle2.2.2 | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-focal-paddle2.2.2)](https://hub.docker.com/r/sdflysha/dotnet6sdk-focal-paddle2.2.2) | PaddleInference 2.2.2, OpenCV 4.5.5, based on official Ubuntu 20.04 .NET 6 SDK     |
+| Docker Images              | Version                                                                                                                      | Description                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle) | PaddleInference 2.3.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 Runtime |
+| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.3.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 # Usage
 * PaddleOCR: [PaddleOCR](./docs/ocr.md)
