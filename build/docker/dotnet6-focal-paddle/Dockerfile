@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal as builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV OPENCV_VERSION=4.5.5
+ENV OPENCV_VERSION=4.6.0
 
 WORKDIR /
 
@@ -82,14 +82,14 @@ RUN cd opencv && mkdir build && cd build && \
     -D BUILD_opencv_structured_light=OFF \
     -D BUILD_opencv_surface_matching=OFF \
     -D BUILD_opencv_videostab=OFF \
-    -D BUILD_opencv_wechat_qrcode=OFF \
+    -D BUILD_opencv_wechat_qrcode=ON \
     -D WITH_GSTREAMER=OFF \
     -D WITH_ADE=OFF \
     -D OPENCV_ENABLE_NONFREE=ON \
     .. && make -j$(nproc) && make install && ldconfig
 
 # Download OpenCvSharp
-RUN git clone https://github.com/shimat/opencvsharp.git && cd opencvsharp && git checkout b4404d6d379807c682be14fcd1c77be7a7897bbb
+RUN git clone https://github.com/shimat/opencvsharp.git && cd opencvsharp
 
 # Install the Extern lib.
 RUN mkdir /opencvsharp/make && cd /opencvsharp/make && \
@@ -99,7 +99,7 @@ RUN mkdir /opencvsharp/make && cd /opencvsharp/make && \
     rm -rf /opencv_contrib && \
     cp /opencvsharp/make/OpenCvSharpExtern/libOpenCvSharpExtern.so /usr/lib/
 
-RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.2.2/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz && \
+RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.3.0/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz && \
     tar -xzf /paddle_inference_c.tgz && \
     find /paddle_inference_c -mindepth 2 -name *.so* -print0 | xargs -0 -I {} mv {} /usr/lib && \
     ls /usr/lib/*.so* && \
@@ -109,5 +109,5 @@ RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.2.2/cxx_c/Linux/CPU/gcc
 
 ########## Final image ##########
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-focal as final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal as final
 COPY --from=builder /usr/lib /usr/lib
