@@ -17,7 +17,7 @@ jobs:
           dotnet build -c Release --no-restore
       - name: Test
         run: |
-          dotnet test --no-build --verbosity normal
+          dotnet test -c Release --no-build --verbosity normal
   linux-ubuntu:
     runs-on: ubuntu-latest
     env:
