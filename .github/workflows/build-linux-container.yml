@@ -1,4 +1,4 @@
-name: main
+name: build-linux-container
 on:
   workflow_dispatch:
 
