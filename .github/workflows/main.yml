@@ -1,6 +1,4 @@
 name: main
-env:
-  tag: 2.3.0-ubuntu20
 on:
   push:
     branches:
@@ -20,6 +18,8 @@ jobs:
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
   linux-ubuntu:
+    env:
+      tag: 2.3.0-ubuntu20
     runs-on: ubuntu-latest
     container: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
     steps:
