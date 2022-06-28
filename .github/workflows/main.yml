@@ -35,4 +35,5 @@ jobs:
             cd /workspace
             ls -a
             dotnet --info
+            dotnet build -c Release --no-restore
             dotnet test -c Release --no-build --verbosity normal
