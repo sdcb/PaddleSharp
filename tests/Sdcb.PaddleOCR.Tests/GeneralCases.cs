@@ -3,7 +3,7 @@ using Sdcb.PaddleOCR.KnownModels;
 
 namespace Sdcb.PaddleOCR.Tests
 {
-    public class UnitTest1
+    public class GeneralCases
     {
         [Fact]
         public async Task FastCheckOCR()
@@ -37,12 +37,6 @@ namespace Sdcb.PaddleOCR.Tests
                     }
                 }
             }
-        }
-
-        [Fact]
-        public void MustFail()
-        {
-            Assert.True(false);
         }
     }
 }
