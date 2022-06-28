@@ -18,10 +18,8 @@ jobs:
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
   linux-ubuntu:
-    env:
-      tag: 2.3.0-ubuntu20
     runs-on: ubuntu-latest
-    container: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
+    container: sdflysha/dotnet6sdk-paddle:2.3.0-ubuntu20
     steps:
       - uses: actions/checkout@v3
       - name: Restore depedencies
