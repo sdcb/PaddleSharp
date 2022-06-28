@@ -1,4 +1,6 @@
 name: main
+env:
+  tag: 2.3.0-ubuntu20
 on:
   push:
     branches:
@@ -19,19 +21,12 @@ jobs:
         run: dotnet test -c Release --no-build --verbosity normal
   linux-ubuntu:
     runs-on: ubuntu-latest
-    env:
-      tag: 2.3.0-ubuntu20
+    container: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
     steps:
       - uses: actions/checkout@v3
       - name: Restore depedencies
         run: dotnet restore
       - name: Build code
         run: dotnet build -c Release --no-restore
-      - uses: kohlerdominik/docker-run-action@v1
-        with:
-          image: sdflysha/dotnet6sdk-paddle:${{ env.tag }}
-          volumes: ${{ github.workspace }}:/workspace
-          run: |
-            cd /workspace
-            dotnet build -c Release
-            dotnet test -c Release --no-build --verbosity normal
+      - name: Test
+        run: dotnet test -c Release --no-build --verbosity normal
