@@ -33,7 +33,5 @@ jobs:
           volumes: ${{ github.workspace }}:/workspace
           run: |
             cd /workspace
-            ls -a
-            dotnet --info
-            dotnet build -c Release --no-restore
+            dotnet build -c Release
             dotnet test -c Release --no-build --verbosity normal
