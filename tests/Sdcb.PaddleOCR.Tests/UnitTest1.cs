@@ -38,5 +38,11 @@ namespace Sdcb.PaddleOCR.Tests
                 }
             }
         }
+
+        [Fact]
+        public void MustFail()
+        {
+            Assert.True(false);
+        }
     }
 }
