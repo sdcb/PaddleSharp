@@ -42,6 +42,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         public Uri[] ClassifierModelUris { get; }
         public Uri[] RecognitionModelUris { get; }
         public Uri[] KeyUris { get; }
+        public int MajorVersion { get; }
         public string RootDirectory { get; }
 
         private async Task EnsureModelFile(Uri[] uris, string prefix, CancellationToken cancellationToken = default)

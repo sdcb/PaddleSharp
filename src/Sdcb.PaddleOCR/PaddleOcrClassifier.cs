@@ -4,7 +4,6 @@ using System;
 
 namespace Sdcb.PaddleOCR
 {
-
     public class PaddleOcrClassifier : IDisposable
     {
         private readonly PaddlePredictor _p;
@@ -102,7 +101,7 @@ namespace Sdcb.PaddleOCR
             }
         }
 
-        private static (int channel, int height, int width) shape = (3, 48, 192);
+        private static (int channel, int height, int width) shape = (3, 48, 320);
 
         private static Mat ResizePadding(Mat src)
         {
