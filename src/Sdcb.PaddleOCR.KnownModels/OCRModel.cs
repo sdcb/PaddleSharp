@@ -58,7 +58,7 @@ namespace Sdcb.PaddleOCR.KnownModels
                 if (!File.Exists(localTarFile))
                 {
                     Console.WriteLine($"Downloading {prefix} model from {string.Join(", ", uris.Select(x => x.ToString()))}");
-                    await DownloadFile(uris, localTarFile, cancellationToken);
+                    await DownloadFiles(uris, localTarFile, cancellationToken);
                 }
 
                 Console.WriteLine($"Extracting {localTarFile} to {directory}");
@@ -71,7 +71,9 @@ namespace Sdcb.PaddleOCR.KnownModels
             }
         }
 
-        internal static async Task DownloadFile(Uri[] uris, string localFile, CancellationToken cancellationToken)
+        internal static Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken) => DownloadFiles(new Uri[] { uri }, localFile, cancellationToken);
+
+        internal static async Task DownloadFiles(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
             using HttpClient http = new();
 
@@ -122,7 +124,7 @@ namespace Sdcb.PaddleOCR.KnownModels
             if (!File.Exists(KeyPath))
             {
                 Console.WriteLine($"Downloading key file {KeyPath} from {string.Join(", ", KeyUris.Select(x => x))}");
-                await DownloadFile(KeyUris, KeyPath, cancellationToken);
+                await DownloadFiles(KeyUris, KeyPath, cancellationToken);
             }
         }
 
