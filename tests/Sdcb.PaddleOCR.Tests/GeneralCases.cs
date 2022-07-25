@@ -1,5 +1,6 @@
 using OpenCvSharp;
 using Sdcb.PaddleOCR.KnownModels;
+using Sdcb.PaddleOCR.Models;
 
 namespace Sdcb.PaddleOCR.Tests
 {
@@ -19,7 +20,7 @@ namespace Sdcb.PaddleOCR.Tests
                 sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
             }
 
-            using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
+            using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath, ModelVersion.V3)
             {
                 AllowRotateDetection = true, /* 允许识别有角度的文字 */
                 Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */

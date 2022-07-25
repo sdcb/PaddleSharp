@@ -1,5 +1,6 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleInference;
+using Sdcb.PaddleOCR.Models;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -16,6 +17,10 @@ namespace Sdcb.PaddleOCR
         public float? BoxThreshold { get; set; } = 0.3f;
         public int MinSize { get; set; } = 3;
         public float UnclipRatio { get; set; } = 2.0f;
+
+        public PaddleOcrDetector(DetectionModel model) : this(model.CreateConfig())
+        {
+        }
 
         public PaddleOcrDetector(PaddleConfig config) : this(config.CreatePredictor())
         {

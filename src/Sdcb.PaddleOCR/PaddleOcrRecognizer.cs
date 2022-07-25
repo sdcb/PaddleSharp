@@ -1,5 +1,6 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleInference;
+using Sdcb.PaddleOCR.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,49 +12,18 @@ namespace Sdcb.PaddleOCR
     public class PaddleOcrRecognizer : IDisposable
     {
         private readonly PaddlePredictor _p;
-        private readonly IReadOnlyList<string> _labels;
 
-        public int Height { get; set; } = 32;
+        public RecognizationModel Model { get; init; }
 
-        public PaddleOcrRecognizer(string modelDir, string labelFilePath) : this(PaddleConfig.FromModelDir(modelDir), File.ReadAllLines(labelFilePath))
+        public PaddleOcrRecognizer(RecognizationModel model)
         {
+            Model = model;
+            _p = Model.CreateConfig().CreatePredictor();
         }
 
-        public PaddleOcrRecognizer(PaddleConfig config, IReadOnlyList<string> labels) : this(CreatePredictor(config), labels)
-        {
-        }
+        public PaddleOcrRecognizer Clone() => new PaddleOcrRecognizer(Model);
 
-        public PaddleOcrRecognizer(PaddlePredictor predictor, IReadOnlyList<string> labels)
-        {
-            _p = predictor;
-            _labels = labels;
-        }
-
-        private static PaddlePredictor CreatePredictor(PaddleConfig config)
-        {
-            config.DeletePass("matmul_transpose_reshape_fuse_pass");
-            return config.CreatePredictor();
-        }
-
-        public PaddleOcrRecognizer Clone()
-        {
-            return new PaddleOcrRecognizer(_p.Clone(), _labels);
-        }
-
-        public void Dispose()
-        {
-            _p.Dispose();
-        }
-
-        private string GetLabelByIndex(int i)
-        {
-            return i switch
-            {
-                var x when x > 0 && x <= _labels.Count => _labels[x - 1],
-                var x when x == _labels.Count + 1 => " ",
-                _ => " ", /* error */
-            };
-        }
+        public void Dispose() => _p.Dispose();
 
         public PaddleOcrRecognizerResult Run(Mat src)
         {
@@ -67,7 +37,7 @@ namespace Sdcb.PaddleOCR
                 throw new NotSupportedException($"{nameof(src)} channel must be 3 or 1, provided {src.Channels()}.");
             }
 
-            using Mat resized = ResizePadding(src, Height);
+            using Mat resized = ResizePadding(src, Model.Shape.height);
             using Mat normalized = Normalize(resized);
 
             using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
@@ -106,7 +76,7 @@ namespace Sdcb.PaddleOCR
                         if (maxIdx[1] > 0 && (!(n > 0 && maxIdx[1] == lastIndex)))
                         {
                             score += (float)maxVal;
-                            sb.Append(GetLabelByIndex(maxIdx[1]));
+                            sb.Append(Model.GetLabelByIndex(maxIdx[1]));
                         }
                         lastIndex = maxIdx[1];
                     }
