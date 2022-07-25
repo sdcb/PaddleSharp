@@ -26,4 +26,8 @@
     <PackageReference Include="SharpCompress" Version="0.31.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
+  </ItemGroup>
+
 </Project>

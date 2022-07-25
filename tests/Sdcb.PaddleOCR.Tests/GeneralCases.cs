@@ -9,8 +9,7 @@ namespace Sdcb.PaddleOCR.Tests
         [Fact]
         public async Task FastCheckOCR()
         {
-            OCRModel model = KnownOCRModel.EnglishPPOcrV3;
-            await model.EnsureAll();
+            FullOcrModel model = await KnownOCRModel.EnglishPPOcrV3.EnsureAll();
 
             byte[] sampleImageData;
             string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
@@ -20,7 +19,7 @@ namespace Sdcb.PaddleOCR.Tests
                 sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
             }
 
-            using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath, ModelVersion.V3)
+            using (PaddleOcrAll all = new PaddleOcrAll(model)
             {
                 AllowRotateDetection = true, /* 允许识别有角度的文字 */
                 Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */

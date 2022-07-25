@@ -1,4 +1,5 @@
-﻿using SharpCompress.Archives;
+﻿using Sdcb.PaddleOCR.Models;
+using SharpCompress.Archives;
 using System;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sdcb.PaddleOCR.KnownModels
 {
-    public class OCRModel : IOCRModel
+    public class OCRModel
     {
         public OCRModel(string name, Uri[] detectionModelUris, Uri[] classifierModelUris, Uri[] recognitionModelUris, Uri[] keyUris)
         {
@@ -32,8 +33,8 @@ namespace Sdcb.PaddleOCR.KnownModels
             RootDirectory = Path.Combine(GlobalModelDirectory, Name);
         }
 
-        public OCRModel(string name, Uri detectionModelUri, Uri classifierModelUri, Uri recognitionModelUri, Uri[] keyUris)
-            : this(name, new[] { detectionModelUri }, new[] { classifierModelUri }, new[] { recognitionModelUri }, keyUris)
+        public OCRModel(string name, Uri detectionModelUri, Uri classifierModelUri, Uri recognitionModelUri, Uri keyUri)
+            : this(name, new[] { detectionModelUri }, new[] { classifierModelUri }, new[] { recognitionModelUri }, new[] { keyUri })
         {
         }
 
@@ -42,7 +43,7 @@ namespace Sdcb.PaddleOCR.KnownModels
         public Uri[] ClassifierModelUris { get; }
         public Uri[] RecognitionModelUris { get; }
         public Uri[] KeyUris { get; }
-        public int MajorVersion { get; }
+        public ModelVersion Version => Name.Contains("v2") ? ModelVersion.V2 : ModelVersion.V3;
         public string RootDirectory { get; }
 
         private async Task EnsureModelFile(Uri[] uris, string prefix, CancellationToken cancellationToken = default)
@@ -125,23 +126,18 @@ namespace Sdcb.PaddleOCR.KnownModels
             }
         }
 
-        public async Task<IOCRModel> EnsureAll(CancellationToken cancellationToken = default)
+        public async Task<FullOcrModel> EnsureAll(CancellationToken cancellationToken = default)
         {
             await Task.WhenAll(
                 EnsureDetectionModel(cancellationToken),
                 EnsureClassifierModel(cancellationToken),
                 EnsureRecognitionModel(cancellationToken),
                 EnsureKeyFile(cancellationToken));
-            return this;
-        }
-    }
 
-    public interface IOCRModel
-    {
-        public string Name { get; }
-        public string DetectionDirectory { get; }
-        public string ClassifierDirectory { get; }
-        public string RecognitionDirectory { get; }
-        public string KeyPath { get; }
+            return new FullOcrModel(
+                DetectionModel.FromDirectory(DetectionDirectory),
+                ClassificationModel.FromDirectory(ClassifierDirectory),
+                RecognizationModel.FromDirectory(RecognitionDirectory, KeyPath, Version));
+        }
     }
 }

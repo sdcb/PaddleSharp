@@ -4,16 +4,14 @@ namespace Sdcb.PaddleOCR.KnownModels
 {
     public class KnownOCRModel
     {
-        private static readonly Uri[] ChineseKeyUris = new[]
-        {
-            new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/ppocr_keys_v1.txt"), /* Github */
-        };
+        private static readonly Uri ChineseKeyUri = new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/ppocr_keys_v1.txt");
+        private static readonly Uri EnglishKeyUri = new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/en_dict.txt");
 
         public static OCRModel PPOcrV2 = new OCRModel("ppocr-v2",
             new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_det_infer.tar"),
             new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
             new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_rec_infer.tar"),
-            ChineseKeyUris);
+            ChineseKeyUri);
 
         public static OCRModel EnglishMobileV2 = new OCRModel("en-ppocr-mobile-v2",
             PPOcrV2.DetectionModelUris,
@@ -21,14 +19,14 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[] { new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/en_number_mobile_v2.0_rec_infer.tar") },
             new[]
             {
-                new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/en_dict.txt"), /* Github */
+                EnglishKeyUri
             });
 
         public static OCRModel PPOcrServerV2 = new OCRModel("ppocr-server-v2",
             new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_det_infer.tar"),
             new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
             new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_rec_infer.tar"),
-            ChineseKeyUris);
+            ChineseKeyUri);
 
         public static OCRModel ChineseTranditionalMobileV2 = new OCRModel("chinese-cht-mobile-v2",
             PPOcrV2.DetectionModelUris,
@@ -37,7 +35,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/chinese_cht_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/chinese_cht_dict.txt"), /* Gitee */
             });
 
         // 法文
@@ -48,7 +45,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/french_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/french_dict.txt"), /* Gitee */
             });
 
         // 德文
@@ -59,7 +55,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/german_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/grench_dict.txt"), /* Gitee */
             });
 
         // 韩文
@@ -70,7 +65,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/korean_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/korean_dict.txt"), /* Gitee */
             });
 
         // 日文
@@ -81,7 +75,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/japan_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/japan_dict.txt"), /* Gitee */
             });
 
         //泰卢固文
@@ -92,7 +85,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/te_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/te_dict.txt"), /* Gitee */
             });
 
         //卡纳达文
@@ -103,7 +95,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/ka_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/ka_dict.txt"), /* Gitee */
             });
 
         //泰米尔文
@@ -114,7 +105,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/ta_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/ta_dict.txt"), /* Gitee */
             });
 
         //拉丁文
@@ -125,7 +115,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/latin_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/latin_dict.txt"), /* Gitee */
             });
 
         //阿拉伯字母
@@ -136,7 +125,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/arabic_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/arabic_dict.txt"), /* Gitee */
             });
 
         //斯拉夫字母
@@ -147,7 +135,6 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/cyrillic_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/cyrillic_dict.txt"), /* Gitee */
             });
 
         //梵文字母
@@ -158,20 +145,18 @@ namespace Sdcb.PaddleOCR.KnownModels
             new[]
             {
                 new Uri(@"https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/ppocr/utils/dict/devanagari_dict.txt"), /* Github */
-                new Uri(@"https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.4/ppocr/utils/dict/devanagari_dict.txt"), /* Gitee */
             });
 
         public static OCRModel PPOcrV3 = new OCRModel("ppocr-v3",
            new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"),
            new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
            new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_infer.tar"),
-           ChineseKeyUris);
+           ChineseKeyUri);
 
         public static OCRModel EnglishPPOcrV3 = new OCRModel("en-ppocr-v3",
            new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar"),
            new Uri(@"https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"),
            new Uri(@"https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_rec_infer.tar"),
-           new[] { new Uri("https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.3/ppocr/utils/en_dict.txt") }
-           );
+           EnglishKeyUri);
     }
 }
