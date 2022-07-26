@@ -38,5 +38,28 @@ namespace Sdcb.PaddleOCR.KnownModels
 
             return new FileDetectionModel(RootDirectory);
         }
+
+        // <summary>[New] slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrV3Slim = new("ch_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
+        // <summary>[New] Original lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrV3 = new("ch_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
+        // <summary>[New] slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrV2Slim = new("ch_PP-OCRv2_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_det_slim_quant_infer.tar"), ModelVersion.V2);
+        // <summary>[New] Original lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrV2 = new("ch_PP-OCRv2_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_det_infer.tar"), ModelVersion.V2);
+        // <summary>Slim pruned lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrMobileSlimV2 = new("ch_ppocr_mobile_slim_v2.0_det", new Uri("https://paddleocr.bj.bcebos.com/dygraph_v2.0/slim/ch_ppocr_mobile_v2.0_det_prune_infer.tar"), ModelVersion.V2);
+        // <summary>Original lightweight model, supporting Chinese, English, multilingual text detection</summary>
+        public static OnlineDetectionModel PPOcrMobileV2 = new("ch_ppocr_mobile_v2.0_det", new Uri("https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_det_infer.tar"), ModelVersion.V2);
+        // <summary>General model, which is larger than the lightweight model, but achieved better performance</summary>
+        public static OnlineDetectionModel PPOcrServerV2 = new("ch_ppocr_server_v2.0_det", new Uri("https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_det_infer.tar"), ModelVersion.V2);
+        // <summary>[New] Slim qunatization with distillation lightweight detection model, supporting English</summary>
+        public static OnlineDetectionModel EnglishPPOcrV3Slim = new("en_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
+        // <summary>[New] Original lightweight detection model, supporting English</summary>
+        public static OnlineDetectionModel EnglishPPOcrV3 = new("en_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
+        // <summary>[New] Slim qunatization with distillation lightweight detection model, supporting English</summary>
+        public static OnlineDetectionModel MultiLanguagePPOcrV3Slim = new("ml_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
+        // <summary>[New] Original lightweight detection model, supporting English</summary>
+        public static OnlineDetectionModel MultiLanguagePPOcrV3 = new("ml_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
     }
 }
