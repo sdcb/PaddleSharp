@@ -9,7 +9,7 @@ namespace Sdcb.PaddleOCR.Tests
         [Fact]
         public async Task FastCheckOCR()
         {
-            FullOcrModel model = await KnownOCRModel.EnglishPPOcrV3.EnsureAll();
+            FullOcrModel model = await OnlineFullModels.EnglishV3.DownloadAsync();
 
             byte[] sampleImageData;
             string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
