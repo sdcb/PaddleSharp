@@ -15,14 +15,19 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
         public static PaddleConfig LoadLocalModel(string key)
         {
             string ns = RootType.Namespace;
-            byte[] programBuffer = ReadResourceAsBytes($"{ns}.models.{key}.pdmodel");
-            byte[] paramsBuffer = ReadResourceAsBytes($"{ns}.models.{key}.pdiparams");
+            byte[] programBuffer = ReadResourceAsBytes($"{ns}.models.{EmbeddedResourceTransform(key)}.inference.pdmodel");
+            byte[] paramsBuffer = ReadResourceAsBytes($"{ns}.models.{EmbeddedResourceTransform(key)}.inference.pdiparams");
             return PaddleConfig.FromMemoryModel(programBuffer, paramsBuffer);
         }
 
         static byte[] ReadResourceAsBytes(string key)
         {
-            using Stream stream = RootAssembly.GetManifestResourceStream(key);
+            using Stream? stream = RootAssembly.GetManifestResourceStream(key);
+            if (stream == null)
+            {
+                throw new Exception($"Unable to load model embedded resource {key} from assembly, model not exists?");
+            }
+
             using MemoryStream ms = new ();
             stream.CopyTo(ms);
             return ms.ToArray();
@@ -31,7 +36,14 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
         public static IReadOnlyList<string> LoadDictsAsArray(string dictName)
         {
             string ns = RootType.Namespace;
-            return ReadLinesFromStream(RootAssembly.GetManifestResourceStream($"{ns}.models.dicts.{dictName}")).ToArray();
+            string resourcePath = $"{ns}.models.dicts.{EmbeddedResourceTransform(dictName)}";
+            using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath);
+            if (dictStream == null)
+            {
+                throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
+            }
+
+            return ReadLinesFromStream(dictStream).ToArray();
 
             static IEnumerable<string> ReadLinesFromStream(Stream stream)
             {
@@ -42,5 +54,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
                 }
             }
         }
+
+        static string EmbeddedResourceTransform(string name) => name.Replace('-', '_').Replace(".0", "._0");
     }
 }

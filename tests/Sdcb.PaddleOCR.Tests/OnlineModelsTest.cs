@@ -5,11 +5,11 @@ using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests
 {
-    public class GeneralCases
+    public class OnlineModelsTest
     {
         private readonly ITestOutputHelper _console;
 
-        public GeneralCases(ITestOutputHelper console)
+        public OnlineModelsTest(ITestOutputHelper console)
         {
             _console = console;
         }
