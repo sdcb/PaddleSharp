@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SharpCompress.Archives;
+using SharpCompress.Archives.GZip;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,9 +11,9 @@ namespace Sdcb.PaddleOCR.Models.Online.Details
 {
     internal static class Utils
     {
-        internal static Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken) => DownloadFiles(new Uri[] { uri }, localFile, cancellationToken);
+        public static Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken) => DownloadFiles(new Uri[] { uri }, localFile, cancellationToken);
 
-        internal static async Task DownloadFiles(Uri[] uris, string localFile, CancellationToken cancellationToken)
+        public static async Task DownloadFiles(Uri[] uris, string localFile, CancellationToken cancellationToken)
         {
             using HttpClient http = new();
 
@@ -45,6 +47,68 @@ namespace Sdcb.PaddleOCR.Models.Online.Details
             }
 
             throw new Exception($"Failed to download {localFile} from all uris: {string.Join(", ", uris.Select(x => x.ToString()))}");
+        }
+
+        public static async Task DownloadAndExtract(string name, Uri uri, string rootDir, CancellationToken cancellationToken)
+        {
+            Directory.CreateDirectory(rootDir);
+            string paramsFile = Path.Combine(rootDir, "inference.pdiparams");
+
+            if (!File.Exists(paramsFile))
+            {
+                string localTarFile = Path.Combine(rootDir, uri.Segments.Last());
+                if (!File.Exists(localTarFile) || new FileInfo(localTarFile).Length == 0)
+                {
+                    Console.WriteLine($"Downloading {name} model from {uri}");
+                    await DownloadFile(uri, localTarFile, cancellationToken);
+                }
+
+                Console.WriteLine($"Extracting {localTarFile} to {rootDir}");
+                using (IArchive archive = ArchiveFactory.Open(localTarFile))
+                {
+                    if (archive is GZipArchive)
+                    {
+                        using Stream stream = archive.Entries.Single().OpenEntryStream();
+                        using MemoryStream ms = new();
+                        stream.CopyTo(ms);
+                        ms.Position = 0;
+                        IArchive inner = ArchiveFactory.Open(ms);
+                        inner.WriteToDirectory(rootDir);
+                    }
+                    else
+                    {
+                        archive.WriteToDirectory(rootDir);
+                    }
+
+                    CheckLocalOCRModel(rootDir);
+                }
+
+                File.Delete(localTarFile);
+            }
+        }
+
+        public static void CheckLocalOCRModel(string rootDir)
+        {
+            string[] filesToCheck = new[]
+            {
+                Path.Combine(rootDir, "inference.pdiparams"),
+                Path.Combine(rootDir, "inference.pdmodel"), 
+            };
+
+            foreach (string path in filesToCheck)
+            {
+                string fileName = Path.GetFileName(path);
+
+                if (!File.Exists(path))
+                {
+                    throw new Exception($"{fileName} not found in {rootDir}, model error?");
+                }
+
+                if (new FileInfo(path).Length == 0)
+                {
+                    throw new Exception($"{fileName} invalid(length = 0), model error?");
+                }
+            }
         }
     }
 }

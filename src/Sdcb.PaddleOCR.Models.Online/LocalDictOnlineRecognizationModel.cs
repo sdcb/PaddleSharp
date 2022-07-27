@@ -1,10 +1,6 @@
-﻿using Sdcb.PaddleOCR.Models;
-using Sdcb.PaddleOCR.Models.Details;
-using Sdcb.PaddleOCR.Models.Online.Details;
-using SharpCompress.Archives;
+﻿using Sdcb.PaddleOCR.Models.Online.Details;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,26 +12,7 @@ namespace Sdcb.PaddleOCR.Models.Online
 
         public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
         {
-            Directory.CreateDirectory(RootDirectory);
-
-            string paramsFile = Path.Combine(RootDirectory, "inference.pdiparams");
-            if (!File.Exists(paramsFile))
-            {
-                string localTarFile = Path.Combine(RootDirectory, uri.Segments.Last());
-                if (!File.Exists(localTarFile))
-                {
-                    Console.WriteLine($"Downloading {name} model from {uri}");
-                    await Utils.DownloadFile(uri, localTarFile, cancellationToken);
-                }
-
-                Console.WriteLine($"Extracting {localTarFile} to {RootDirectory}");
-                using (IArchive archive = ArchiveFactory.Open(localTarFile))
-                {
-                    archive.WriteToDirectory(RootDirectory);
-                }
-
-                File.Delete(localTarFile);
-            }
+            await Utils.DownloadAndExtract(name, uri, RootDirectory, cancellationToken);
 
             return new StreamDictFileRecognizationModel(RootDirectory, GetDictStreamByName(dictName), version);
         }
