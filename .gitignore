@@ -11,3 +11,4 @@
 /build/win64.mkl
 /build/win64.cuda10_cudnn7
 /build/win64.cuda11_cudnn8_tr8
+/src/Sdcb.PaddleOCR.Models.LocalV3/models

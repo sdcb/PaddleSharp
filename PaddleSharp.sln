@@ -59,6 +59,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet6sdk-paddle", "dotnet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Online", "src\Sdcb.PaddleOCR.Models.Online\Sdcb.PaddleOCR.Models.Online.csproj", "{E996BEA0-C552-4A31-8DC2-DED4B97648FF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.LocalV3", "src\Sdcb.PaddleOCR.Models.LocalV3\Sdcb.PaddleOCR.Models.LocalV3.csproj", "{06475814-73FA-4C45-BCD0-4F64849A5612}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{E996BEA0-C552-4A31-8DC2-DED4B97648FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E996BEA0-C552-4A31-8DC2-DED4B97648FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E996BEA0-C552-4A31-8DC2-DED4B97648FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06475814-73FA-4C45-BCD0-4F64849A5612}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06475814-73FA-4C45-BCD0-4F64849A5612}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06475814-73FA-4C45-BCD0-4F64849A5612}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06475814-73FA-4C45-BCD0-4F64849A5612}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{ACED3A78-4E04-421F-AC15-2B91192382CE} = {3C8D6738-0E9A-4BDD-AB62-26B854B055F9}
 		{C6C02ED4-7411-43D3-B326-358CBC9BEF02} = {3C8D6738-0E9A-4BDD-AB62-26B854B055F9}
 		{E996BEA0-C552-4A31-8DC2-DED4B97648FF} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+		{06475814-73FA-4C45-BCD0-4F64849A5612} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
