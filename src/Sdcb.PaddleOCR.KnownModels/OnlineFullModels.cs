@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sdcb.PaddleOCR.KnownModels
+namespace Sdcb.PaddleOCR.Models.Online
 {
     public record class OnlineFullModels(OnlineDetectionModel detModel, OnlineClassificationModel? clsModel, LocalDictOnlineRecognizationModel recModel)
     {
@@ -30,6 +30,6 @@ namespace Sdcb.PaddleOCR.KnownModels
 
         public readonly static OnlineFullModels TranditionalChinseV3 = new(OnlineDetectionModel.ChineseV3, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.TranditionalChineseV3);
 
-        // free to make any combination
+        // free to make any other combinations
     }
 }

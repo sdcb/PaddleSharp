@@ -1,6 +1,6 @@
 using OpenCvSharp;
-using Sdcb.PaddleOCR.KnownModels;
 using Sdcb.PaddleOCR.Models;
+using Sdcb.PaddleOCR.Models.Online;
 
 namespace Sdcb.PaddleOCR.Tests
 {

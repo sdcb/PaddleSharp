@@ -1,9 +1,7 @@
-﻿using Sdcb.PaddleOCR.Models;
-using SharpCompress.Archives;
-using System;
+﻿using System;
 using System.IO;
 
-namespace Sdcb.PaddleOCR.KnownModels
+namespace Sdcb.PaddleOCR.Models.Online
 {
     public class Settings
     {

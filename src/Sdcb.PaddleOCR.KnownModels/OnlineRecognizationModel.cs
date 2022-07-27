@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sdcb.PaddleOCR.KnownModels
+namespace Sdcb.PaddleOCR.Models.Online
 {
     public record LocalDictOnlineRecognizationModel(string name, string dictName, Uri uri, ModelVersion version)
     {

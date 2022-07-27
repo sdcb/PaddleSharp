@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sdcb.PaddleOCR.KnownModels
+namespace Sdcb.PaddleOCR.Models.Online
 {
     public record OnlineClassificationModel(string name, Uri uri, ModelVersion version)
     {
