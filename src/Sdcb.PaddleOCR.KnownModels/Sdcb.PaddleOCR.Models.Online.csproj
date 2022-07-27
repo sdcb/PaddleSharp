@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>AI;Paddle;OCR;PaddleOCR</PackageTags>
-    <VersionPrefix>2.2.1</VersionPrefix>
+    <VersionPrefix>2.5</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Known models for PaddleOCR</Description>
     <Authors>sdcb</Authors>
