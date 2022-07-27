@@ -14,7 +14,7 @@ async Task Main()
 		await m.DownloadAsync(cts);
 	});
 
-	await Parallel.ForEachAsync(OnlineClassificationModel.All.Where(x => x.version == ModelVersion.V3), QueryCancelToken, async (m, cts) =>
+	await Parallel.ForEachAsync(OnlineClassificationModel.All, QueryCancelToken, async (m, cts) =>
 	{
 		await m.DownloadAsync(cts);
 	});
@@ -49,5 +49,5 @@ async Task Main()
 		}
 	}
 	
-	Process.Start("explorer", @$"/select, ""{Settings.GlobalModelDirectory}""".Dump());
+	Process.Start("explorer", @$"/select, ""{dictsFolder}""".Dump());
 }
