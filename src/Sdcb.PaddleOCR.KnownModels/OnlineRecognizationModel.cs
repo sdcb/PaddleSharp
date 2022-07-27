@@ -1,5 +1,6 @@
 ﻿using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Details;
+using Sdcb.PaddleOCR.Models.Online.Details;
 using SharpCompress.Archives;
 using System;
 using System.IO;
@@ -13,9 +14,7 @@ namespace Sdcb.PaddleOCR.Models.Online
     {
         public string RootDirectory = Path.Combine(Settings.GlobalModelDirectory, name);
 
-        public static string DictRootDirectory = Path.Combine(Settings.GlobalModelDirectory, "dicts");
-
-        public async Task<FileRecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
+        public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
         {
             Directory.CreateDirectory(RootDirectory);
 
@@ -38,16 +37,7 @@ namespace Sdcb.PaddleOCR.Models.Online
                 File.Delete(localTarFile);
             }
 
-            string keyFile = Path.Combine(DictRootDirectory, Path.GetFileName(dictName));
-            if (!File.Exists(keyFile))
-            {
-                Directory.CreateDirectory(DictRootDirectory);
-                using FileStream localFile = File.OpenWrite(keyFile);
-                using Stream resource = GetType().Assembly.GetManifestResourceStream($"Sdcb.PaddleOCR.KnownModels.dicts.{dictName}");
-                await resource.CopyToAsync(localFile, 81920, cancellationToken);
-            }
-
-            return new FileRecognizationModel(RootDirectory, keyFile, version);
+            return new StreamDictFileRecognizationModel(RootDirectory, GetDictStreamByName(dictName), version);
         }
 
         internal static Stream GetDictStreamByName(string dictName)

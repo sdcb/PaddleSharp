@@ -5,19 +5,36 @@ using System.IO;
 
 namespace Sdcb.PaddleOCR.Models.Details
 {
-    public class FileRecognizationModel : RecognizationModel
+    public class FileRecognizationModel : VersionedRecognizationModel
     {
         private readonly IReadOnlyList<string> _labels;
-        private ModelVersion Version { get; init; }
 
-        public string DirectoryPath { get; init; }
+        public string DirectoryPath { get; }
 
-        public FileRecognizationModel(string directoryPath, string labelFilePath, ModelVersion version)
+        public FileRecognizationModel(string directoryPath, string labelFilePath, ModelVersion version) : base(version)
         {
             DirectoryPath = directoryPath;
             _labels = File.ReadAllLines(labelFilePath);
+        }
+
+        public override PaddleConfig CreateConfig()
+        {
+            PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
+            ConfigPostProcess(config);
+            return config;
+        }
+
+        public override string GetLabelByIndex(int i) => GetLabelByIndex(i, _labels);
+    }
+
+    public abstract class VersionedRecognizationModel : RecognizationModel
+    {
+        public VersionedRecognizationModel(ModelVersion version)
+        {
             Version = version;
         }
+
+        public ModelVersion Version { get; }
 
         public override OcrShape Shape => Version switch
         {
@@ -26,24 +43,22 @@ namespace Sdcb.PaddleOCR.Models.Details
             _ => throw new ArgumentOutOfRangeException($"Unknown OCR model version: {Version}."),
         };
 
-        public override PaddleConfig CreateConfig()
+        protected static string GetLabelByIndex(int i, IReadOnlyList<string> labels)
         {
-            PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
+            return i switch
+            {
+                var x when x > 0 && x <= labels.Count => labels[x - 1],
+                var x when x == labels.Count + 1 => " ",
+                _ => throw new Exception($"Unable to GetLabelByIndex: index {i} out of range {labels.Count}, OCR model or labels not matched?"),
+            };
+        }
+
+        protected void ConfigPostProcess(PaddleConfig config)
+        {
             if (Version == ModelVersion.V3)
             {
                 config.DeletePass("matmul_transpose_reshape_fuse_pass");
             }
-            return config;
-        }
-
-        public override string GetLabelByIndex(int i)
-        {
-            return i switch
-            {
-                var x when x > 0 && x <= _labels.Count => _labels[x - 1],
-                var x when x == _labels.Count + 1 => " ",
-                _ => throw new Exception($"Unable to GetLabelByIndex: index {i} out of range {_labels.Count}, OCR model or labels not matched?"), 
-            };
         }
     }
 }

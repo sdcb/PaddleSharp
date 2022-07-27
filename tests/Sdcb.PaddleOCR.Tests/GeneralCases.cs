@@ -1,11 +1,19 @@
 using OpenCvSharp;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
+using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests
 {
     public class GeneralCases
     {
+        private readonly ITestOutputHelper _console;
+
+        public GeneralCases(ITestOutputHelper console)
+        {
+            _console = console;
+        }
+
         [Fact]
         public async Task FastCheckOCR()
         {
@@ -15,7 +23,7 @@ namespace Sdcb.PaddleOCR.Tests
             string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
             using (HttpClient http = new HttpClient())
             {
-                Console.WriteLine("Download sample image from: " + sampleImageUrl);
+                _console.WriteLine("Download sample image from: " + sampleImageUrl);
                 sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
             }
 
@@ -30,10 +38,10 @@ namespace Sdcb.PaddleOCR.Tests
                 using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
                 {
                     PaddleOcrResult result = all.Run(src);
-                    Console.WriteLine("Detected all texts: \n" + result.Text);
+                    _console.WriteLine("Detected all texts: \n" + result.Text);
                     foreach (PaddleOcrResultRegion region in result.Regions)
                     {
-                        Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize:    {region.Rect.Size}, Angle: {region.Rect.Angle}");
+                        _console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize:    {region.Rect.Size}, Angle: {region.Rect.Angle}");
                     }
                 }
             }

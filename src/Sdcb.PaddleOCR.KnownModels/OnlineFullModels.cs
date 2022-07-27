@@ -14,7 +14,7 @@ namespace Sdcb.PaddleOCR.Models.Online
         {
             FileDetectionModel localDetModel = await detModel.DownloadAsync(cancellationToken);
             FileClassificationModel? localClsModel = clsModel != null ? await clsModel.DownloadAsync(cancellationToken) : null;
-            FileRecognizationModel? localRecModel = await recModel.DownloadAsync(cancellationToken);
+            RecognizationModel localRecModel = await recModel.DownloadAsync(cancellationToken);
             return new FullOcrModel(localDetModel, localClsModel, localRecModel);
         }
 
