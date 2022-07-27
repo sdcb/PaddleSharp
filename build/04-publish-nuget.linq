@@ -5,35 +5,21 @@
 </Query>
 
 #load ".\00-common"
-
-DumpContainer dc = new DumpContainer().Dump();
+#load ".\03-publish-proget"
 
 async Task Main()
 {
+	Util.Metatext("注意，这个是发布到nuget！").Dump();
 	await SetupAsync(QueryCancelToken);
-	Refresh();
-}
 
-void Refresh()
-{
-	dc.Content = BuildTable();
-}
+	DumpContainer dc = new DumpContainer().Dump();
+	Refresh(dc, Publish);
 
-object BuildTable()
-{
-	return Directory.EnumerateFiles(@".\nupkgs\", "*.nupkg")
-		.Where(x => x.Contains(Version))
-		.Select(x => new 
-		{ 
-			Package = Path.GetFileNameWithoutExtension(x), 
-			Publish = new Button("Publish", o => Publish(x)), 
-		});
-}
-
-void Publish(string path)
-{
-	string nugetApiUrl = "nuget.org";
-	string nugetApiKey = Util.GetPassword("nuget-api-key");
-	NuGetRun($@"push {path} {nugetApiKey} -Source {nugetApiUrl}".Dump());
-	Refresh();
+	void Publish(string path)
+	{
+		string nugetApiUrl = "nuget.org";
+		string nugetApiKey = Util.GetPassword("nuget-api-key");
+		NuGetRun($@"push {path} {nugetApiKey} -Source {nugetApiUrl}".Dump());
+		Refresh(dc, Publish);
+	}
 }

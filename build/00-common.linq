@@ -4,8 +4,6 @@
   <IncludeUncapsulator>false</IncludeUncapsulator>
 </Query>
 
-const string Version = "2.3.0";
-
 async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
@@ -19,14 +17,14 @@ async Task SetupAsync(CancellationToken cancellationToken = default)
 }
 
 static void NuGetRun(string args) => Run(@".\nuget.exe", args, Encoding.GetEncoding("gb2312"));
-static void DotNetRun(string args) => Run("dotnet", args, Encoding.UTF8);
+static void DotNetRun(string args) => Run("dotnet", args, Encoding.GetEncoding("gb2312"));
 static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, args, encoding);
-string[] Projects = new[]
+static ProjectVersion[] Projects = new[]
 {
-	"Sdcb.PaddleInference",
-	"Sdcb.PaddleOCR",
-	"Sdcb.PaddleOCR.KnownModels", 
-	"Sdcb.PaddleDetection", 
+	new ProjectVersion("Sdcb.PaddleInference", "2.3.0"), 
+	new ProjectVersion("Sdcb.PaddleOCR", "2.5.0-preview"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.5.0-preview"), 
+	new ProjectVersion("Sdcb.PaddleDetection", "2.2.1-preview"), 
 };
 
 static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
@@ -55,3 +53,5 @@ static async Task<string> EnsureNugetExe(CancellationToken cancellationToken = d
 	}
 	return localPath;
 }
+
+record ProjectVersion(string name, string version);

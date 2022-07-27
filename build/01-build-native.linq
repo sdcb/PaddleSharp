@@ -10,6 +10,8 @@
 
 #load ".\00-common"
 
+static string NativeVersion => Projects.First(x => x.name == "Sdcb.PaddleInference").version;
+
 async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
@@ -161,7 +163,7 @@ public abstract record NupkgBuildSource(string rid, string titleRid, string libN
 {
 	public string CLibFilePath => $@"./{titleRid}/bin/{libName}";
 	public string PlatformDir => Path.GetDirectoryName(CLibFilePath);
-	public string NuGetPath => $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{Version}.nupkg";
+	public string NuGetPath => $@".\nupkgs\Sdcb.PaddleInference.runtime.{titleRid}.{NativeVersion}.nupkg";
 
 	public async Task<string> EnsurePackage(CancellationToken cancellationToken = default)
 	{
@@ -201,7 +203,7 @@ public abstract record NupkgBuildSource(string rid, string titleRid, string libN
 		{
 			string iconDestPath = @$".\{titleRid}\icon.jpg";
 			if (!File.Exists(iconDestPath)) File.Copy(@$".\icon.jpg", iconDestPath);
-			NuGetRun($@"pack {nuspecPath} -Version {Version} -OutputDirectory .\nupkgs".Dump());
+			NuGetRun($@"pack {nuspecPath} -Version {NativeVersion} -OutputDirectory .\nupkgs".Dump());
 			File.Delete(@$".\{titleRid}\icon.jpg");
 		}
 		else

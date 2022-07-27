@@ -10,8 +10,7 @@ DumpContainer dc = new DumpContainer().Dump();
 
 async Task Main()
 {
-	await SetupAsync(QueryCancelToken);
-	
+	await SetupAsync(QueryCancelToken);	
 	Refresh();
 }
 
@@ -25,14 +24,15 @@ object LoadTable()
 	return Projects
 		.Select(x => new
 		{
-			Project = x, 
+			Project = x.name, 
+			Version = x.version, 
 			Build = new Button("Build", o => Build(x))
 		});
 }
 
-void Build(string project)
+void Build(ProjectVersion p)
 {
 	//DotNetRun($@"build ..\src\{project}\{project}.csproj -c Release");
-	DotNetRun($@"pack ..\src\{project}\{project}.csproj -p:Version={Version} -c Release -o .\nupkgs".Dump());
+	DotNetRun($@"pack ..\src\{p.name}\{p.name}.csproj -p:Version={p.version} -c Release -o .\nupkgs".Dump());
 	Refresh();
 }
