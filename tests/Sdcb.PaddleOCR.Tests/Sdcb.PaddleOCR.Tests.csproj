@@ -22,7 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   
-    <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV3" Version="2.5.0-preview4" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV3" Version="2.5.0-preview5" />
   </ItemGroup>
 
   <ItemGroup>
