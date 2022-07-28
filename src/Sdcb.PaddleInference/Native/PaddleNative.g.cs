@@ -218,13 +218,13 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
         /// <param name="tensor_num">The number of the subgraph input.</param>
         /// <param name="tensor_name">(<see cref="IntPtr*" />) The name of every subgraph input.</param>
-        /// <param name="shapes_num">(<see cref="int*" />) The shape size of every subgraph input.</param>
+        /// <param name="shapes_num">(<see cref="long*" />) The shape size of every subgraph input.</param>
         /// <param name="min_shape">(<see cref="IntPtr*" />) The min input shape of every subgraph input.</param>
         /// <param name="max_shape">(<see cref="IntPtr*" />) The max input shape of every subgraph input.</param>
         /// <param name="optim_shape">(<see cref="IntPtr*" />) The opt input shape of every subgraph input.</param>
         /// <param name="disable_trt_plugin_fp16">(<see cref="PD_Bool" />) Setting this parameter to true means that TRT plugin will not run fp16.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigSetTrtDynamicShapeInfo(IntPtr pd_config, int tensor_num, IntPtr tensor_name, IntPtr shapes_num, IntPtr min_shape, IntPtr max_shape, IntPtr optim_shape, sbyte disable_trt_plugin_fp16);
+        public static extern void PD_ConfigSetTrtDynamicShapeInfo(IntPtr pd_config, long tensor_num, IntPtr tensor_name, IntPtr shapes_num, IntPtr min_shape, IntPtr max_shape, IntPtr optim_shape, sbyte disable_trt_plugin_fp16);
 
         /// <summary>A boolean state telling whether the trt dynamic_shape is used.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -269,7 +269,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="ops_num">ops number</param>
         /// <param name="ops_name">(<see cref="IntPtr*" />) ops name</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigDisableTensorRtOPs(IntPtr pd_config, int ops_num, IntPtr ops_name);
+        public static extern void PD_ConfigDisableTensorRtOPs(IntPtr pd_config, long ops_num, IntPtr ops_name);
 
         /// <summary>Replace some TensorRT plugins to TensorRT OSS( https://github.com/NVIDIA/TensorRT), with which some models's inference may be more high-performance. Libnvinfer_plugin.so greater than V7.2.1 is needed.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -303,7 +303,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="ops_filter_num">The number of operators not supported by Lite.</param>
         /// <param name="ops_filter">(<see cref="IntPtr*" />) The name of operators not supported by Lite.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigEnableLiteEngine(IntPtr pd_config, int precision, sbyte zero_copy, int passes_filter_num, IntPtr passes_filter, int ops_filter_num, IntPtr ops_filter);
+        public static extern void PD_ConfigEnableLiteEngine(IntPtr pd_config, int precision, sbyte zero_copy, long passes_filter_num, IntPtr passes_filter, long ops_filter_num, IntPtr ops_filter);
 
         /// <summary>A boolean state indicating whether the Lite sub-graph engine is used.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -351,7 +351,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="ops_num">The number of operator type list.</param>
         /// <param name="op_list">(<see cref="IntPtr*" />) The name of operator type list.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigSetMkldnnOp(IntPtr pd_config, int ops_num, IntPtr op_list);
+        public static extern void PD_ConfigSetMkldnnOp(IntPtr pd_config, long ops_num, IntPtr op_list);
 
         /// <summary>Turn on MKLDNN quantization.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -380,7 +380,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="ops_num">The number of operator type list.</param>
         /// <param name="op_list">(<see cref="IntPtr*" />) The name of operator type list.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigSetBfloat16Op(IntPtr pd_config, int ops_num, IntPtr op_list);
+        public static extern void PD_ConfigSetBfloat16Op(IntPtr pd_config, long ops_num, IntPtr op_list);
 
         /// <summary>Enable the GPU multi-computing stream feature. NOTE: The current behavior of this interface is to bind the computation stream to the thread, and this behavior may be changed in the future.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -400,7 +400,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="params_buffer">(<see cref="byte*" />) The memory buffer of the combined parameters file.</param>
         /// <param name="params_buffer_size">The size of the combined parameters data.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigSetModelBuffer(IntPtr pd_config, IntPtr prog_buffer, int prog_buffer_size, IntPtr params_buffer, int params_buffer_size);
+        public static extern void PD_ConfigSetModelBuffer(IntPtr pd_config, IntPtr prog_buffer, long prog_buffer_size, IntPtr params_buffer, long params_buffer_size);
 
         /// <summary>A boolean state telling whether the model is set from the CPU memory.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -469,7 +469,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="idx">the position to insert.</param>
         /// <param name="pass">(<see cref="byte*" />) the new pass.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigInsertPass(IntPtr pd_config, int idx, IntPtr pass);
+        public static extern void PD_ConfigInsertPass(IntPtr pd_config, long idx, IntPtr pass);
 
         /// <summary>Append a pass to the end of the passes</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -517,13 +517,13 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="pd_predictor">(<see cref="PD_Predictor*" />) predictor</param>
         /// <returns>input number</returns>
         [DllImport(PaddleInferenceCLib)]
-        public static extern int PD_PredictorGetInputNum(IntPtr pd_predictor);
+        public static extern long PD_PredictorGetInputNum(IntPtr pd_predictor);
 
         /// <summary>Get the output number</summary>
         /// <param name="pd_predictor">(<see cref="PD_Predictor*" />) predictor</param>
         /// <returns>output number</returns>
         [DllImport(PaddleInferenceCLib)]
-        public static extern int PD_PredictorGetOutputNum(IntPtr pd_predictor);
+        public static extern long PD_PredictorGetOutputNum(IntPtr pd_predictor);
 
         /// <summary>Get the Input Tensor object</summary>
         /// <param name="pd_predictor">(<see cref="PD_Predictor*" />) predictor</param>
@@ -576,7 +576,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="shape_size">The size of shape.</param>
         /// <param name="shape">(<see cref="int*" />) The shape to set.</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_TensorReshape(IntPtr pd_tensor, int shape_size, IntPtr shape);
+        public static extern void PD_TensorReshape(IntPtr pd_tensor, long shape_size, IntPtr shape);
 
         /// <summary>Get the memory pointer in CPU or GPU with 'float' data type. Please Reshape the tensor first before call this. It's usually used to get input data pointer.</summary>
         /// <param name="pd_tensor">(<see cref="PD_Tensor*" />) tensor.</param>

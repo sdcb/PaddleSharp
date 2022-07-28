@@ -15,18 +15,7 @@
     <Authors>sdcb</Authors>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="dicts\arabic_dict.txt" />
-    <EmbeddedResource Include="dicts\chinese_cht_dict.txt" />
-    <EmbeddedResource Include="dicts\cyrillic_dict.txt" />
-    <EmbeddedResource Include="dicts\devanagari_dict.txt" />
-    <EmbeddedResource Include="dicts\en_dict.txt" />
-    <EmbeddedResource Include="dicts\japan_dict.txt" />
-    <EmbeddedResource Include="dicts\ka_dict.txt" />
-    <EmbeddedResource Include="dicts\korean_dict.txt" />
-    <EmbeddedResource Include="dicts\latin_dict.txt" />
-    <EmbeddedResource Include="dicts\ppocr_keys_v1.txt" />
-    <EmbeddedResource Include="dicts\ta_dict.txt" />
-    <EmbeddedResource Include="dicts\te_dict.txt" />
+    <EmbeddedResource Include="dicts\*.txt" />
   </ItemGroup>
 
   <ItemGroup>

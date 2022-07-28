@@ -55,8 +55,8 @@ namespace Sdcb.PaddleInference
             }
         }
 
-        public int InputSize => PaddleNative.PD_PredictorGetInputNum(_ptr);
-        public int OutputSize => PaddleNative.PD_PredictorGetOutputNum(_ptr);
+        public long InputSize => PaddleNative.PD_PredictorGetInputNum(_ptr);
+        public long OutputSize => PaddleNative.PD_PredictorGetOutputNum(_ptr);
 
         public bool Run() => PaddleNative.PD_PredictorRun(_ptr) != 0;
 

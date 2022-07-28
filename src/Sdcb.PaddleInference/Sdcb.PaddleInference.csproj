@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>AI;Paddle;OCR;PaddleOCR;PaddleDetection</PackageTags>
-    <VersionPrefix>2.3</VersionPrefix>
+    <VersionPrefix>2.3.1</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>.NET Wrapper of Paddle Inference library, no native binding, please also install native runtime binding libraries like Sdcb.PaddleInference.runtimes.*</Description>
     <Authors>sdcb</Authors>
