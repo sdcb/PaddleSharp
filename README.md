@@ -42,6 +42,7 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 
 ### PaddleOCR packages
 <details>
+
 | NuGet Package                 | Version                                                                                                                                | Description                                             |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference)        |
@@ -52,6 +53,7 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 
 ### PaddleDetection packages
 <details>
+
 | NuGet Package        | Version                                                                                                              | Description                                            |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | Sdcb.PaddleDetection | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleDetection.svg)](https://nuget.org/packages/Sdcb.PaddleDetection) | PaddleDetection library(based on Sdcb.PaddleInference) |
