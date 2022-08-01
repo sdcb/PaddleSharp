@@ -9,8 +9,8 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
 {
     internal static class Utils
     {
-        public readonly static Type RootType = typeof(LocalV3FullModels);
-        public readonly static Assembly RootAssembly = typeof(LocalV3FullModels).Assembly;
+        public readonly static Type RootType = typeof(LocalFullModels);
+        public readonly static Assembly RootAssembly = typeof(LocalFullModels).Assembly;
 
         public static PaddleConfig LoadLocalModel(string key)
         {

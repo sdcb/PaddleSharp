@@ -9,17 +9,17 @@ async Task Main()
 {
 	Settings.GlobalModelDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "models");
 	
-	await Parallel.ForEachAsync(OnlineDetectionModel.All.Where(x => x.version == ModelVersion.V3), QueryCancelToken, async (m, cts) =>
+	await Parallel.ForEachAsync(OnlineDetectionModel.All.Where(x => x.version == ModelVersion.V3 && !x.name.Contains("_slim")), QueryCancelToken, async (m, cts) =>
 	{
 		await m.DownloadAsync(cts);
 	});
 
-	await Parallel.ForEachAsync(OnlineClassificationModel.All, QueryCancelToken, async (m, cts) =>
+	await Parallel.ForEachAsync(OnlineClassificationModel.All.Where(x =>  !x.name.Contains("_slim")), QueryCancelToken, async (m, cts) =>
 	{
 		await m.DownloadAsync(cts);
 	});
 
-	await Parallel.ForEachAsync(LocalDictOnlineRecognizationModel.All.Where(x => x.version == ModelVersion.V3), QueryCancelToken, async (m, cts) =>
+	await Parallel.ForEachAsync(LocalDictOnlineRecognizationModel.All.Where(x => x.version == ModelVersion.V3 &&  !x.name.Contains("_slim")), QueryCancelToken, async (m, cts) =>
 	{
 		await m.DownloadAsync(cts);
 	});

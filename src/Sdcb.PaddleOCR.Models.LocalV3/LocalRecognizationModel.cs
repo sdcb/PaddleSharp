@@ -26,22 +26,10 @@ namespace Sdcb.PaddleOCR.Models.LocalV3
         }
 
         /// <summary>
-        /// [New] Slim qunatization with distillation lightweight model, supporting Chinese, English text recognition
-        /// (Size: 4.9M)
-        /// </summary>
-        public static LocalRecognizationModel ChineseV3Slim => new("ch_PP-OCRv3_rec_slim", "ppocr_keys_v1.txt", ModelVersion.V3);
-
-        /// <summary>
         /// [New] Original lightweight model, supporting Chinese, English, multilingual text recognition
         /// (Size: 12.4M)
         /// </summary>
         public static LocalRecognizationModel ChineseV3 => new("ch_PP-OCRv3_rec", "ppocr_keys_v1.txt", ModelVersion.V3);
-
-        /// <summary>
-        /// [New] Slim qunatization with distillation lightweight model, supporting english, English text recognition
-        /// (Size: 3.2M)
-        /// </summary>
-        public static LocalRecognizationModel EnglishV3Slim => new("en_PP-OCRv3_rec_slim", "en_dict.txt", ModelVersion.V3);
 
         /// <summary>
         /// [New] Original lightweight model, supporting english, English, multilingual text recognition
@@ -111,9 +99,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3
 
         public static LocalRecognizationModel[] All => new[]
         {
-            ChineseV3Slim,
             ChineseV3,
-            EnglishV3Slim,
             EnglishV3,
             KoreanV3,
             JapanV3,
