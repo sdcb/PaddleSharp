@@ -26,9 +26,9 @@
 ### Paddle Inference GPU package
 <details>
 Since GPU package are too large(>1.5GB), I cannot publish a NuGet package to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
+
 * https://github.com/PaddlePaddle/Paddle/issues/43874
 * https://github.com/NuGet/Home/issues/11706#issuecomment-1167305006
-* 
 
 However you're good to build your own GPU nuget package using `01-build-native.linq`.
 
