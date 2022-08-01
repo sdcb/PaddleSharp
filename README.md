@@ -41,7 +41,6 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 </details>
 
 ### PaddleOCR packages
-<details>
 
 | NuGet Package                 | Version                                                                                                                                | Description                                             |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
@@ -49,7 +48,6 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 | Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using |
 | Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~130MB) |
 | Sdcb.PaddleOCR.KnownModels    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)       | Old online model download helper, *deprecated*          |
-</details>
 
 ### PaddleDetection packages
 <details>
