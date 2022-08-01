@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.5.5.20211231" />
-    <PackageReference Include="Sdcb.PaddleInference" Version="2.3.1-preview2" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>

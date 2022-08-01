@@ -1,7 +1,6 @@
 using OpenCvSharp;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.LocalV3;
-using Sdcb.PaddleOCR.Models.Online;
 using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests
@@ -18,7 +17,7 @@ namespace Sdcb.PaddleOCR.Tests
         [Fact]
         public async Task FastCheckOCR()
         {
-            FullOcrModel model = LocalV3FullModels.EnglishV3;
+            FullOcrModel model = LocalFullModels.EnglishV3;
 
             byte[] sampleImageData;
             string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";

@@ -33,6 +33,7 @@ static void Refresh(DumpContainer dc, Action<string> publish)
 			.Select(x => new
 			{
 				Package = Path.GetFileNameWithoutExtension(x),
+				Size = $"{new FileInfo(x).Length / 1024.0 / 1024:N2}MB",
 				Publish = new Button("Publish", o => publish(x)),
 				Delete = new Button("Delete", o =>
 				{
