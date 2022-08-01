@@ -1,20 +1,16 @@
 # Usage
 
-## Windows: Detection and Recognition(All)
+## Windows(Local model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
-   Sdcb.PaddleInference
+   Sdcb.PaddleOCR.Models.LocalV3
    Sdcb.PaddleInference.runtime.win64.mkl
-   Sdcb.PaddleOCR
-   Sdcb.PaddleOCR.KnownModels
-   OpenCvSharp4
    OpenCvSharp4.runtime.win
    ```
 
 2. Using following C# code to get result:
    ```csharp
-   OCRModel model = KnownOCRModel.PPOcrV2;
-   await model.EnsureAll();
+   FullOcrModel model = LocalFullModels.ChineseV3;
    
    byte[] sampleImageData;
    string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
@@ -24,7 +20,47 @@
        sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
    }
    
-   using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath)
+   using (PaddleOcrAll all = new PaddleOcrAll(model)
+   {
+       AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
+       Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+   })
+   {
+       // Load local file by following code:
+       // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
+       using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+       {
+           PaddleOcrResult result = all.Run(src);
+           Console.WriteLine("Detected all texts: \n" + result.Text);
+           foreach (PaddleOcrResultRegion region in result.Regions)
+           {
+               Console.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectSize:    {region.Rect.Size}, Angle: {region.Rect.Angle}");
+           }
+       }
+   }
+   ```
+
+## Windows(Online model): Detection and Recognition(All)
+1. Install NuGet Packages:
+   ```
+   Sdcb.PaddleOCR.Models.Online
+   Sdcb.PaddleInference.runtime.win64.mkl
+   OpenCvSharp4.runtime.win
+   ```
+
+2. Using following C# code to get result:
+   ```csharp
+   FullOcrModel model = await OnlineFullModels.EnglishV3.DownloadAsync();
+   
+   byte[] sampleImageData;
+   string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
+   using (HttpClient http = new HttpClient())
+   {
+       Console.WriteLine("Download sample image from: " + sampleImageUrl);
+       sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
+   }
+   
+   using (PaddleOcrAll all = new PaddleOcrAll(model)
    {
        AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
        Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
@@ -51,19 +87,15 @@ The build steps for `sdflysha/dotnet6-paddle:2.3.0-ubuntu20` was described [here
 
 2. Install NuGet Packages:
 ```ps
-dotnet add package Sdcb.PaddleInference
-dotnet add package Sdcb.PaddleOCR
-dotnet add package Sdcb.PaddleOCR.KnownModels
-dotnet add package OpenCvSharp4
+dotnet add package Sdcb.PaddleOCR.Models.LocalV3
 ```
 
 Please aware in `Linux`, the native binding library is not required, instead, you should compile your own `OpenCV`/`PaddleInference` library, or just use the `Docker` image.
 
 3. write following C# code to get result(also can be exactly the same as windows):
 ```csharp
-OCRModel model = KnownOCRModel.PPOcrV2;
-await model.EnsureAll();
-using (PaddleOcrAll all = new PaddleOcrAll(model.RootDirectory, model.KeyPath))
+FullOcrModel model = LocalFullModels.ChineseV3;
+using (PaddleOcrAll all = new PaddleOcrAll(model))
 // Load in-memory data by following code:
 // using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
@@ -75,13 +107,9 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 ## Detection Only
 ```csharp
 // Install following packages:
-// Sdcb.PaddleInference
-// Sdcb.PaddleInference.runtime.win64.mkl (required in Windows)
-// Sdcb.PaddleOCR
-// Sdcb.PaddleOCR.KnownModels
-// OpenCvSharp4
-// OpenCvSharp4.runtime.win (required in Windows)
-// OpenCvSharp4.runtime.linux18.04 (required in Linux)
+// Sdcb.PaddleOCR.Models.LocalV3
+// Sdcb.PaddleInference.runtime.win64.mkl (required in Windows, linux using docker)
+// OpenCvSharp4.runtime.win (required in Windows, linux using docker)
 byte[] sampleImageData;
 string sampleImageUrl = @"https://www.tp-link.com.cn/content/images2017/gallery/4288_1920.jpg";
 using (HttpClient http = new HttpClient())
@@ -90,9 +118,7 @@ using (HttpClient http = new HttpClient())
     sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
 }
 
-OCRModel model = KnownOCRModel.PPOcrV2;
-await model.EnsureAll();
-using (PaddleOcrDetector detector = new PaddleOcrDetector(model.DetectionDirectory))
+using (PaddleOcrDetector detector = new PaddleOcrDetector(LocalDetectionModel.ChineseV3))
 using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 {
     RotatedRect[] rects = detector.Run(src);
@@ -107,25 +133,9 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 
 # Language supports
 
-| Language             | 中文名             | Code                               |
-| -------------------- | ------------------ | ---------------------------------- |
-| Chinese              | 简体中文           | `KnownOCRModel.PPOcrV2`            |
-| Chinese Server       | 简体中文(服务器版) | `KnownOCRModel.PPOcrServerV2`      |
-| English              | 英文               | `KnownOCRModel.EnglishMobileV2`    |
-| Tranditional Chinese | 繁体中文           | `KnownOCRModel.EnglishMobileV2`    |
-| French               | 法文               | `KnownOCRModel.FrenchMobileV2`     |
-| German               | 德文               | `KnownOCRModel.GermanMobileV2`     |
-| Korean               | 韩文               | `KnownOCRModel.KoreanMobileV2`     |
-| Japanese             | 日文               | `KnownOCRModel.JapaneseMobileV2`   |
-| Telugu               | 泰卢固文           | `KnownOCRModel.TeluguMobileV2`     |
-| Kannada              | 卡纳达文           | `KnownOCRModel.KannadaMobileV2`    |
-| Tamil                | 泰米尔文           | `KnownOCRModel.TamilMobileV2`      |
-| Latin                | 拉丁文             | `KnownOCRModel.LatinMobileV2`      |
-| Arabic               | 阿拉伯字母         | `KnownOCRModel.ArabicMobileV2`     |
-| Cyrillic             | 斯拉夫字母         | `KnownOCRModel.CyrillicMobileV2`   |
-| Devanagari           | 梵文字母           | `KnownOCRModel.DevanagariMobileV2` |
+Please refer to https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/doc/doc_en/models_list_en.md to check language support models.
 
-Just replace the `KnownOCRModel.PPOcrV2` in demo code with your speicific language in `Code` column above, then you can use the language.
+Just replace the `.ChineseV3` in demo code with your speicific language, then you can use the language.
 
 # Technical details
 
