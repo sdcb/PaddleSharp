@@ -6,7 +6,7 @@ jobs:
   linux-ubuntu:
     runs-on: ubuntu-latest
     env:
-      tag: 2.3.0-ubuntu20
+      tag: 2.3.1-ubuntu20
     steps:
       - uses: actions/checkout@v3
       - name: Build runtime container
