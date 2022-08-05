@@ -25,13 +25,13 @@ namespace Sdcb.PaddleOCR
             Recognizer = new PaddleOcrRecognizer(model.RecognizationModel);
         }
 
-        [Obsolete]
+        [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
         public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version)
             : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version))
         {
         }
 
-        [Obsolete]
+        [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
         public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version)
             : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version))
         {
