@@ -31,7 +31,7 @@ namespace Sdcb.PaddleOCR
                 return new PaddleOcrRecognizerResult[0];
             }
 
-            int chooseBatchSize = batchSize != 0 ? batchSize : Environment.ProcessorCount;
+            int chooseBatchSize = batchSize != 0 ? batchSize : Math.Max(8, Environment.ProcessorCount);
             PaddleOcrRecognizerResult[] allResult = new PaddleOcrRecognizerResult[srcs.Length];
 
             return srcs
