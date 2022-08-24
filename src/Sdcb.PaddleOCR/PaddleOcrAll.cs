@@ -1,7 +1,6 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleOCR.Models;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace Sdcb.PaddleOCR
@@ -62,7 +61,7 @@ namespace Sdcb.PaddleOCR
                 MathUtil.Clamp(rect.Bottom, 0, size.Height));
         }
 
-        public PaddleOcrResult Run(Mat src)
+        public PaddleOcrResult Run(Mat src, int recognizeBatchSize = 0)
         {
             if (Enable180Classification && Classifier == null)
             {
@@ -70,16 +69,16 @@ namespace Sdcb.PaddleOCR
             }
 
             RotatedRect[] rects = Detector.Run(src);
-            return new PaddleOcrResult(rects
-                .Select(rect =>
+            Mat[] mats =
+                rects.Select(rect =>
                 {
                     using Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[GetCropedRect(rect.BoundingRect(), src.Size())];
-                    using Mat cls = Enable180Classification ? Classifier!.Run(roi) : roi;
-                    PaddleOcrRecognizerResult result = Recognizer.Run(cls);
-                    PaddleOcrResultRegion region = new(rect, result.Text, result.Score);
-                    //Util.HorizontalRun(true, Image(roi), Image(cls), result.Text, result.Score, rect.Angle, rect.Size.Width > rect.Size.Height).Dump();
-                    return region;
+                    return Enable180Classification ? Classifier!.Run(roi) : roi.Clone();
                 })
+                .ToArray();
+
+            return new PaddleOcrResult(Recognizer.Run(mats, recognizeBatchSize)
+                .Select((result, i) => new PaddleOcrResultRegion(rects[i], result.Text, result.Score))
                 .ToArray());
         }
 
