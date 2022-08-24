@@ -22,7 +22,7 @@ static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, arg
 static ProjectVersion[] Projects = new[]
 {
 	new ProjectVersion("Sdcb.PaddleInference", "2.3.1"), 
-	new ProjectVersion("Sdcb.PaddleOCR", "2.5.0"), 
+	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0-preview3"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.5.0"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.5.0"), 
 	new ProjectVersion("Sdcb.PaddleDetection", "2.2.1-preview"), 
