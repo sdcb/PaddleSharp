@@ -16,16 +16,12 @@ async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
 	//await new LinuxNuGetSource().Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_mkl/paddle_inference_c.zip"))
+	await new WindowsNugetSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-mkl-vs2017/paddle_inference_c.zip"))
 		.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.openblas", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.1/cxx_c/Windows/CPU/x86-64_vs2017_avx_openblas/paddle_inference_c.zip"))
+	await new WindowsNugetSource("win-x64", "win64.openblas", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-openblas-vs2017/paddle_inference_c.zip"))
 		.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda10_cudnn7", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.1/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda10.1_cudnn7/paddle_inference_c_notrt.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr7", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.1/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.0_cudnn8/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda11_cudnn8_tr8", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.0/cxx_c/Windows/GPU/x86-64_vs2017_avx_mkl_cuda11.2_cudnn8/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda101_cudnn76", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/GPU/x86-64_cuda10.1_cudnn7.6.5_trt6.0.1.5_mkl_avx_vs2017/paddle_inference_c_notrt.zip"))
+		.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)

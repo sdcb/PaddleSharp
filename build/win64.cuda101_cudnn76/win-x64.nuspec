@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76</id>
+    <version>2.2.1</version>
+    <title>PaddleInference native bindings for win64.cuda101_cudnn76</title>
+    <authors>sdcb</authors>
+    <license type="expression">Apache-2.0</license>
+    <projectUrl>https://github.com/sdcb/PaddleSharp</projectUrl>
+    <icon>images\icon.jpg</icon>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Native binding for paddle_inference_c to work on win64.cuda101_cudnn76.</description>
+    <summary>Native binding for paddle_inference_c to work on win64.cuda101_cudnn76.</summary>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2021</copyright>
+    <tags>AI Paddle OCR PaddleOCR Sdcb linqpad-samples</tags>
+    <repository type="git" url="https://github.com/sdcb/PaddleSharp.git" />
+    <dependencies>
+      <group targetFramework="net461"></group>
+      <group targetFramework="netstandard2.0"></group>
+      <group targetFramework="netstandard2.1"></group>
+      <group targetFramework="netcoreapp2.1"></group>
+    </dependencies>
+    <frameworkAssemblies></frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="..\icon.jpg" target="images\" />
+    <file src=".\bin\libiomp5md.dll" target="runtimes\win-x64\native" />
+    <file src=".\bin\mkldnn.dll" target="runtimes\win-x64\native" />
+    <file src=".\bin\mklml.dll" target="runtimes\win-x64\native" />
+    <file src=".\bin\paddle_inference_c.dll" target="runtimes\win-x64\native" />
+    <file src="Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" target="build\net\Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" />
+    <file src="Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" target="build\netstandard\Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" />
+    <file src="Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" target="build\netcoreapp\Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76.props" />
+  </files>
+</package>
