@@ -69,17 +69,27 @@ namespace Sdcb.PaddleOCR
             }
 
             RotatedRect[] rects = Detector.Run(src);
+
             Mat[] mats =
                 rects.Select(rect =>
                 {
-                    using Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[GetCropedRect(rect.BoundingRect(), src.Size())];
-                    return Enable180Classification ? Classifier!.Run(roi) : roi.Clone();
+                    Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[GetCropedRect(rect.BoundingRect(), src.Size())];
+                    return Enable180Classification ? Classifier!.Run(roi) : roi;
                 })
                 .ToArray();
-
-            return new PaddleOcrResult(Recognizer.Run(mats, recognizeBatchSize)
-                .Select((result, i) => new PaddleOcrResultRegion(rects[i], result.Text, result.Score))
-                .ToArray());
+            try
+            {
+                return new PaddleOcrResult(Recognizer.Run(mats, recognizeBatchSize)
+                    .Select((result, i) => new PaddleOcrResultRegion(rects[i], result.Text, result.Score))
+                    .ToArray());
+            }
+            finally
+            {
+                foreach (Mat mat in mats)
+                {
+                    mat.Dispose();
+                }
+            }
         }
 
         public static Mat GetRotateCropImage(Mat src, RotatedRect rect)

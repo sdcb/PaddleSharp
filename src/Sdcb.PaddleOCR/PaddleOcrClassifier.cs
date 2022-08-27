@@ -97,9 +97,8 @@ namespace Sdcb.PaddleOCR
 
             if (ShouldRotate180(src))
             {
-                Mat dest = new();
-                Cv2.Rotate(src, dest, RotateFlags.Rotate180);
-                return dest;
+                Cv2.Rotate(src, src, RotateFlags.Rotate180);
+                return src;
             }
             else
             {
