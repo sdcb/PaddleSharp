@@ -77,7 +77,7 @@ namespace Sdcb.PaddleOCR
                     {
                         4 => src.CvtColor(ColorConversionCodes.RGBA2BGR),
                         1 => src.CvtColor(ColorConversionCodes.GRAY2RGB),
-                        3 => src,
+                        3 => src.Clone(),
                         var x => throw new Exception($"Unexpect src channel: {x}, allow: (1/3/4)")
                     };
                     using Mat resized = ResizePadding(channel3, modelHeight, maxWidth);
