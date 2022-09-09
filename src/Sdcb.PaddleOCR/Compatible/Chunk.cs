@@ -8,7 +8,7 @@ using System.Diagnostics;
 #if NETSTANDARD2_0
 namespace System.Linq
 {
-    public static class EnumerableEx
+    internal static class EnumerableEx
     {
         /// <summary>
         /// Split the elements of a sequence into chunks of size at most <paramref name="size"/>.
