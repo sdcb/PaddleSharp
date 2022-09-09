@@ -24,7 +24,6 @@
 | sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.3.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 ### Paddle Inference GPU package
-<details>
 Since GPU package are too large(>1.5GB), I cannot publish a NuGet package to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
 
 * https://github.com/PaddlePaddle/Paddle/issues/43874
@@ -34,11 +33,19 @@ However you're good to build your own GPU nuget package using `01-build-native.l
 
 There is 2 old version GPU package here, might unable to use(not very large at that time):
 
+<details>
+
 | NuGet Package                                        | Version                                                                                                                                                                                  | Description                                                               |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7.mkl)         | Paddle Inference native windows-x64(CUDA 10/cuDNN 7.x) binding            |
 | Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7.mkl) | Paddle Inference native windows-x64(CUDA 11/cuDNN 8.0/TensorRT 7) binding |  |
 </details>
+
+Here is the GPU package that I compiled(not from baidu):
+| NuGet Package                                        | Version                                                                                                                                                                                  | Description                                                               |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61)         | Paddle Inference native windows-x64(CUDA 10.1/cuDNN 7.6) SM61 binding            |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.mkl) | Paddle Inference native windows-x64(CUDA 10.2/cuDNN 8.5) Pascal binding |  |
 
 ### PaddleOCR packages
 

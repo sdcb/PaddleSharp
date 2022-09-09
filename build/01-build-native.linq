@@ -16,12 +16,14 @@ async Task Main()
 {
 	await SetupAsync(QueryCancelToken);
 	//await new LinuxNuGetSource().Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-mkl-vs2017/paddle_inference_c.zip"))
-		.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.openblas", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-openblas-vs2017/paddle_inference_c.zip"))
-		.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.cuda101_cudnn76", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/GPU/x86-64_cuda10.1_cudnn7.6.5_trt6.0.1.5_mkl_avx_vs2017/paddle_inference_c_notrt.zip"))
-		.Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.mkl", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-mkl-vs2017/paddle_inference_c.zip"))
+	//	.Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.openblas", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/CPU/x86-64_avx-openblas-vs2017/paddle_inference_c.zip"))
+	//	.Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.cuda101_cudnn76_sm61", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda101_tr76_c.zip"))
+	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn85_pascal", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda102_cudnn85_pascal.zip"))
+	.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)
