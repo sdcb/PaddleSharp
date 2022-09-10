@@ -24,7 +24,9 @@ async Task Main()
 	//	.Process(QueryCancelToken);
 	//await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn85_pascal", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda102_cudnn85_pascal.zip"))
 	//	.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn85_ampere", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda117_cudnn85_ampere.zip"))
+	//await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn85_ampere", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda117_cudnn85_ampere.zip"))
+	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda116_cudnn84_tr84", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/GPU/x86-64_cuda11.6_cudnn8.4.0_trt8.4.1.5_mkl_avx_vs2019/paddle_inference_c.zip"))
 		.Process(QueryCancelToken);
 }
 
@@ -147,7 +149,7 @@ public record LinuxNuGetSource() : NupkgBuildSource("linux-x64", "linux64.mkl", 
 				// Console.WriteLine($"{src} -> {dest}");
 			}
 		}
-		
+
 		return Task.FromResult(0);
 	}
 
@@ -195,7 +197,7 @@ public abstract record NupkgBuildSource(string rid, string titleRid, string libN
 			File.Delete(localZipFile);
 		}
 		string[] libs = GetDlls();
-		
+
 		string nugetExePath = await EnsureNugetExe(cancellationToken);
 
 		string nuspecPath = BuildNuspec(libs, rid, titleRid);
