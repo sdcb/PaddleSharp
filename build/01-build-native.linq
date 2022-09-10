@@ -22,8 +22,10 @@ async Task Main()
 	//	.Process(QueryCancelToken);
 	//await new WindowsNugetSource("win-x64", "win64.cuda101_cudnn76_sm61", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda101_tr76_c.zip"))
 	//	.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn85_pascal", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda102_cudnn85_pascal.zip"))
-	.Process(QueryCancelToken);
+	//await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn85_pascal", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda102_cudnn85_pascal.zip"))
+	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn85_ampere", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda117_cudnn85_ampere.zip"))
+		.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)

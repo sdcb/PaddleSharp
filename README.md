@@ -42,10 +42,11 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 </details>
 
 Here is the GPU package that I compiled(not from baidu):
-| NuGet Package                                        | Version                                                                                                                                                                                  | Description                                                               |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61)         | Paddle Inference native windows-x64(CUDA 10.1/cuDNN 7.6) SM61 binding            |
+| NuGet Package                                             | Version                                                                                                                                                                                            | Description                                                             |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61)         | Paddle Inference native windows-x64(CUDA 10.1/cuDNN 7.6) SM61 binding   |
 | Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.mkl) | Paddle Inference native windows-x64(CUDA 10.2/cuDNN 8.5) Pascal binding |  |
+| Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere.mkl) | Paddle Inference native windows-x64(CUDA 11.7/cuDNN 8.5) Ampere binding |  |
 
 ### PaddleOCR packages
 

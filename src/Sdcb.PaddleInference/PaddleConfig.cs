@@ -404,6 +404,6 @@ namespace Sdcb.PaddleInference
         public bool UseGpu { get; set; } = false;
         public int InitialGpuMemoryMb { get; set; } = 500;
         public int GpuDeviceId { get; set; } = 0;
-        public bool EnableGpuMultiStream { get; set; } = true;
+        public bool EnableGpuMultiStream { get; set; } = false;
     }
 }
