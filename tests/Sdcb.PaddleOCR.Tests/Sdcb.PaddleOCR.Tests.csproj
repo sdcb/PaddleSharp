@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />
     <ProjectReference Include="..\..\src\Sdcb.PaddleOCR.Models.LocalV3\Sdcb.PaddleOCR.Models.LocalV3.csproj" />
     <ProjectReference Include="..\..\src\Sdcb.PaddleOCR.Models.Online\Sdcb.PaddleOCR.Models.Online.csproj" />
     <ProjectReference Include="..\..\src\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
