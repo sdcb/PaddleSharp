@@ -26,7 +26,9 @@ async Task Main()
 	//	.Process(QueryCancelToken);
 	//await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn85_ampere", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.avx-x64_cuda117_cudnn85_ampere.zip"))
 	//	.Process(QueryCancelToken);
-	await new WindowsNugetSource("win-x64", "win64.cuda116_cudnn84_tr84", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/GPU/x86-64_cuda11.6_cudnn8.4.0_trt8.4.1.5_mkl_avx_vs2019/paddle_inference_c.zip"))
+	//await new WindowsNugetSource("win-x64", "win64.cuda116_cudnn84_tr84", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Windows/GPU/x86-64_cuda11.6_cudnn8.4.0_trt8.4.1.5_mkl_avx_vs2019/paddle_inference_c.zip"))
+	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda116_cudnn84", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.3.2.mkl-onnx-x64_cuda116_cudnn84_sm61_75_86.zip"))
 		.Process(QueryCancelToken);
 }
 
