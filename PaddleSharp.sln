@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		docs\detection.md = docs\detection.md
-		docs\ocr.md = docs\ocr.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -65,6 +63,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.RotationDetector", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.RotationDetector.Tests", "tests\Sdcb.RotationDetector.Tests\Sdcb.RotationDetector.Tests.csproj", "{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-94D0-4143-A1CD-39FF2F1E24A6}"
+	ProjectSection(SolutionItems) = preProject
+		docs\detection.md = docs\detection.md
+		docs\ocr.md = docs\ocr.md
+		docs\rotation-detection.md = docs\rotation-detection.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +125,7 @@ Global
 		{06475814-73FA-4C45-BCD0-4F64849A5612} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{69BF0B03-E1FE-4CF8-97A5-40E32B758E1A} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
+		{026E4A25-94D0-4143-A1CD-39FF2F1E24A6} = {CCC0070E-E444-42B2-84F7-EE999ADA0750}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
