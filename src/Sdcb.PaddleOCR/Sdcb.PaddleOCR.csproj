@@ -27,8 +27,4 @@
     <PackageReference Include="Sdcb.PaddleInference" Version="2.3.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!--<ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />-->
-  </ItemGroup>
-
 </Project>
