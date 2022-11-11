@@ -206,7 +206,7 @@ namespace Sdcb.PaddleInference.Native
         /// <param name="use_static">(<see cref="PD_Bool" />) Serialize optimization information to disk for reusing.</param>
         /// <param name="use_calib_mode">(<see cref="PD_Bool" />) Use TRT int8 calibration(post training quantization).</param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigEnableTensorRtEngine(IntPtr pd_config, int workspace_size, int max_batch_size, int min_subgraph_size, int precision, sbyte use_static, sbyte use_calib_mode);
+        public static extern void PD_ConfigEnableTensorRtEngine(IntPtr pd_config, long workspace_size, int max_batch_size, int min_subgraph_size, int precision, sbyte use_static, sbyte use_calib_mode);
 
         /// <summary>A boolean state telling whether the TensorRT engine is used.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
@@ -274,7 +274,7 @@ namespace Sdcb.PaddleInference.Native
         /// <summary>Replace some TensorRT plugins to TensorRT OSS( https://github.com/NVIDIA/TensorRT), with which some models's inference may be more high-performance. Libnvinfer_plugin.so greater than V7.2.1 is needed.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
         [DllImport(PaddleInferenceCLib)]
-        public static extern void PD_ConfigEnableTensorRtOSS(IntPtr pd_config);
+        public static extern void PD_ConfigEnableVarseqlen(IntPtr pd_config);
 
         /// <summary>A boolean state telling whether to use the TensorRT OSS.</summary>
         /// <param name="pd_config">(<see cref="PD_Config*" />) </param>
