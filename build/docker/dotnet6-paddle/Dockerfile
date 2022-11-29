@@ -1,4 +1,4 @@
-FROM docker pull ghcr.io/shimat/opencvsharp/ubuntu20-dotnet6-opencv4.6.0:20220615 as builder
+FROM ghcr.io/shimat/opencvsharp/ubuntu20-dotnet6-opencv4.6.0:20220615 as builder
 
 WORKDIR /
 
@@ -16,5 +16,5 @@ RUN wget -q https://paddle-inference-lib.bj.bcebos.com/2.4.0/cxx_c/Linux/CPU/gcc
 
 ########## Final image ##########
 
-FROM docker pull ghcr.io/shimat/opencvsharp/ubuntu20-dotnet6-opencv4.6.0:20220615 as final
+FROM ghcr.io/shimat/opencvsharp/ubuntu20-dotnet6-opencv4.6.0:20220615 as final
 COPY --from=builder /usr/lib /usr/lib
