@@ -88,6 +88,13 @@ Otherwise, it will failed with following error(Windows only):
 
 2. Many old CPUs does not support AVX instructions, please ensure your CPU supports AVX, or download the x64-noavx-openblas dlls and disable Mkldnn: `PaddleConfig.Defaults.UseMkldnn = false;`
 
+3. If you're using **Win7-x64**, and your CPU do support AVX2, then you might also need to extract following 3 dlls into `C:\Windows\System32` folder to make it run:
+   * api-ms-win-core-libraryloader-l1-2-0.dll
+   * api-ms-win-core-processtopology-obsolete-l1-1-0.dll
+   * API-MS-Win-Eventing-Provider-L1-1-0.dll
+   
+   You can download these 3 dlls here: [win7-x64-onnxruntime-missing-dlls.zip](https://github.com/sdcb/PaddleSharp/files/10110622/win7-x64-onnxruntime-missing-dlls.zip)
+
 ## How to enable GPU?
 Enable GPU support can significantly improve the throughput and lower the CPU usage.
 
