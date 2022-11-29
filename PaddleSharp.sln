@@ -15,8 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6
 		build\00-common.linq = build\00-common.linq
 		build\01-build-native.linq = build\01-build-native.linq
 		build\02-build-packages.linq = build\02-build-packages.linq
-		build\03-publish-proget.linq = build\03-publish-proget.linq
-		build\04-publish-nuget.linq = build\04-publish-nuget.linq
+		build\03-publish-proget-nuget.linq = build\03-publish-proget-nuget.linq
 		build\icon.jpg = build\icon.jpg
 		build\Sdcb.PaddleInference.runtime.nuspec = build\Sdcb.PaddleInference.runtime.nuspec
 		build\Sdcb.PaddleInference.runtime.props = build\Sdcb.PaddleInference.runtime.props
@@ -61,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Local
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.RotationDetector", "src\Sdcb.RotationDetector\Sdcb.RotationDetector.csproj", "{69BF0B03-E1FE-4CF8-97A5-40E32B758E1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.RotationDetector.Tests", "tests\Sdcb.RotationDetector.Tests\Sdcb.RotationDetector.Tests.csproj", "{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.RotationDetector.Tests", "tests\Sdcb.RotationDetector.Tests\Sdcb.RotationDetector.Tests.csproj", "{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-94D0-4143-A1CD-39FF2F1E24A6}"
 	ProjectSection(SolutionItems) = preProject
