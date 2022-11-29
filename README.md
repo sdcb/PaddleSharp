@@ -20,8 +20,8 @@
 
 | Docker Images              | Version                                                                                                                      | Description                                                                        |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle) | PaddleInference 2.3.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 Runtime |
-| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.3.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 SDK     |
+| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle) | PaddleInference 2.4.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 Runtime |
+| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.4.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 ### Paddle Inference GPU package
 Since GPU package are too large(>1.5GB), I cannot publish a NuGet package to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
