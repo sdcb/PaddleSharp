@@ -13,7 +13,7 @@ namespace Sdcb.PaddleOCR
 
         public OcrShape Shape { get; init; } = ClassificationModel.DefaultShape;
 
-        public PaddleOcrClassifier(ClassificationModel model) : this(model.CreateConfig().CreatePredictor())
+        public PaddleOcrClassifier(ClassificationModel model, Action<PaddleConfig> configure) : this(model.CreateConfig().Apply(configure).CreatePredictor())
         {
             Shape = model.Shape;
         }

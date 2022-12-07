@@ -20,16 +20,9 @@ namespace Sdcb.PaddleInference
             _ptr = PaddleNative.PD_ConfigCreate();
         }
 
-        public static readonly PaddleConfigDefaults Defaults = new();
-
         public PaddleConfig(IntPtr configPointer)
         {
             _ptr = configPointer;
-
-            if (!Defaults.EnableGLog)
-            {
-                GLogEnabled = Defaults.EnableGLog;
-            }
         }
 
         public static PaddleConfig FromModelDir(string modelDir)
@@ -52,7 +45,7 @@ namespace Sdcb.PaddleInference
 
                 if (File.Exists(pdmodel) && File.Exists(pdiparams))
                 {
-                    PaddleConfig c = CreateDefault();
+                    PaddleConfig c = new();
                     c.SetModel(pdmodel, pdiparams);
                     return c;
                 }
@@ -63,52 +56,15 @@ namespace Sdcb.PaddleInference
 
         public static PaddleConfig FromModelFiles(string programPath, string paramsPath)
         {
-            PaddleConfig c = CreateDefault();
+            PaddleConfig c = new();
             c.SetModel(programPath, paramsPath);
             return c;
         }
 
         public static PaddleConfig FromMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
         {
-            PaddleConfig c = CreateDefault();
+            PaddleConfig c = new();
             c.SetMemoryModel(programBuffer, paramsBuffer);
-            return c;
-        }
-
-        public static PaddleConfig CreateDefault()
-        {
-            var c = new PaddleConfig();
-
-            if (!Defaults.EnableGLog)
-            {
-                c.GLogEnabled = Defaults.EnableGLog;
-            }
-            if (Defaults.CpuMathThreadCount != 0)
-            {
-                c.CpuMathThreadCount = Defaults.CpuMathThreadCount;
-            }
-            if (Defaults.MemoryOptimized)
-            {
-                c.MemoryOptimized = Defaults.MemoryOptimized;
-            }
-            if (Defaults.ProfileEnabled)
-            {
-                c.ProfileEnabled = Defaults.ProfileEnabled;
-            }
-            if (Defaults.UseGpu)
-            {
-                c.EnableUseGpu(Defaults.InitialGpuMemoryMb, Defaults.GpuDeviceId);
-                if (Defaults.EnableGpuMultiStream)
-                {
-                    c.EnableGpuMultiStream = Defaults.EnableGpuMultiStream;
-                }
-            }
-            else if (Defaults.UseMkldnn)
-            {
-                c.MkldnnEnabled = true;
-                c.MkldnnCacheCapacity = Defaults.MkldnnCacheCapacity;
-            }
-
             return c;
         }
 
@@ -189,7 +145,7 @@ namespace Sdcb.PaddleInference
 
         public IntPtr UnsafeGetHandle() => _ptr;
 
-        /// <summary>A boolean state telling whether logs in Paddle inference are muted.</summary>
+        /// <summary>A boolean state telling whether logs in Paddle inference are enabled.</summary>
         public bool GLogEnabled
         {
             get => PaddleNative.PD_ConfigGlogInfoDisabled(_ptr) == 0;
@@ -465,25 +421,12 @@ namespace Sdcb.PaddleInference
                 _ptr = IntPtr.Zero;
             }
         }
-    }
 
-    public class PaddleConfigDefaults
-    {
-        public bool EnableGLog { get; set; } = false;
-
-        public bool UseMkldnn { get; set; } = true;
-        public int MkldnnCacheCapacity { get; set; } = 10;
-
-        public int CpuMathThreadCount { get; set; } = 0;
-
-        public bool MemoryOptimized { get; set; } = true;
-
-        public bool ProfileEnabled { get; set; } = false;
-
-        public bool UseGpu { get; set; } = false;
-        public int InitialGpuMemoryMb { get; set; } = 500;
-        public int GpuDeviceId { get; set; } = 0;
-        public bool EnableGpuMultiStream { get; set; } = false;
+        public PaddleConfig Apply(Action<PaddleConfig> configure)
+        {
+            configure(this);
+            return this;
+        }
     }
 
     file class PtrFromStringArray : IDisposable

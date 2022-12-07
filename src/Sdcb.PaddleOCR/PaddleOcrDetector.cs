@@ -11,14 +11,14 @@ namespace Sdcb.PaddleOCR
     {
         readonly PaddlePredictor _p;
 
-        public int? MaxSize { get; set; } = 2048;
+        public int? MaxSize { get; set; } = 1536;
         public int? DilatedSize { get; set; } = 2;
         public float? BoxScoreThreahold { get; set; } = 0.7f;
         public float? BoxThreshold { get; set; } = 0.3f;
         public int MinSize { get; set; } = 3;
         public float UnclipRatio { get; set; } = 2.0f;
 
-        public PaddleOcrDetector(DetectionModel model) : this(model.CreateConfig())
+        public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig> configure) : this(model.CreateConfig().Apply(configure))
         {
         }
 

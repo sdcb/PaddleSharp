@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models;
 using System;
 using System.Linq;
@@ -14,25 +15,30 @@ namespace Sdcb.PaddleOCR
         public bool Enable180Classification { get; set; } = false;
         public bool AllowRotateDetection { get; set; } = true;
 
-        public PaddleOcrAll(FullOcrModel model)
+        [Obsolete("use PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> configure)")]
+        public PaddleOcrAll(FullOcrModel model) : this(model, PaddleConfigure.EnableMkldnn)
         {
-            Detector = new PaddleOcrDetector(model.DetectionModel);
+        }
+
+        public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> configure)
+        {
+            Detector = new PaddleOcrDetector(model.DetectionModel, configure);
             if (model.ClassificationModel != null)
             {
-                Classifier = new PaddleOcrClassifier(model.ClassificationModel);
+                Classifier = new PaddleOcrClassifier(model.ClassificationModel, configure);
             }
-            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel);
+            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, configure);
         }
 
         [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-        public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version)
-            : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version))
+        public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
+            : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version), configure)
         {
         }
 
         [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-        public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version)
-            : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version))
+        public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
+            : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version), configure)
         {
         }
 

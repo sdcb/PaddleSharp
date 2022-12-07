@@ -14,13 +14,19 @@ namespace Sdcb.PaddleOCR
 
         public RecognizationModel Model { get; init; }
 
-        public PaddleOcrRecognizer(RecognizationModel model)
+        public PaddleOcrRecognizer(RecognizationModel model, Action<PaddleConfig> configure)
         {
             Model = model;
-            _p = Model.CreateConfig().CreatePredictor();
+            _p = Model.CreateConfig().Apply(configure).CreatePredictor();
         }
 
-        public PaddleOcrRecognizer Clone() => new PaddleOcrRecognizer(Model);
+        public PaddleOcrRecognizer(RecognizationModel model, PaddlePredictor predictor)
+        {
+            Model = model;
+            _p = predictor;
+        }
+
+        public PaddleOcrRecognizer Clone() => new PaddleOcrRecognizer(Model, _p.Clone());
 
         public void Dispose() => _p.Dispose();
 
