@@ -1,19 +1,55 @@
-﻿namespace Sdcb.PaddleInference
+﻿using System;
+
+namespace Sdcb.PaddleInference
 {
     public static class PaddleConfigure
     {
-        public static void EnableMkldnn(this PaddleConfig c)
+        public static Action<PaddleConfig> Mkldnn(int cacheCapacity = 10, int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
         {
-            c.MkldnnEnabled = true;
-            c.MkldnnCacheCapacity = 10;
-            c.MemoryOptimized = true;
+            return cfg =>
+            {
+                cfg.MkldnnEnabled = true;
+                cfg.MkldnnCacheCapacity = cacheCapacity;
+                cfg.CpuMathThreadCount = cpuMathThreadCount;
+                CommonAction(cfg, memoryOptimized, glogEnabled);
+            };
         }
 
-        public static void EnableGpu(this PaddleConfig c, int initialMemoryMB = 500, int deviceId = 0)
+        public static Action<PaddleConfig> Gpu(int initialMemoryMB = 200, int deviceId = 0, bool multiStream = false, bool memoryOptimized = true, bool glogEnabled = false)
         {
-            c.EnableUseGpu(initialMemoryMB, deviceId);
-            c.EnableGpuMultiStream = true;
-            c.MemoryOptimized = true;
+            return cfg =>
+            {
+                cfg.EnableUseGpu(initialMemoryMB, deviceId);
+                cfg.EnableGpuMultiStream = multiStream;
+                CommonAction(cfg, memoryOptimized, glogEnabled);
+            };
+        }
+
+        public static Action<PaddleConfig> Openblas(int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
+        {
+            return cfg =>
+            {
+                cfg.CpuMathThreadCount = cpuMathThreadCount;
+                CommonAction(cfg, memoryOptimized, glogEnabled);
+            };
+        }
+
+        private static void CommonAction(PaddleConfig cfg, bool memoryOptimized, bool glogEnabled)
+        {
+            cfg.MemoryOptimized = memoryOptimized;
+            cfg.GLogEnabled = glogEnabled;
+        }
+    }
+
+    public static class PaddleConfigureExtensions
+    {
+        public static Action<PaddleConfig> And(this Action<PaddleConfig> action1, Action<PaddleConfig> action2)
+        {
+            return cfg =>
+            {
+                action1(cfg);
+                action2(cfg);
+            };
         }
     }
 }

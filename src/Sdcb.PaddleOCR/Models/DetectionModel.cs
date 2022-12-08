@@ -13,28 +13,30 @@ namespace Sdcb.PaddleOCR.Models
 
         public static DetectionModel FromDirectory(string directoryPath) => new FileDetectionModel(directoryPath);
 
-        public static void EnableTensorRt(PaddleConfig cfg, string? cacheDir = null)
+        public static Action<PaddleConfig> EnableTensorRt(int maxEdge = 1536, string? cacheDir = null)
         {
-            if (cacheDir != null)
+            return cfg =>
             {
+                cacheDir = cacheDir ?? TensorRtDefaults.DefaultCacheFolder;
                 cfg.SetOptimCacheDir(cacheDir);
-            }
-            cfg.EnableTensorRtEngine(1 << 20, 1, 20, 0, useStatic: true, useCalibMode: false);
-            cfg.SetTrtDynamicShapeInfo(new Dictionary<string, TrtShapeGroup>
-            {
-                ["x"] = new(new(1, 3, 50, 50), new(1, 3, 1536, 1536), new(1, 3, 640, 640)),
-                ["conv2d_92.tmp_0"] = new(new(1, 120, 20, 20), new(1, 120, 400, 400), new(1, 120, 160, 160)),
-                ["conv2d_91.tmp_0"] = new(new(1, 24, 10, 10), new(1, 24, 200, 200), new(1, 24, 80, 80)),
-                ["conv2d_59.tmp_0"] = new(new(1, 96, 20, 20), new(1, 96, 400, 400), new(1, 96, 160, 160)),
-                ["nearest_interp_v2_1.tmp_0"] = new(new(1, 256, 10, 10), new(1, 256, 200, 200), new(1, 256, 80, 80)),
-                ["nearest_interp_v2_2.tmp_0"] = new(new(1, 256, 20, 20), new(1, 256, 400, 400), new(1, 256, 160, 160)),
-                ["conv2d_124.tmp_0"] = new(new(1, 256, 20, 20), new(1, 256, 400, 400), new(1, 256, 160, 160)),
-                ["nearest_interp_v2_3.tmp_0"] = new(new(1, 64, 20, 20), new(1, 64, 400, 400), new(1, 64, 160, 160)),
-                ["nearest_interp_v2_4.tmp_0"] = new(new(1, 64, 20, 20), new(1, 64, 400, 400), new(1, 64, 160, 160)),
-                ["nearest_interp_v2_5.tmp_0"] = new(new(1, 64, 20, 20), new(1, 64, 400, 400), new(1, 64, 160, 160)),
-                ["elementwise_add_7"] = new(new(1, 56, 2, 2), new(1, 56, 400, 400), new(1, 56, 40, 40)),
-                ["nearest_interp_v2_0.tmp_0"] = new(new(1, 256, 2, 2), new(1, 256, 400, 400), new(1, 256, 40, 40)),
-            });
+                cfg.EnableTensorRtEngine(workspaceSize: 1 << 20, maxBatchSize: 1, minSubgraphSize: 20, precision: 0, useStatic: true, useCalibMode: false);
+                cfg.SetTrtDynamicShapeInfo(new Dictionary<string, TensorRtDynamicShapeGroup>
+                {
+                    // tensor name                  min shape                   max shape                       optimal shape
+                    ["x"] =                         new(new(1, 3, 50, 50),      new(1, 3, maxEdge, maxEdge),    new(1, 3, 640, 640)),
+                    ["conv2d_92.tmp_0"] =           new(new(1, 120, 20, 20),    new(1, 120, 400, 400),          new(1, 120, 160, 160)),
+                    ["conv2d_91.tmp_0"] =           new(new(1, 24, 10, 10),     new(1, 24, 200, 200),           new(1, 24, 80, 80)),
+                    ["conv2d_59.tmp_0"] =           new(new(1, 96, 20, 20),     new(1, 96, 400, 400),           new(1, 96, 160, 160)),
+                    ["nearest_interp_v2_1.tmp_0"] = new(new(1, 256, 10, 10),    new(1, 256, 200, 200),          new(1, 256, 80, 80)),
+                    ["nearest_interp_v2_2.tmp_0"] = new(new(1, 256, 20, 20),    new(1, 256, 400, 400),          new(1, 256, 160, 160)),
+                    ["conv2d_124.tmp_0"] =          new(new(1, 256, 20, 20),    new(1, 256, 400, 400),          new(1, 256, 160, 160)),
+                    ["nearest_interp_v2_3.tmp_0"] = new(new(1, 64, 20, 20),     new(1, 64, 400, 400),           new(1, 64, 160, 160)),
+                    ["nearest_interp_v2_4.tmp_0"] = new(new(1, 64, 20, 20),     new(1, 64, 400, 400),           new(1, 64, 160, 160)),
+                    ["nearest_interp_v2_5.tmp_0"] = new(new(1, 64, 20, 20),     new(1, 64, 400, 400),           new(1, 64, 160, 160)),
+                    ["elementwise_add_7"] =         new(new(1, 56, 2, 2),       new(1, 56, 400, 400),           new(1, 56, 40, 40)),
+                    ["nearest_interp_v2_0.tmp_0"] = new(new(1, 256, 2, 2),      new(1, 256, 400, 400),          new(1, 256, 40, 40)),
+                });
+            };
         }
     }
 }

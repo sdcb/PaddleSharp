@@ -257,8 +257,14 @@ namespace Sdcb.PaddleInference
         /// <param name="precision">The precision used in TensorRT.</param>
         /// <param name="useStatic">Serialize optimization information to disk for reusing.</param>
         /// <param name="useCalibMode">Use TRT int8 calibration(post training quantization)</param>
-        public void EnableTensorRtEngine(long workspaceSize = 1 << 20, int maxBatchSize = 1, int minSubgraphSize = 20, int precision = 0, bool useStatic = true, bool useCalibMode = false)
-            => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
+        public void EnableTensorRtEngine(
+            long workspaceSize = 1 << 20, 
+            int maxBatchSize = 1, 
+            int minSubgraphSize = 20, 
+            PaddlePrecision precision = PaddlePrecision.Float32, 
+            bool useStatic = true, 
+            bool useCalibMode = false)
+            => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, (int)precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
 
         /// <summary>A boolean state telling whether the TensorRT engine is used.</summary>
         public bool TensorRtEngineEnabled => PaddleNative.PD_ConfigTensorRtEngineEnabled(_ptr) != 0;
@@ -279,7 +285,7 @@ namespace Sdcb.PaddleInference
         }
 
         /// <summary>Set min, max, opt shape for TensorRT Dynamic shape mode.</summary>
-        public unsafe void SetTrtDynamicShapeInfo(Dictionary<string, TrtShapeGroup> shapeInfo)
+        public unsafe void SetTrtDynamicShapeInfo(Dictionary<string, TensorRtDynamicShapeGroup> shapeInfo)
         {
             using PtrFromStringArray shapeNames = new(shapeInfo.Keys.ToArray());
 

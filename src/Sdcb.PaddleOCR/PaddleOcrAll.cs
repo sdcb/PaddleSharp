@@ -15,11 +15,6 @@ namespace Sdcb.PaddleOCR
         public bool Enable180Classification { get; set; } = false;
         public bool AllowRotateDetection { get; set; } = true;
 
-        [Obsolete("use PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> configure)")]
-        public PaddleOcrAll(FullOcrModel model) : this(model, PaddleConfigure.EnableMkldnn)
-        {
-        }
-
         public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> configure)
         {
             Detector = new PaddleOcrDetector(model.DetectionModel, configure);
@@ -28,6 +23,19 @@ namespace Sdcb.PaddleOCR
                 Classifier = new PaddleOcrClassifier(model.ClassificationModel, configure);
             }
             Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, configure);
+        }
+
+        public PaddleOcrAll(FullOcrModel model, 
+            Action<PaddleConfig>? detectorConfigure = null,
+            Action<PaddleConfig>? classifierConfigure = null,
+            Action<PaddleConfig>? recognizerConfigure = null)
+        {
+            Detector = new PaddleOcrDetector(model.DetectionModel, detectorConfigure ?? PaddleConfigure.Mkldnn());
+            if (model.ClassificationModel != null)
+            {
+                Classifier = new PaddleOcrClassifier(model.ClassificationModel, classifierConfigure ?? PaddleConfigure.Mkldnn());
+            }
+            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerConfigure ?? PaddleConfigure.Mkldnn());
         }
 
         [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
