@@ -275,6 +275,30 @@ namespace Sdcb.PaddleInference
         /// <summary>A boolean state telling whether to use the TensorRT DLA.</summary>
         public bool TensorRtDlaEnabled => PaddleNative.PD_ConfigTensorRtDlaEnabled(_ptr) != 0;
 
+        /// <summary>Collect shape info of all tensors in compute graph.</summary>
+        public unsafe void CollectShapeRangeInfo(string rangeShapeInfoPath)
+        {
+            fixed (byte* cacheDirPtr = PaddleEncoding.GetBytes(rangeShapeInfoPath))
+            {
+                PaddleNative.PD_ConfigCollectShapeRangeInfo(_ptr, (IntPtr)cacheDirPtr);
+            }
+        }
+
+        /// <summary>A boolean state telling whether to collect shape info.</summary>
+        public bool ShapeRangeInfoCollected => PaddleNative.PD_ConfigShapeRangeInfoCollected(_ptr) != 0;
+
+        /// <summary>Enable tuned tensorrt dynamic shape.</summary>
+        public unsafe void EnableTunedTensorRtDynamicShape(string rangeShapeInfoPath, bool allowBuildAtRuntime = true)
+        {
+            fixed (byte* cacheDirPtr = PaddleEncoding.GetBytes(rangeShapeInfoPath))
+            {
+                PaddleNative.PD_ConfigEnableTunedTensorRtDynamicShape(_ptr, (IntPtr)cacheDirPtr, (sbyte)(allowBuildAtRuntime ? 1 : 0));
+            }
+        }
+
+        /// <summary>A boolean state telling whether to use tuned tensorrt dynamic shape.</summary>
+        public bool TunedTensorRtDynamicShape => PaddleNative.PD_ConfigTunedTensorRtDynamicShape(_ptr) != 0;
+
         /// <summary>Set the path of optimization cache directory.</summary>
         public unsafe void SetOptimCacheDir(string path)
         {
