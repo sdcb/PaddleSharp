@@ -38,7 +38,7 @@ namespace Sdcb.PaddleInference
         {
             return cfg =>
             {
-                cacheDir = cacheDir ?? TensorRtDefaults.DefaultCacheFolder;
+                cacheDir ??= TensorRtDefaults.DefaultCacheFolder;
                 Directory.CreateDirectory(cacheDir);
                 string subGraphFileName = Path.Combine(cacheDir, rangeShapeInfoKey);
                 if (!File.Exists(subGraphFileName))
@@ -64,7 +64,7 @@ namespace Sdcb.PaddleInference
         {
             return cfg =>
             {
-                cacheDir = cacheDir ?? TensorRtDefaults.DefaultCacheFolder;
+                cacheDir ??= TensorRtDefaults.DefaultCacheFolder;
                 Directory.CreateDirectory(cacheDir);
                 cfg.SetOptimCacheDir(cacheDir);
                 cfg.SetTrtDynamicShapeInfo(shapeInfo);
