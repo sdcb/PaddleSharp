@@ -1,4 +1,3 @@
-﻿namespace Sdcb.PaddleInference.TensorRt
-{
-    public record TensorRtDynamicShapeGroup(TensorRtShape Min, TensorRtShape Max, TensorRtShape Opt);
-}
+﻿namespace Sdcb.PaddleInference.TensorRt;
+
+public record TensorRtDynamicShapeGroup(int[] Min, int[] Max, int[] Optimal);

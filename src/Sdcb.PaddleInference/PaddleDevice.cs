@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Sdcb.PaddleInference
 {
-    public static class PaddleConfigure
+    public static class PaddleDevice
     {
         public static Action<PaddleConfig> Mkldnn(int cacheCapacity = 10, int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
         {

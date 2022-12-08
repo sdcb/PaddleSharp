@@ -15,27 +15,27 @@ namespace Sdcb.PaddleOCR
         public bool Enable180Classification { get; set; } = false;
         public bool AllowRotateDetection { get; set; } = true;
 
-        public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> configure)
+        public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> device)
         {
-            Detector = new PaddleOcrDetector(model.DetectionModel, configure);
+            Detector = new PaddleOcrDetector(model.DetectionModel, device);
             if (model.ClassificationModel != null)
             {
-                Classifier = new PaddleOcrClassifier(model.ClassificationModel, configure);
+                Classifier = new PaddleOcrClassifier(model.ClassificationModel, device);
             }
-            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, configure);
+            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, device);
         }
 
         public PaddleOcrAll(FullOcrModel model, 
-            Action<PaddleConfig>? detectorConfigure = null,
-            Action<PaddleConfig>? classifierConfigure = null,
-            Action<PaddleConfig>? recognizerConfigure = null)
+            Action<PaddleConfig>? detectorDevice = null,
+            Action<PaddleConfig>? classifierDevice = null,
+            Action<PaddleConfig>? recognizerDevice = null)
         {
-            Detector = new PaddleOcrDetector(model.DetectionModel, detectorConfigure ?? PaddleConfigure.Mkldnn());
+            Detector = new PaddleOcrDetector(model.DetectionModel, detectorDevice ?? PaddleDevice.Mkldnn());
             if (model.ClassificationModel != null)
             {
-                Classifier = new PaddleOcrClassifier(model.ClassificationModel, classifierConfigure ?? PaddleConfigure.Mkldnn());
+                Classifier = new PaddleOcrClassifier(model.ClassificationModel, classifierDevice ?? PaddleDevice.Mkldnn());
             }
-            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerConfigure ?? PaddleConfigure.Mkldnn());
+            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerDevice ?? PaddleDevice.Mkldnn());
         }
 
         [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]

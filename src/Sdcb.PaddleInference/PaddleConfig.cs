@@ -320,7 +320,7 @@ namespace Sdcb.PaddleInference
             }
             using PtrFromIntArray minShapePtr = new(shapeInfo.Select(x => x.Value.Min.ToArray()).ToArray());
             using PtrFromIntArray maxShapePtr = new(shapeInfo.Select(x => x.Value.Max.ToArray()).ToArray());
-            using PtrFromIntArray optShapePtr = new(shapeInfo.Select(x => x.Value.Opt.ToArray()).ToArray());
+            using PtrFromIntArray optShapePtr = new(shapeInfo.Select(x => x.Value.Optimal.ToArray()).ToArray());
 
             fixed (long* shapePtr = shape)
             {
