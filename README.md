@@ -20,7 +20,7 @@
 
 | Docker Images              | Version                                                                                                                      | Description                                                                        |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle) | PaddleInference 2.4.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 Runtime |
+| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle)       | PaddleInference 2.4.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 Runtime |
 | sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.4.0, OpenCV 4.6.0, based on official Ubuntu 20.04 .NET 6 SDK     |
 
 ### Paddle Inference GPU package
@@ -42,12 +42,11 @@ There is 2 old version GPU package here, might unable to use(not very large at t
 </details>
 
 Here is the GPU package that I compiled(not from baidu):
-| NuGet Package                                             | Version                                                                                                                                                                                            | Description                                                                                      |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda101_cudnn76_sm61)         | Paddle Inference native windows-x64(CUDA 10.1/cuDNN 7.6) SM61 binding                            |
-| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn85_pascal.mkl) | Paddle Inference native windows-x64(CUDA 10.2/cuDNN 8.5) Pascal binding                          |  |
-| Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn85_ampere.mkl) | Paddle Inference native windows-x64(CUDA 11.7/cuDNN 8.5) Ampere binding                          |  |
-| Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84        | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84.mkl)               | Paddle Inference native windows-x64(CUDA 11.6/cuDNN 8.4) SM61/SM75/SM86 binding with mkldnn/ONNX |  |
+| NuGet Package             | Version                                                                                                                                                                                              | Description                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| cuda117_cudnn84_tr84_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86) | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86 binding |
+| cuda102_cudnn76_sm61_75   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)     | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75 binding         |
+| cuda116_cudnn84_sm86_onnx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx) | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx binding              |
 
 
 ### PaddleOCR packages
@@ -99,16 +98,20 @@ Otherwise, it will failed with following error(Windows only):
 Enable GPU support can significantly improve the throughput and lower the CPU usage.
 
 Steps to use GPU in windows:
-1. (for windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both.
+1. (for windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cuda*` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both.
 2. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
 3. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
 4. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH`(linux)
 
 You can refer this blog page for GPU in Windows: [关于PaddleSharp GPU使用 常见问题记录](https://www.cnblogs.com/cuichaohui/p/15766519.html)
 
-If you're using Linux, you need to compile your own OpenCvSharp4 environment following the [docker build scripts](./build/docker/ubuntu20-dotnet6-paddleocr2.2.1/Dockerfile) follow the CUDA/cuDNN/TensorRT configuration tasks.
+If you're using Linux, you need to compile your own OpenCvSharp4 environment following the [docker build scripts](./build/docker/dotnet6sdk-paddle/Dockerfile) follow the CUDA/cuDNN/TensorRT configuration tasks.
 
-After these steps completed, you can try specify `PaddleConfig.Defaults.UseGpu = true` in begin of your code and then enjoy😁.
+After these steps completed, you can try specify `PaddleDevice.Gpu()` in paddle device configure parameter then enjoy🚀.
+
+### TensorRT
+
+To use TensorRT, just specify `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))` instead of `PaddleDevice.Gpu()` to make it work.
 
 # Thanks & Sponsors
 * 深圳-钱文松
