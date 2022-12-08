@@ -459,7 +459,7 @@ namespace Sdcb.PaddleInference
         }
     }
 
-    file class PtrFromStringArray : IDisposable
+    class PtrFromStringArray : IDisposable
     {
         readonly IntPtr[] internalArray;
         readonly GCHandle[] handles;
@@ -489,7 +489,7 @@ namespace Sdcb.PaddleInference
         }
     }
 
-    file class PtrFromIntArray : IDisposable
+    class PtrFromIntArray : IDisposable
     {
         readonly IntPtr[] internalArray;
         readonly GCHandle[] handles;
