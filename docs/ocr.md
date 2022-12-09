@@ -6,6 +6,8 @@
 ## Windows(Local model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
+   Sdcb.PaddleInference
+   Sdcb.PaddleOCR
    Sdcb.PaddleOCR.Models.LocalV3
    Sdcb.PaddleInference.runtime.win64.mkl
    OpenCvSharp4.runtime.win
@@ -23,7 +25,7 @@
        sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
    }
    
-   using (PaddleOcrAll all = new PaddleOcrAll(model)
+   using (PaddleOcrAll all = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
    {
        AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
        Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
@@ -46,6 +48,8 @@
 ## Windows(Online model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
+   Sdcb.PaddleInference
+   Sdcb.PaddleOCR
    Sdcb.PaddleOCR.Models.Online
    Sdcb.PaddleInference.runtime.win64.mkl
    OpenCvSharp4.runtime.win
@@ -63,7 +67,7 @@
        sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
    }
    
-   using (PaddleOcrAll all = new PaddleOcrAll(model)
+   using (PaddleOcrAll all = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
    {
        AllowRotateDetection = true, /* 允许识别有角度的文字 */ 
        Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
@@ -98,7 +102,7 @@ Please aware in `Linux`, the native binding library is not required, instead, yo
 3. write following C# code to get result(also can be exactly the same as windows):
 ```csharp
 FullOcrModel model = LocalFullModels.ChineseV3;
-using (PaddleOcrAll all = new PaddleOcrAll(model))
+using (PaddleOcrAll all = new PaddleOcrAll(model, PaddleDevice.Mkldnn()))
 // Load in-memory data by following code:
 // using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
@@ -110,6 +114,8 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 ## Detection Only
 ```csharp
 // Install following packages:
+// Sdcb.PaddleInference
+// Sdcb.PaddleOCR
 // Sdcb.PaddleOCR.Models.LocalV3
 // Sdcb.PaddleInference.runtime.win64.mkl (required in Windows, linux using docker)
 // OpenCvSharp4.runtime.win (required in Windows, linux using docker)
@@ -121,7 +127,7 @@ using (HttpClient http = new HttpClient())
     sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
 }
 
-using (PaddleOcrDetector detector = new PaddleOcrDetector(LocalDetectionModel.ChineseV3))
+using (PaddleOcrDetector detector = new PaddleOcrDetector(LocalDetectionModel.ChineseV3, PaddleDevice.Mkldnn()))
 using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 {
     RotatedRect[] rects = detector.Run(src);
@@ -139,6 +145,26 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 Please refer to https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/doc/doc_en/models_list_en.md to check language support models.
 
 Just replace the `.ChineseV3` in demo code with your speicific language, then you can use the language.
+
+# Paddle Devices
+
+* Mkldnn - `PaddleDevice.Mkldnn()`
+  
+  Generally fast
+
+* Openblas - `PaddleDevice.Openblas()`
+
+  Much slower, but binary file smaller and consume lesser memory
+
+* Gpu - `PaddleDevice.Gpu()`
+
+  Much faster but relies on NVIDIA GPU and CUDA
+
+  If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
+
+* TensorRT - `PaddleDevice.Gpu().And(PaddleDevice.TensorRt(dynamicMapCacheKey))`
+
+  Even faster than raw Gpu but need install TensorRT environment.
 
 # Technical details
 
@@ -169,10 +195,6 @@ This effect the the max size of step #1, lower this value can improve performanc
 
 You can also set this value to `null`, in that case, images will not scale-down to detect, performance will drop and memory will high, but should able to get better accurancy.
 
-## PaddleConfig.Defaults.UseGpu
-Default value: `false`
-
-If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
 
 ## How can I improve performance?
 Please review the `Technical details` section and read the `Optimize parameters and performance hints` section, or UseGpu.
