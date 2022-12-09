@@ -25,10 +25,7 @@
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.5.5.20211231" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.4.0" />
   </ItemGroup>
 
 </Project>
