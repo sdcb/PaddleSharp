@@ -1,5 +1,8 @@
 # Usage
 
+## How to migrate previous old version to latest 2.6.0.1?
+![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
+
 ## Windows(Local model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
