@@ -15,7 +15,7 @@ namespace Sdcb.PaddleDetection
 		private readonly Preprocessor _preprocessor;
 		public DetectionModelConfig Config { get; }
 
-		public PaddleDetector(PaddleConfig config, string configYmlPath) : this(config.CreatePredictor(), configYmlPath)
+		public PaddleDetector(PaddleConfig config, string configYmlPath, Action<PaddleConfig> configure = null) : this(config.Apply(configure ?? PaddleDevice.Mkldnn()).CreatePredictor(), configYmlPath)
 		{
 		}
 
