@@ -30,9 +30,9 @@ namespace Sdcb.PaddleDetection
 			_preprocessor = new Preprocessor((YamlSequenceNode)doc.RootNode["Preprocess"]);
 		}
 
-		public PaddleDetector(string modelDir, string configYmlPath) : this(PaddleConfig.FromModelFiles(
+		public PaddleDetector(string modelDir, string configYmlPath, Action<PaddleConfig> configure = null) : this(PaddleConfig.FromModelFiles(
 			Path.Combine(modelDir, "model.pdmodel"),
-			Path.Combine(modelDir, "model.pdiparams")), configYmlPath)
+			Path.Combine(modelDir, "model.pdiparams")), configYmlPath, configure)
 		{
 		}
 
