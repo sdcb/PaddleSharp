@@ -44,3 +44,6 @@
        }
    }
    ```
+
+running effect(for image):
+![image](https://user-images.githubusercontent.com/1317141/222453236-fc7c25b8-c5ca-41b7-bf93-ac2708bb8c62.png)
