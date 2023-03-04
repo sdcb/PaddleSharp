@@ -10,7 +10,7 @@
 
         public static FullOcrModel JapanV3 => new(LocalDetectionModel.MultiLanguageV3, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.JapanV3);
 
-        public static FullOcrModel TranditionalChineseV3 => new(LocalDetectionModel.ChineseV3, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.TranditionalChineseV3);
+        public static FullOcrModel TraditionalChineseV3 => new(LocalDetectionModel.ChineseV3, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.TraditionalChineseV3);
 
         public static FullOcrModel TeluguV3 => new(LocalDetectionModel.MultiLanguageV3, null, LocalRecognizationModel.TeluguV3);
 
@@ -32,7 +32,7 @@
             EnglishV3, 
             KoreanV3, 
             JapanV3, 
-            TranditionalChineseV3, 
+            TraditionalChineseV3, 
             TeluguV3, 
             KannadaV3, 
             TamilV3, 

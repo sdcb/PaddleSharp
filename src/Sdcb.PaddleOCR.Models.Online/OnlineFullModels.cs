@@ -34,7 +34,7 @@ namespace Sdcb.PaddleOCR.Models.Online
 
         public readonly static OnlineFullModels JapanV3 = new(OnlineDetectionModel.MultiLanguageV3, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.JapanV3);
 
-        public readonly static OnlineFullModels TranditionalChineseV3 = new(OnlineDetectionModel.ChineseV3, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.TranditionalChineseV3);
+        public readonly static OnlineFullModels TraditionalChineseV3 = new(OnlineDetectionModel.ChineseV3, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.TraditionalChineseV3);
 
         public readonly static OnlineFullModels TeluguV3 = new(OnlineDetectionModel.MultiLanguageV3, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.TeluguV3);
 

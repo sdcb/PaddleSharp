@@ -53,7 +53,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3
         /// Lightweight model for chinese cht
         /// (Size: 12M)
         /// </summary>
-        public static LocalRecognizationModel TranditionalChineseV3 => new("chinese_cht_PP-OCRv3_rec", "chinese_cht_dict.txt", ModelVersion.V3);
+        public static LocalRecognizationModel TraditionalChineseV3 => new("chinese_cht_PP-OCRv3_rec", "chinese_cht_dict.txt", ModelVersion.V3);
 
         /// <summary>
         /// Lightweight model for Telugu recognition
@@ -103,7 +103,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3
             EnglishV3,
             KoreanV3,
             JapanV3,
-            TranditionalChineseV3,
+            TraditionalChineseV3,
             TeluguV3,
             KannadaV3,
             TamilV3,
