@@ -23,8 +23,8 @@ static ProjectVersion[] Projects = new[]
 {
 	new ProjectVersion("Sdcb.PaddleInference", "2.4.1.1"), 
 	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.2"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.5.0"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.5.0"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0"), 
 	new ProjectVersion("Sdcb.PaddleDetection", "2.3.0"), 
 	new ProjectVersion("Sdcb.RotationDetector", "1.0.0"), 
 };
