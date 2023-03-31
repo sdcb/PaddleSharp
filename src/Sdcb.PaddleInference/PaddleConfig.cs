@@ -362,7 +362,7 @@ namespace Sdcb.PaddleInference
                 {
                     PaddleNative.PD_ConfigEnableGpuMultiStream(_ptr);
                 }
-                else
+                else if (EnableGpuMultiStream)
                 {
                     Console.WriteLine($"Warn: GpuMultiStream cannot disabled after enabled.");
                 }

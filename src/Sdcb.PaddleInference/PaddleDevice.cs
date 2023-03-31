@@ -18,7 +18,7 @@ namespace Sdcb.PaddleInference
             };
         }
 
-        public static Action<PaddleConfig> Gpu(int initialMemoryMB = 500, int deviceId = 0, bool multiStream = true, bool memoryOptimized = true, bool glogEnabled = false)
+        public static Action<PaddleConfig> Gpu(int initialMemoryMB = 500, int deviceId = 0, bool multiStream = false, bool memoryOptimized = true, bool glogEnabled = false)
         {
             return cfg =>
             {
