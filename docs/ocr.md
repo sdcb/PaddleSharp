@@ -1,5 +1,9 @@
 # Usage
 
+## How to integrate Sdcb.PaddleOCR to ASP.NET Core:
+
+Please refer to this demo website, it contains a tutorial: [https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo](https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo)
+
 ## How to migrate previous old version to latest 2.6.0.1?
 ![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
 
