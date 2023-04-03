@@ -4,6 +4,46 @@
 
 Please refer to this demo website, it contains a tutorial: [https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo](https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo)
 
+In your service builder code, register a QueuedPaddleOcrAll Singleton:
+```csharp
+builder.Services.AddSingleton(s =>
+{
+    Action<PaddleConfig> device = builder.Configuration["PaddleDevice"] == "GPU" ? PaddleDevice.Gpu() : PaddleDevice.Mkldnn();
+    return new QueuedPaddleOcrAll(() => new PaddleOcrAll(LocalFullModels.ChineseV3, device)
+    {
+        Enable180Classification = true,
+        AllowRotateDetection = true,
+    }, consumerCount: 1);
+});
+```
+
+In your controller, use the registered `QueuedPaddleOcrAll` singleton:
+```csharp
+public class OcrController : Controller
+{
+    private readonly QueuedPaddleOcrAll _ocr;
+
+    public OcrController(QueuedPaddleOcrAll ocr) { _ocr = ocr; }
+
+    [Route("ocr")]
+    public async Task<OcrResponse> Ocr(IFormFile file)
+    {
+        using MemoryStream ms = new();
+        using Stream stream = file.OpenReadStream();
+        stream.CopyTo(ms);
+        using Mat src = Cv2.ImDecode(ms.ToArray(), ImreadModes.Color);
+        double scale = 1;
+        using Mat scaled = src.Resize(Size.Zero, scale, scale);
+
+        Stopwatch sw = Stopwatch.StartNew();
+        string textResult = (await _ocr.Run(scaled)).Text;
+        sw.Stop();
+
+        return new OcrResponse(textResult, sw.ElapsedMilliseconds);
+    }
+}
+```
+
 ## How to migrate previous old version to latest 2.6.0.1?
 ![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
 
