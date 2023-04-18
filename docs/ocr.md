@@ -233,7 +233,7 @@ This allows detect any rotated texts. If your subject is 0 degree text (like sca
 
 
 ## PaddleOcrAll.Detector.MaxSize
-Default value: `2048`
+Default value: `1536`
 
 This effect the the max size of step #1, lower this value can improve performance and reduce memory usage, but will also lower the accurancy.
 
