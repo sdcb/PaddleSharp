@@ -218,6 +218,15 @@ There is 3 steps to do OCR:
 3. Recognization - Recognize the area into text
 
 # Optimize parameters and performance hints
+## PaddleConfig.MkldnnCacheCapacity
+Default value: `1`
+
+This value has a positive correlation to the peak of memory usage that used by `mkldnn` and a negative correlation to the performance when providing different images.
+
+To figure out each value corresponding to the peak memory usage, you should run the detection for various images(using the same image will not increase memory usage) continuously till the memory usage get stable within a variation of 1GB.
+
+For more details please check the [pr #46](https://github.com/sdcb/PaddleSharp/pull/46) that decreases the default value and the [Paddle](https://github.com/PaddlePaddle/docs/blob/63362b7443c77a324f58a045bcc8d03bb59637fa/docs/design/mkldnn/caching/caching.md) document for `MkldnnCacheCapacity`.
+
 ## PaddleOcrAll.Enable180Classification
 Default value: `false`
 
