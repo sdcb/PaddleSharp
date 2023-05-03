@@ -119,12 +119,14 @@ namespace Sdcb.PaddleOCR
                     .Select(rect =>
                     {
                         float minEdge = Math.Min(rect.Size.Width, rect.Size.Height);
-                        Size2f newSize = new Size2f(
+                        Size2f newSize = new(
                             (rect.Size.Width + UnclipRatio * minEdge) * scaleRate,
                             (rect.Size.Height + UnclipRatio * minEdge) * scaleRate);
-                        RotatedRect largerRect = new RotatedRect(rect.Center * scaleRate, newSize, rect.Angle);
+                        RotatedRect largerRect = new(rect.Center * scaleRate, newSize, rect.Angle);
                         return largerRect;
                     })
+                    .OrderBy(v => v.Center.Y)
+                    .ThenBy(v => v.Center.X)
                     .ToArray();
                 //{
                 //	using Mat demo = dilated.CvtColor(ColorConversionCodes.GRAY2RGB);

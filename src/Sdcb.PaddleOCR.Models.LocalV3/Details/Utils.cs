@@ -33,7 +33,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
             return ms.ToArray();
         }
 
-        public static IReadOnlyList<string> LoadDictsAsArray(string dictName)
+        public static List<string> LoadDicts(string dictName)
         {
             string ns = RootType.Namespace;
             string resourcePath = $"{ns}.models.dicts.{EmbeddedResourceTransform(dictName)}";
@@ -43,7 +43,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3.Details
                 throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
             }
 
-            return ReadLinesFromStream(dictStream).ToArray();
+            return ReadLinesFromStream(dictStream).ToList();
 
             static IEnumerable<string> ReadLinesFromStream(Stream stream)
             {

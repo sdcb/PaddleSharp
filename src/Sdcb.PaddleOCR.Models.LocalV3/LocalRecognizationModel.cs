@@ -13,7 +13,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3
         public LocalRecognizationModel(string name, string dictName, ModelVersion version) : base(version)
         {
             Name = name;
-            Labels = Utils.LoadDictsAsArray(dictName);
+            Labels = Utils.LoadDicts(dictName);
         }
 
         public override string GetLabelByIndex(int i) => GetLabelByIndex(i, Labels);
