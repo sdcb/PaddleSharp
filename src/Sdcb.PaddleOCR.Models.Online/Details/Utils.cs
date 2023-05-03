@@ -1,9 +1,11 @@
 ﻿using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,7 +51,7 @@ namespace Sdcb.PaddleOCR.Models.Online.Details
             throw new Exception($"Failed to download {localFile} from all uris: {string.Join(", ", uris.Select(x => x.ToString()))}");
         }
 
-        public static async Task DownloadAndExtract(string name, Uri uri, string rootDir, CancellationToken cancellationToken)
+        public static async Task DownloadAndExtractAsync(string name, Uri uri, string rootDir, CancellationToken cancellationToken)
         {
             Directory.CreateDirectory(rootDir);
             string paramsFile = Path.Combine(rootDir, "inference.pdiparams");
@@ -110,5 +112,32 @@ namespace Sdcb.PaddleOCR.Models.Online.Details
                 }
             }
         }
+
+        public static List<string> LoadDicts(string dictName)
+        {
+            string ns = RootType.Namespace;
+            string resourcePath = $"{ns}.dicts.{EmbeddedResourceTransform(dictName)}";
+            using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath);
+            if (dictStream == null)
+            {
+                throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
+            }
+
+            return ReadLinesFromStream(dictStream).ToList();
+
+            static IEnumerable<string> ReadLinesFromStream(Stream stream)
+            {
+                using StreamReader reader = new(stream);
+                while (!reader.EndOfStream)
+                {
+                    yield return reader.ReadLine();
+                }
+            }
+        }
+
+        static string EmbeddedResourceTransform(string name) => name.Replace('-', '_').Replace(".0", "._0");
+
+        public readonly static Type RootType = typeof(Settings);
+        public readonly static Assembly RootAssembly = typeof(Settings).Assembly;
     }
 }

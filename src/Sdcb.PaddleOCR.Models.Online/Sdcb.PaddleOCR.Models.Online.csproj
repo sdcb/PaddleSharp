@@ -17,6 +17,10 @@
   <ItemGroup>
     <EmbeddedResource Include="dicts\*.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="dicts\table_structure_dict.txt" />
+    <None Remove="dicts\table_structure_dict_ch.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\build\icon.jpg">

@@ -13,7 +13,7 @@ namespace Sdcb.PaddleOCR.Models.Online
 
         public async Task<FileDetectionModel> DownloadAsync(CancellationToken cancellationToken = default)
         {
-            await Utils.DownloadAndExtract(name, uri, RootDirectory, cancellationToken);
+            await Utils.DownloadAndExtractAsync(name, uri, RootDirectory, cancellationToken);
 
             return new FileDetectionModel(RootDirectory);
         }

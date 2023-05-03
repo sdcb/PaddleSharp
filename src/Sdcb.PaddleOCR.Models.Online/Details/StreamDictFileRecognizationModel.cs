@@ -13,19 +13,10 @@ namespace Sdcb.PaddleOCR.Models.Online.Details
 
         public string DirectoryPath { get; }
 
-        public StreamDictFileRecognizationModel(string directoryPath, Stream dictStream, ModelVersion version) : base(version)
+        public StreamDictFileRecognizationModel(string directoryPath, IReadOnlyList<string> dict, ModelVersion version) : base(version)
         {
             DirectoryPath = directoryPath;
-            _labels = ReadLinesFromStream(dictStream).ToArray();
-        }
-
-        public static IEnumerable<string> ReadLinesFromStream(Stream stream)
-        {
-            using StreamReader reader = new(stream);
-            while (!reader.EndOfStream)
-            {
-                yield return reader.ReadLine();
-            }
+            _labels = dict;
         }
 
         public override PaddleConfig CreateConfig()

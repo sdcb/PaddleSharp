@@ -16,7 +16,7 @@ namespace Sdcb.PaddleOCR.Models.Online
 
         public async Task<FileClassificationModel> DownloadAsync(CancellationToken cancellationToken = default)
         {
-            await Utils.DownloadAndExtract(name, uri, RootDirectory, cancellationToken);
+            await Utils.DownloadAndExtractAsync(name, uri, RootDirectory, cancellationToken);
             return new FileClassificationModel(RootDirectory);
         }
 

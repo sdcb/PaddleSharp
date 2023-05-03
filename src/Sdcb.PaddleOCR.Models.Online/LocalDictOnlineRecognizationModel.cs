@@ -12,17 +12,8 @@ namespace Sdcb.PaddleOCR.Models.Online
 
         public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
         {
-            await Utils.DownloadAndExtract(name, uri, RootDirectory, cancellationToken);
-
-            return new StreamDictFileRecognizationModel(RootDirectory, GetDictStreamByName(dictName), version);
-        }
-
-        internal static Stream GetDictStreamByName(string dictName)
-        {
-            Type type = typeof(LocalDictOnlineRecognizationModel);
-            string ns = type.Namespace;
-
-            return type.Assembly.GetManifestResourceStream($"{ns}.dicts.{dictName}");
+            await Utils.DownloadAndExtractAsync(name, uri, RootDirectory, cancellationToken);
+            return new StreamDictFileRecognizationModel(RootDirectory, Utils.LoadDicts(dictName), version);
         }
 
         /// <summary>
