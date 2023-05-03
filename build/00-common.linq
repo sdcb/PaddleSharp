@@ -21,10 +21,10 @@ static void DotNetRun(string args) => Run("dotnet", args, Encoding.GetEncoding("
 static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, args, encoding);
 static ProjectVersion[] Projects = new[]
 {
-	new ProjectVersion("Sdcb.PaddleInference", "2.4.1.1"), 
-	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.2"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0"), 
+	new ProjectVersion("Sdcb.PaddleInference", "2.4.1.2"), 
+	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.3"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0.3"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0.3"), 
 	new ProjectVersion("Sdcb.PaddleDetection", "2.3.0"), 
 	new ProjectVersion("Sdcb.RotationDetector", "1.0.0"), 
 };
