@@ -15,7 +15,7 @@ public class PaddleOcrTableRecognizer : IDisposable
     public int MaxEdgeSize { get; set; } = 488;
     public TableRecognitionModel Model { get; }
 
-    public PaddleOcrTableRecognizer(TableRecognitionModel model, Action<PaddleConfig>? configure = null) : this(model, model.CreateConfig().Apply(configure ?? PaddleDevice.Mkldnn()).CreatePredictor())
+    public PaddleOcrTableRecognizer(TableRecognitionModel model, Action<PaddleConfig>? configure = null) : this(model, model.CreateConfig().Apply(configure ?? PaddleDevice.Openblas()).CreatePredictor())
     {
     }
 
