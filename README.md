@@ -1,12 +1,15 @@
 # PaddleSharp [![main](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml/badge.svg)](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml) [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
-💗.NET Wrapper for `PaddleInference` C API, include [PaddleOCR](./docs/ocr.md), [PaddleDetection](./docs/detection.md), [Rotation Detector](./docs/rotation-detection.md) support **Windows**(x64), NVIDIA GPU and **Linux**(Ubuntu-20.04 x64).
+💗.NET Wrapper for `PaddleInference` C API, include [PaddleOCR](./docs/ocr.md), [PaddleDetection](./docs/detection.md), [Rotation Detector](./docs/rotation-detection.md), support **Windows**(x64), NVIDIA Cuda 10.2+ based GPU and **Linux**(Ubuntu-22.04 x64), currently contained following main components:
 
-[PaddleOCR](./docs/ocr.md) support 14 OCR languages model download on-demand, allow rotated text angle detection, 180 degree text detection.
-
-[PaddleDetection](./docs/detection.md) support PPYolo detection model and PicoDet model.
+* [PaddleOCR](./docs/ocr.md) support 14 OCR languages model download on-demand, allow rotated text angle detection, 180 degree text detection, also support table recognition.
+* [PaddleDetection](./docs/detection.md) support PPYolo detection model and PicoDet model.
+* [RotationDetection](./docs/rotation-detection.md) use Baidu's official `text_image_orientation_infer` model to detect text picture's rotation angle(`0, 90, 180, 270`).
 
 ## NuGet Packages/Docker Images
+
+### Release notes
+Please checkout [this page](https://github.com/sdcb/PaddleSharp/releases).
 
 ### Infrastructure packages
 
@@ -31,17 +34,7 @@ Since GPU package are too large(>1.5GB), I cannot publish a NuGet package to nug
 
 However you're good to build your own GPU nuget package using `01-build-native.linq`.
 
-There is 2 old version GPU package here, might unable to use(not very large at that time):
-
-<details>
-
-| NuGet Package                                        | Version                                                                                                                                                                                  | Description                                                               |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda10_cudnn7.mkl)         | Paddle Inference native windows-x64(CUDA 10/cuDNN 7.x) binding            |
-| Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda11_cudnn8_tr7.mkl) | Paddle Inference native windows-x64(CUDA 11/cuDNN 8.0/TensorRT 7) binding |  |
-</details>
-
-Here is the GPU package that I compiled(not from baidu):
+Here is the GPU package that I compiled(not from baidu official):
 | NuGet Package             | Version                                                                                                                                                                                              | Description                                         |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | cuda117_cudnn84_tr84_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86) | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86 binding |
@@ -56,20 +49,17 @@ Here is the GPU package that I compiled(not from baidu):
 | Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference)        |
 | Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using |
 | Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~130MB) |
-| Sdcb.PaddleOCR.KnownModels    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.KnownModels.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.KnownModels)       | Old online model download helper, *deprecated*          |
 
-### Rotation Detection packages(part of PaddleClass)
+### Rotation Detection packages(part of PaddleCls)
 | NuGet Package         | Version                                                                                                                | Description                                             |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Sdcb.RotationDetector | [![NuGet](https://img.shields.io/nuget/v/Sdcb.RotationDetector.svg)](https://nuget.org/packages/Sdcb.RotationDetector) | RotationDetector library(based on Sdcb.PaddleInference) |
 
 ### PaddleDetection packages
-<details>
 
 | NuGet Package        | Version                                                                                                              | Description                                            |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | Sdcb.PaddleDetection | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleDetection.svg)](https://nuget.org/packages/Sdcb.PaddleDetection) | PaddleDetection library(based on Sdcb.PaddleInference) |
-</details>
 
 # Usage
 * PaddleOCR: [PaddleOCR](./docs/ocr.md)
@@ -112,6 +102,29 @@ After these steps completed, you can try specify `PaddleDevice.Gpu()` in paddle 
 ### TensorRT
 
 To use TensorRT, just specify `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))` instead of `PaddleDevice.Gpu()` to make it work.
+
+Please aware, this shape info text file `**.txt` is bind to your model, **different model have different shape info**, so if you're using complexed model like `Sdcb.PaddleOCR`, you should use different shape for different model like this:
+```csharp
+using PaddleOcrAll all = new(model,
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("det.txt")),
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("cls.txt")),
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("rec.txt")))
+{
+   Enable180Classification = true,
+   AllowRotateDetection = true,
+};
+```
+
+In this case:
+* `DetectionModel` will use `det.txt`
+* `180DegreeClassificationModel` will use `cls.txt`
+* `RecognitionModel` will use `rec.txt`
+
+**NOTE :**
+
+First round of `TensorRT` running will generate a shape info `**.txt` file in this folder: `%AppData%\Sdcb.PaddleInference\TensorRtCache`, it will takes around 100 seconds to finish TensorRT cache generation, after than it should be faster than general `GPU`.
+
+In this case, if something strange happened, (for example you mistakenly create a same `shape-info.txt` file for different models), you can delete this folder to generate TensorRT cache again: `%AppData%\Sdcb.PaddleInference\TensorRtCache`.
 
 # Thanks & Sponsors
 * 深圳-钱文松

@@ -1,51 +1,10 @@
+# Language supports
+
+Please refer to https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/doc/doc_en/models_list_en.md to check language support models.
+
+Just replace the `.ChineseV3` in demo code with your speicific language, then you can use the language.
+
 # Usage
-
-## How to integrate Sdcb.PaddleOCR to ASP.NET Core:
-
-Please refer to this demo website, it contains a tutorial: [https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo](https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo)
-
-In your service builder code, register a QueuedPaddleOcrAll Singleton:
-```csharp
-builder.Services.AddSingleton(s =>
-{
-    Action<PaddleConfig> device = builder.Configuration["PaddleDevice"] == "GPU" ? PaddleDevice.Gpu() : PaddleDevice.Mkldnn();
-    return new QueuedPaddleOcrAll(() => new PaddleOcrAll(LocalFullModels.ChineseV3, device)
-    {
-        Enable180Classification = true,
-        AllowRotateDetection = true,
-    }, consumerCount: 1);
-});
-```
-
-In your controller, use the registered `QueuedPaddleOcrAll` singleton:
-```csharp
-public class OcrController : Controller
-{
-    private readonly QueuedPaddleOcrAll _ocr;
-
-    public OcrController(QueuedPaddleOcrAll ocr) { _ocr = ocr; }
-
-    [Route("ocr")]
-    public async Task<OcrResponse> Ocr(IFormFile file)
-    {
-        using MemoryStream ms = new();
-        using Stream stream = file.OpenReadStream();
-        stream.CopyTo(ms);
-        using Mat src = Cv2.ImDecode(ms.ToArray(), ImreadModes.Color);
-        double scale = 1;
-        using Mat scaled = src.Resize(Size.Zero, scale, scale);
-
-        Stopwatch sw = Stopwatch.StartNew();
-        string textResult = (await _ocr.Run(scaled)).Text;
-        sw.Stop();
-
-        return new OcrResponse(textResult, sw.ElapsedMilliseconds);
-    }
-}
-```
-
-## How to migrate previous old version to latest 2.6.0.1?
-![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
 
 ## Windows(Local model): Detection and Recognition(All)
 1. Install NuGet Packages:
@@ -184,11 +143,27 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 }
 ```
 
-# Language supports
+## Table recognition
+```csharp
+// Install following packages:
+// Sdcb.PaddleInference
+// Sdcb.PaddleOCR
+// Sdcb.PaddleOCR.Models.LocalV3
+// Sdcb.PaddleInference.runtime.win64.mkl (required in Windows, linux using docker)
+// OpenCvSharp4.runtime.win (required in Windows, linux using docker)
+using PaddleOcrTableRecognizer tableRec = new(LocalTableRecognitionModel.ChineseMobileV2_SLANET);
+using Mat src = Cv2.ImRead(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "table.jpg"));
+// Table detection
+TableDetectionResult tableResult = tableRec.Run(src);
 
-Please refer to https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/doc/doc_en/models_list_en.md to check language support models.
+// Normal OCR
+using PaddleOcrAll all = new(LocalFullModels.ChineseV3);
+all.Detector.UnclipRatio = 1.2f;
+PaddleOcrResult ocrResult = all.Run(src);
 
-Just replace the `.ChineseV3` in demo code with your speicific language, then you can use the language.
+// Rebuild table
+string html = tableResult.RebuildTable(ocrResult);
+```
 
 # Paddle Devices
 
@@ -206,9 +181,11 @@ Just replace the `.ChineseV3` in demo code with your speicific language, then yo
 
   If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
 
-* TensorRT - `PaddleDevice.Gpu().And(PaddleDevice.TensorRt(dynamicMapCacheKey))`
+* TensorRT - `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))`
 
   Even faster than raw Gpu but need install TensorRT environment.
+
+  Please refer to [this page](../README.md#tensorrt) for more details
 
 # Technical details
 
@@ -251,3 +228,51 @@ You can also set this value to `null`, in that case, images will not scale-down 
 
 ## How can I improve performance?
 Please review the `Technical details` section and read the `Optimize parameters and performance hints` section, or UseGpu.
+
+# FAQ
+## How to integrate Sdcb.PaddleOCR to ASP.NET Core?
+
+Please refer to this demo website, it contains a tutorial: [https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo](https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo)
+
+In your service builder code, register a QueuedPaddleOcrAll Singleton:
+```csharp
+builder.Services.AddSingleton(s =>
+{
+    Action<PaddleConfig> device = builder.Configuration["PaddleDevice"] == "GPU" ? PaddleDevice.Gpu() : PaddleDevice.Mkldnn();
+    return new QueuedPaddleOcrAll(() => new PaddleOcrAll(LocalFullModels.ChineseV3, device)
+    {
+        Enable180Classification = true,
+        AllowRotateDetection = true,
+    }, consumerCount: 1);
+});
+```
+
+In your controller, use the registered `QueuedPaddleOcrAll` singleton:
+```csharp
+public class OcrController : Controller
+{
+    private readonly QueuedPaddleOcrAll _ocr;
+
+    public OcrController(QueuedPaddleOcrAll ocr) { _ocr = ocr; }
+
+    [Route("ocr")]
+    public async Task<OcrResponse> Ocr(IFormFile file)
+    {
+        using MemoryStream ms = new();
+        using Stream stream = file.OpenReadStream();
+        stream.CopyTo(ms);
+        using Mat src = Cv2.ImDecode(ms.ToArray(), ImreadModes.Color);
+        double scale = 1;
+        using Mat scaled = src.Resize(Size.Zero, scale, scale);
+
+        Stopwatch sw = Stopwatch.StartNew();
+        string textResult = (await _ocr.Run(scaled)).Text;
+        sw.Stop();
+
+        return new OcrResponse(textResult, sw.ElapsedMilliseconds);
+    }
+}
+```
+
+## How to migrate previous old version to latest 2.6.0.1?
+![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
