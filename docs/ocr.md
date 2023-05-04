@@ -165,6 +165,10 @@ PaddleOcrResult ocrResult = all.Run(src);
 string html = tableResult.RebuildTable(ocrResult);
 ```
 
+| Raw table                            | Table model output | Rebuilt table                            |
+| ----------------------------------- | -- | ----------------------------------- |
+| ![table](https://user-images.githubusercontent.com/1317141/236091511-d8446cf6-dd75-4201-993a-3ec2f5999bca.jpg) | ![image](https://user-images.githubusercontent.com/1317141/236092184-78d7e035-ab28-465c-a7fe-6dc90aabc4c6.png) | ![image](https://user-images.githubusercontent.com/1317141/236091667-bbe28517-24a0-4f36-b559-f7026dd00ca4.png) |
+
 # Paddle Devices
 
 * Mkldnn - `PaddleDevice.Mkldnn()`
