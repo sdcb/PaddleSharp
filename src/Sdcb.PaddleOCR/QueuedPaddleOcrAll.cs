@@ -14,7 +14,7 @@ namespace Sdcb.PaddleOCR
         private readonly CountdownEvent _countdownEvent;
         private bool _disposed;
 
-        public QueuedPaddleOcrAll(Func<PaddleOcrAll> factory, int consumerCount = 4, int boundedCapacity = 64)
+        public QueuedPaddleOcrAll(Func<PaddleOcrAll> factory, int consumerCount = 1, int boundedCapacity = 64)
         {
             _factory = factory;
             _queue = new BlockingCollection<ThreadedQueueItem>(boundedCapacity);
