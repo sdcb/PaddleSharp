@@ -5,8 +5,14 @@ using System.Linq;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// Represents a table cell bounding box.
+/// </summary>
 public record TableCellBox(IReadOnlyList<int> Data)
 {
+    /// <summary>
+    /// Gets the list of points that define the contours of the bounding box.
+    /// </summary>
     internal IEnumerable<Point> Contours => Data.Count switch
     {
         8 => Data.Chunk(2).Select(x => new Point(x[0], x[1])),
@@ -14,6 +20,9 @@ public record TableCellBox(IReadOnlyList<int> Data)
         _ => throw new NotSupportedException(OutOfRangeMessage),
     };
 
+    /// <summary>
+    /// Gets the Rectangular area that bounds the table cell.
+    /// </summary>
     public Rect Rect => Data.Count switch
     {
         8 => Xyxyxyxy2xyxy(Data),

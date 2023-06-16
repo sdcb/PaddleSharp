@@ -5,8 +5,19 @@ using System.Text;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// Represents the result of table detection.
+/// </summary>
+/// <param name="Score">score of the table detection.</param>
+/// <param name="StructureBoxes">the structured boxes of the table.</param>
+/// <param name="HtmlTags">the html tags of the table.</param>
 public record TableDetectionResult(float Score, List<TableCellBox> StructureBoxes, List<string> HtmlTags)
 {
+    /// <summary>
+    /// Rebuilds table using the detected text content.
+    /// </summary>
+    /// <param name="ocrResult">the OCR result.</param>
+    /// <returns>the table content as a string.</returns>
     public string RebuildTable(PaddleOcrResult ocrResult)
     {
         List<string>[] matched = Enumerable.Range(0, StructureBoxes.Count)
@@ -106,6 +117,13 @@ public record TableDetectionResult(float Score, List<TableCellBox> StructureBoxe
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Visualizes the table structure on the image.
+    /// </summary>
+    /// <param name="src">the source image.</param>
+    /// <param name="color">the color used to draw the structure.</param>
+    /// <param name="thickness">the thickness of the structure line.</param>
+    /// <returns>the image with table structure visualized.</returns>
     public Mat Visualize(Mat src, Scalar color, int thickness = 1)
     {
         Mat clone = src.Clone();

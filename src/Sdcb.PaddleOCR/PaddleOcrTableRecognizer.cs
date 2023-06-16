@@ -7,17 +7,38 @@ using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// Represents a PaddleOCR table recognizer.
+/// </summary>
 public class PaddleOcrTableRecognizer : IDisposable
 {
     readonly PaddlePredictor _p;
 
+    /// <summary>
+    /// Gets or sets the maximum edge size.
+    /// </summary>
     public int MaxEdgeSize { get; set; } = 488;
+
+    /// <summary>
+    /// Gets the table recognition model.
+    /// </summary>
     public TableRecognitionModel Model { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrTableRecognizer"/> class.
+    /// </summary>
+    /// <param name="model">The table recognition model.</param>
+    /// <param name="configure">The action to configure Paddle device.</param>
     public PaddleOcrTableRecognizer(TableRecognitionModel model, Action<PaddleConfig>? configure = null) : this(model, model.CreateConfig().Apply(configure ?? PaddleDevice.Openblas()).CreatePredictor())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrTableRecognizer"/> class from directory path and label path.
+    /// </summary>
+    /// <param name="directoryPath">The directory path.</param>
+    /// <param name="labelPath">The label path.</param>
+    /// <param name="configure">The action to configure Paddle device.</param>
     public PaddleOcrTableRecognizer(string directoryPath, string labelPath, Action<PaddleConfig>? configure = null) : this(TableRecognitionModel.FromDirectory(directoryPath, labelPath), configure)
     {
     }
@@ -28,10 +49,25 @@ public class PaddleOcrTableRecognizer : IDisposable
         _p = predictor;
     }
 
+    /// <summary>
+    /// Clones a new <see cref="PaddleOcrTableRecognizer"/> instance.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="PaddleOcrTableRecognizer"/> class.</returns>
     public PaddleOcrTableRecognizer Clone() => new(Model, _p.Clone());
 
+    /// <summary>
+    /// Disposes the PaddleOCR table recognizer.
+    /// </summary>   
     public void Dispose() => _p.Dispose();
 
+    /// <summary>
+    /// Runs table detection on the image.
+    /// </summary>
+    /// <param name="src">The input image to run table detection on.</param>
+    /// <returns>The table detection result.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input image size is 0.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the input image channel is not 3 or 1.</exception>
+    /// <exception cref="Exception">Thrown when the PaddlePredictor(Table) run failed.</exception>
     public TableDetectionResult Run(Mat src)
     {
         if (src.Empty())

@@ -6,10 +6,20 @@ using System.Linq;
 
 namespace Sdcb.PaddleOCR.Models;
 
+/// <summary>
+/// Abstract class for table recognition models.
+/// </summary>
 public abstract class TableRecognitionModel
 {
+    /// <summary>
+    /// Read-only list that contains the recognized text labels.
+    /// </summary>
     public IReadOnlyList<string> Labels { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableRecognitionModel"/> class with labels and mergeNoSpanStructure.
+    /// </summary>
+    /// <param name="labels">The list of recognized text labels.</param>
     public TableRecognitionModel(IReadOnlyList<string> labels) : this(labels, mergeNoSpanStructure: true)
     {
     }
@@ -39,10 +49,25 @@ public abstract class TableRecognitionModel
         }
     }
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    /// <returns>Returns an instance of the <see cref="PaddleConfig"/> class.</returns>
     public abstract PaddleConfig CreateConfig();
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="FileTableRecognizationModel"/> class from a specified directory path and label path.
+    /// </summary>
+    /// <param name="directoryPath">The directory path.</param>
+    /// <param name="labelPath">The label path.</param>
+    /// <returns>Returns an instance of the <see cref="FileTableRecognizationModel"/> class.</returns>
     public static TableRecognitionModel FromDirectory(string directoryPath, string labelPath) => new FileTableRecognizationModel(directoryPath, labelPath);
 
+    /// <summary>
+    /// Gets the recognized label based on the specified index.
+    /// </summary>
+    /// <param name="i">The specified index.</param>
+    /// <returns>Returns the recognized label based on the specified index.</returns>
     public virtual string GetLabelByIndex(int i)
     {
         return i switch
@@ -54,11 +79,9 @@ public abstract class TableRecognitionModel
         };
     }
 
+    /// <summary>
+    /// Configures the <see cref="PaddleConfig"/> instance and its properties.
+    /// </summary>
+    /// <param name="config">The instance of the <see cref="PaddleConfig"/> class to configure.</param>
     protected virtual void ConfigPostProcess(PaddleConfig config) { }
-}
-
-public static class TableRecognitionModelConsts
-{
-    public const string FirstLabel = "sos";
-    public const string LastLabel = "eos";
 }
