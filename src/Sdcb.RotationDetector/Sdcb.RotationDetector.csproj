@@ -16,6 +16,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>rotation-detection.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="models\text_image_orientation_infer\inference.pdiparams" />
@@ -24,6 +25,10 @@
 
   <ItemGroup>
     <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\docs\rotation-detection.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

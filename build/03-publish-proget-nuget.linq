@@ -35,13 +35,13 @@ void Refresh()
 	object BuildTable()
 	{
 		return Directory.EnumerateFiles(@".\nupkgs\", "*.nupkg")
-			//.Where(x => x.Contains(Version))
 			.Select(x => new
 			{
 				Package = Path.GetFileNameWithoutExtension(x),
 				Size = $"{new FileInfo(x).Length / 1024.0 / 1024:N2}MB",
 				Publish = new Button("Publish", o => PublishProGet(x)),
 				PublishNuGet = new Button("Publish NuGet", o => PublishNuGet(x)),
+				Open = new Button("📁", o => Process.Start("explorer.exe", $"/select,\"{Path.Combine(Environment.CurrentDirectory, x)}\"")), 
 				Delete = new Button("Delete", o =>
 				{
 					File.Delete(x);
