@@ -4,10 +4,17 @@ using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleInference;
 
+/// <summary>
+/// A tensor for Paddle Inference.
+/// </summary>
 public class PaddleTensor : IDisposable
 {
     private IntPtr _ptr;
 
+    /// <summary>
+    /// Creates a new instance of <see cref="PaddleTensor"/> class.
+    /// </summary>
+    /// <param name="predictorPointer">Pointer to the associated predictor.</param>
     public PaddleTensor(IntPtr predictorPointer)
     {
         if (predictorPointer == IntPtr.Zero)
@@ -17,7 +24,14 @@ public class PaddleTensor : IDisposable
         _ptr = predictorPointer;
     }
 
+    /// <summary>
+    /// Gets the name of this tensor.
+    /// </summary>
     public string Name => PaddleNative.PD_TensorGetName(_ptr).UTF8PtrToString()!;
+
+    /// <summary>
+    /// Gets or sets the shape of this tensor.
+    /// </summary>
     public unsafe int[] Shape
     {
         get
@@ -34,6 +48,11 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the data of this tensor.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the tensor.</typeparam>
+    /// <returns>The data of this tensor.</returns>
     public unsafe T[] GetData<T>()
     {
         TypeCode code = Type.GetTypeCode(typeof(T));
@@ -62,6 +81,10 @@ public class PaddleTensor : IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Sets the data of this tensor.
+    /// </summary>
+    /// <param name="data">The data to be set.</param>
     public unsafe void SetData(float[] data)
     {
         fixed (void* ptr = data)
@@ -70,6 +93,10 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sets the data of this tensor.
+    /// </summary>
+    /// <param name="data">The data to be set.</param>
     public unsafe void SetData(int[] data)
     {
         fixed (void* ptr = data)
@@ -78,6 +105,10 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sets the data of this tensor.
+    /// </summary>
+    /// <param name="data">The data to be set.</param>
     public unsafe void SetData(long[] data)
     {
         fixed (void* ptr = data)
@@ -86,6 +117,10 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sets the data of this tensor.
+    /// </summary>
+    /// <param name="data">The data to be set.</param>
     public unsafe void SetData(byte[] data)
     {
         fixed (void* ptr = data)
@@ -94,6 +129,10 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sets the data of this tensor.
+    /// </summary>
+    /// <param name="data">The data to be set.</param>
     public unsafe void SetData(sbyte[] data)
     {
         fixed (void* ptr = data)
@@ -102,8 +141,14 @@ public class PaddleTensor : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the data type of this tensor.
+    /// </summary>
     public DataTypes DataType => (DataTypes)PaddleNative.PD_TensorGetDataType(_ptr);
 
+    /// <summary>
+    /// Disposes any resources held by this tensor.
+    /// </summary>
     public void Dispose()
     {
         if (_ptr != IntPtr.Zero)

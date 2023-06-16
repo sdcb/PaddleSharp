@@ -11,20 +11,34 @@ using System.Text;
 
 namespace Sdcb.PaddleInference;
 
+/// <summary>
+/// Provides a configuration for Paddle Inference.
+/// </summary>
 public sealed class PaddleConfig : IDisposable
 {
     private IntPtr _ptr;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleConfig"/> class.
+    /// </summary>
     public PaddleConfig()
     {
         _ptr = PaddleNative.PD_ConfigCreate();
     }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    /// <param name="configPointer">A pointer to a paddle config object</param>
     public PaddleConfig(IntPtr configPointer)
     {
         _ptr = configPointer;
     }
 
+    /// <summary>
+    /// Returns a PaddleConfig instance from the given model directory.
+    /// </summary>
+    /// <param name="modelDir">The path to the directory containing the model files.</param>
+    /// <returns>A new instance of PaddleConfig.</returns>
     public static PaddleConfig FromModelDir(string modelDir)
     {
         if (!Directory.Exists(modelDir))
@@ -54,6 +68,12 @@ public sealed class PaddleConfig : IDisposable
         throw new FileNotFoundException($"Model file not find in model dir: {modelDir}");
     }
 
+    /// <summary>
+    /// Returns a PaddleConfig instance from paddle model files.
+    /// </summary>
+    /// <param name="programPath">Path of the PaddlePaddle model program file.</param>
+    /// <param name="paramsPath">Path of the PaddlePaddle model parameter file.</param>
+    /// <returns>A PaddleConfig instance.</returns>
     public static PaddleConfig FromModelFiles(string programPath, string paramsPath)
     {
         PaddleConfig c = new();
@@ -61,6 +81,12 @@ public sealed class PaddleConfig : IDisposable
         return c;
     }
 
+    /// <summary>
+    /// Creates the <see cref="PaddleConfig"/> object from in-memory program data.
+    /// </summary>
+    /// <param name="programBuffer">In-memory program data.</param>
+    /// <param name="paramsBuffer">In-memory parameter data.</param>
+    /// <returns>The <see cref="PaddleConfig"/> object.</returns>
     public static PaddleConfig FromMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
     {
         PaddleConfig c = new();
@@ -68,6 +94,9 @@ public sealed class PaddleConfig : IDisposable
         return c;
     }
 
+    /// <summary>
+    /// Gets the encoding used by Paddle Inference.
+    /// </summary>
     public static readonly Encoding PaddleEncoding;
 
     static PaddleConfig()
@@ -143,6 +172,10 @@ public sealed class PaddleConfig : IDisposable
     /// <summary>Get version info.</summary>
     public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
 
+    /// <summary>
+    /// Returns a pointer to the underlying unmanaged object handle.
+    /// </summary>
+    /// <returns>An unmanaged object handle.</returns>
     public IntPtr UnsafeGetHandle() => _ptr;
 
     /// <summary>A boolean state telling whether logs in Paddle inference are enabled.</summary>
@@ -452,6 +485,11 @@ public sealed class PaddleConfig : IDisposable
         }
     }
 
+    /// <summary>
+    /// Apply the configuration to the PaddleConfig.
+    /// </summary>
+    /// <param name="configure">The action to configure the PaddleConfig.</param>
+    /// <returns>The modified PaddleConfig.</returns>
     public PaddleConfig Apply(Action<PaddleConfig> configure)
     {
         configure(this);

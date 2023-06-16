@@ -24,7 +24,7 @@ public partial class PaddleNative
         public byte** Data;
 #pragma warning restore CS0649
 
-        public string[] ToArray()
+        public readonly string[] ToArray()
         {
             var result = new string[Size];
             for (int i = 0; i < Size; ++i)
@@ -35,15 +35,29 @@ public partial class PaddleNative
         }
     }
 
+    /// <summary>
+    /// Wrapper for managing arrays of strings.
+    /// </summary>
     public unsafe ref struct PdStringArrayWrapper
     {
+        /// <summary>
+        /// Pointer to the managed stack array.
+        /// </summary>
         public IntPtr ptr;
 
-        public unsafe string[] ToArray()
+        /// <summary>
+        /// Converts the array to an array of strings.
+        /// </summary>
+        /// <returns>The array of strings.</returns>
+        public readonly unsafe string[] ToArray()
         {
             return ((PdStringArray*)ptr)->ToArray();
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the PdStringArrayWrapper, 
+        /// and optionally releases the managed resources.
+        /// </summary>
         public void Dispose()
         {
             PD_OneDimArrayCstrDestroy(ptr);
@@ -56,7 +70,7 @@ public partial class PaddleNative
         public nint Size;
         public int* Data;
 
-        public int[] ToArray()
+        public readonly int[] ToArray()
         {
             var result = new int[Size];
             for (int i = 0; i < Size; ++i)
@@ -75,15 +89,29 @@ public partial class PaddleNative
         }
     }
 
+    /// <summary>
+    /// Wrapper for managing arrays of integers.
+    /// </summary>
     public ref struct PdIntArrayWrapper
     {
+        /// <summary>
+        /// Pointer to the managed stack array.
+        /// </summary>
         public IntPtr ptr;
 
-        public unsafe int[] ToArray()
+        /// <summary>
+        /// Converts the array to an array of integers.
+        /// </summary>
+        /// <returns></returns>
+        public readonly unsafe int[] ToArray()
         {
             return ((PdIntArray*)ptr)->ToArray();
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the PdIntArrayWrapper, 
+        /// and optionally releases the managed resources.
+        /// </summary>
         public void Dispose()
         {
             PD_OneDimArrayInt32Destroy(ptr);
@@ -91,6 +119,9 @@ public partial class PaddleNative
         }
     }
 
+    /// <summary>
+    /// Path of the Paddle Inference C library.
+    /// </summary>
     public const string PaddleInferenceCLib =
         #if NET45_OR_GREATER
             @"dll\x64\paddle_inference_c.dll";
@@ -104,7 +135,7 @@ public partial class PaddleNative
         public uint Length;
         public IntPtr Data;
 
-        public override string? ToString()
+        public override readonly string? ToString()
         {
             return Data.ANSIToString((int)Length - 1);
         }

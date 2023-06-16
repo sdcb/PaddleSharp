@@ -7,13 +7,24 @@ using System.Threading.Tasks;
 
 namespace Sdcb.PaddleOCR.Models.Online;
 
-public record OnlineDetectionModel(string name, Uri uri, ModelVersion version)
+/// <summary>
+/// Represents a model for online object detection.
+/// </summary>
+public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
 {
-    public string RootDirectory => Path.Combine(Settings.GlobalModelDirectory, name);
+    /// <summary>
+    /// Gets the root directory of the model.
+    /// </summary>
+    public string RootDirectory => Path.Combine(Settings.GlobalModelDirectory, Name);
 
+    /// <summary>
+    /// Downloads and extracts the model files to the root directory asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A <see cref="FileDetectionModel"/> representing the downloaded and extracted file model.</returns>
     public async Task<FileDetectionModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
-        await Utils.DownloadAndExtractAsync(name, uri, RootDirectory, cancellationToken);
+        await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
 
         return new FileDetectionModel(RootDirectory);
     }
@@ -84,6 +95,9 @@ public record OnlineDetectionModel(string name, Uri uri, ModelVersion version)
     /// </summary>
     public static OnlineDetectionModel MultiLanguageV3 => new("ml_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
 
+    /// <summary>
+    /// Gets all available online detection models
+    /// </summary>
     public static OnlineDetectionModel[] All => new[]
     {
         ChineseV3Slim,

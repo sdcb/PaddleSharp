@@ -6,14 +6,28 @@ using System.Threading.Tasks;
 
 namespace Sdcb.PaddleOCR.Models.Online;
 
-public record LocalDictOnlineRecognizationModel(string name, string dictName, Uri uri, ModelVersion version)
+/// <summary>
+/// Class representing a local online recognition model with a custom dictionary.
+/// </summary>
+/// <remarks>
+/// Used for downloading and extracting a model from a url, and creating a new StreamDictFileRecognizationModel with the downloaded contents.
+/// </remarks>
+public record LocalDictOnlineRecognizationModel(string Name, string DictName, Uri Uri, ModelVersion Version)
 {
-    public string RootDirectory = Path.Combine(Settings.GlobalModelDirectory, name);
+    /// <summary>
+    /// Gets or sets the root directory for the downloaded models.
+    /// </summary>
+    public string RootDirectory = Path.Combine(Settings.GlobalModelDirectory, Name);
 
+    /// <summary>
+    /// Downloads and extracts a RecognizationModel asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The downloaded and extracted RecognizationModel.</returns>
     public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
-        await Utils.DownloadAndExtractAsync(name, uri, RootDirectory, cancellationToken);
-        return new StreamDictFileRecognizationModel(RootDirectory, Utils.LoadDicts(dictName), version);
+        await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
+        return new StreamDictFileRecognizationModel(RootDirectory, Utils.LoadDicts(DictName), Version);
     }
 
     /// <summary>
@@ -142,6 +156,9 @@ public record LocalDictOnlineRecognizationModel(string name, string dictName, Ur
     /// </summary>
     public static LocalDictOnlineRecognizationModel DevanagariV3 => new("devanagari_PP-OCRv3_rec", "devanagari_dict.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/devanagari_PP-OCRv3_rec_infer.tar"), ModelVersion.V3);
 
+    /// <summary>
+    /// Provides an array of all available recognizer models, including for Chinese, English, Korean, Japanese, Arabic, Cyrillic and so on.
+    /// </summary>
     public static LocalDictOnlineRecognizationModel[] All => new[]
     {
         ChineseV3Slim,
