@@ -13,6 +13,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Known models for PaddleOCR</Description>
     <Authors>sdcb</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

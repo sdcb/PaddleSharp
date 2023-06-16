@@ -13,6 +13,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Awesome multilingual OCR toolkits based on PaddlePaddle (practical ultra lightweight OCR system, support 80+ languages recognition)</Description>
     <Authors>sdcb</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

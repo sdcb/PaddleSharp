@@ -13,6 +13,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>.NET Wrapper of Paddle Inference library, no native binding, please also install native runtime binding libraries like Sdcb.PaddleInference.runtimes.*</Description>
     <Authors>sdcb</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -13,6 +13,7 @@
     <Description>Paddle rotation detector based on PULC Classification Model of Text Image Orientation: https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/PULC/PULC_text_image_orientation_en.md</Description>
     <Authors>sdcb</Authors>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="models\text_image_orientation_infer\inference.pdiparams" />
