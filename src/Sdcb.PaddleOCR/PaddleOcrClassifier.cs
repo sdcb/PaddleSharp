@@ -61,7 +61,7 @@ public class PaddleOcrClassifier : IDisposable
     /// Creates and returns a new instance of the <see cref="PaddleOcrClassifier"/> class.
     /// </summary>
     /// <returns>A new instance of the <see cref="PaddleOcrClassifier"/> class.</returns>
-    public PaddleOcrClassifier Clone() => new PaddleOcrClassifier(_p.Clone())
+    public PaddleOcrClassifier Clone() => new(_p.Clone())
     {
         RotateThreshold = RotateThreshold,
         Shape = Shape,

@@ -141,7 +141,7 @@ public class PaddleOcrDetector : IDisposable
             float[] data = output.GetData<float>();
             int[] shape = output.Shape;
 
-            using Mat pred = new Mat(shape[2], shape[3], MatType.CV_32FC1, data);
+            using Mat pred = new(shape[2], shape[3], MatType.CV_32FC1, data);
             using Mat cbuf = new();
             {
                 using Mat roi = pred[0, resizedSize.Height, 0, resizedSize.Width];
@@ -208,7 +208,7 @@ public class PaddleOcrDetector : IDisposable
         Point[] rootPoints = contour
             .Select(v => new Point(v.X - xmin, v.Y - ymin))
             .ToArray();
-        using Mat mask = new Mat(ymax - ymin + 1, xmax - xmin + 1, MatType.CV_8UC1, Scalar.Black);
+        using Mat mask = new(ymax - ymin + 1, xmax - xmin + 1, MatType.CV_8UC1, Scalar.Black);
         mask.FillPoly(new[] { rootPoints }, new Scalar(1));
 
         using Mat croppedMat = pred[ymin, ymax + 1, xmin, xmax + 1];
@@ -249,7 +249,7 @@ public class PaddleOcrDetector : IDisposable
             IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
             for (int i = 0; i < src.Channels(); ++i)
             {
-                using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
+                using Mat dest = new(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
                 Cv2.ExtractChannel(src, dest, i);
             }
         }

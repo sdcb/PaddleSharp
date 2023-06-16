@@ -46,7 +46,7 @@ public class PaddleOcrRecognizer : IDisposable
     /// Creates a new <see cref="PaddleOcrRecognizer"/> instance that is a copy of the current instance.
     /// </summary>
     /// <returns>A copy of the current <see cref="PaddleOcrRecognizer"/> instance.</returns>
-    public PaddleOcrRecognizer Clone() => new PaddleOcrRecognizer(Model, _p.Clone());
+    public PaddleOcrRecognizer Clone() => new(Model, _p.Clone());
 
     /// <summary>
     /// Releases all resources used by the current instance of the <see cref="PaddleOcrRecognizer"/> class.
@@ -158,7 +158,7 @@ public class PaddleOcrRecognizer : IDisposable
                         float score = 0;
                         for (int n = 0; n < charCount; ++n)
                         {
-                            using Mat mat = new Mat(1, labelCount, MatType.CV_32FC1, dataPtr + (n + i * charCount) * labelCount * sizeof(float));
+                            using Mat mat = new(1, labelCount, MatType.CV_32FC1, dataPtr + (n + i * charCount) * labelCount * sizeof(float));
                             int[] maxIdx = new int[2];
                             mat.MinMaxIdx(out double _, out double maxVal, new int[0], maxIdx);
 
@@ -237,7 +237,7 @@ public class PaddleOcrRecognizer : IDisposable
                 }
                 for (int c = 0; c < channel; ++c)
                 {
-                    using Mat dest = new Mat(height, width, MatType.CV_32FC1, resultPtr + (c + i * channel) * height * width * sizeof(float));
+                    using Mat dest = new(height, width, MatType.CV_32FC1, resultPtr + (c + i * channel) * height * width * sizeof(float));
                     Cv2.ExtractChannel(src, dest, c);
                 }
             }
