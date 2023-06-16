@@ -7,44 +7,92 @@ using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// The PaddleOcrDetector class is responsible for detecting text regions in an image using PaddleOCR.
+/// It implements IDisposable to manage memory resources.
+/// </summary>
 public class PaddleOcrDetector : IDisposable
 {
+    /// <summary>Holds an instance of the PaddlePredictor class.</summary>
     readonly PaddlePredictor _p;
 
+    /// <summary>Gets or sets the maximum size for resizing the input image.</summary>
     public int? MaxSize { get; set; } = 1536;
+
+    /// <summary>Gets or sets the size for dilation during preprocessing.</summary>
     public int? DilatedSize { get; set; } = 2;
+
+    /// <summary>Gets or sets the score threshold for filtering out possible text boxes.</summary>
     public float? BoxScoreThreahold { get; set; } = 0.7f;
+
+    /// <summary>Gets or sets the threshold to binarize the text region.</summary>
     public float? BoxThreshold { get; set; } = 0.3f;
+
+    /// <summary>Gets or sets the minimum size of the text boxes to be considered as valid.</summary>
     public int MinSize { get; set; } = 3;
+
+    /// <summary>Gets or sets the ratio for enlarging text boxes during post-processing.</summary>
     public float UnclipRatio { get; set; } = 2.0f;
 
+    /// <summary>
+    /// Initializes a new instance of the PaddleOcrDetector class with the provided DetectionModel and PaddleConfig.
+    /// </summary>
+    /// <param name="model">The DetectionModel to use.</param>
+    /// <param name="configure">The action to configure the PaddleConfig.</param>
     public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig> configure) : this(model.CreateConfig().Apply(configure))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the PaddleOcrDetector class with the provided PaddleConfig.
+    /// </summary>
+    /// <param name="config">The PaddleConfig to use.</param>
     public PaddleOcrDetector(PaddleConfig config) : this(config.CreatePredictor())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the PaddleOcrDetector class with the provided PaddlePredictor.
+    /// </summary>
+    /// <param name="predictor">The PaddlePredictor to use.</param>
     public PaddleOcrDetector(PaddlePredictor predictor)
     {
         _p = predictor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the PaddleOcrDetector class with model directory path.
+    /// </summary>
+    /// <param name="modelDir">The path of directory containing model files.</param>
     public PaddleOcrDetector(string modelDir) : this(PaddleConfig.FromModelDir(modelDir))
     {
     }
 
+    /// <summary>
+    /// Clones the current PaddleOcrDetector instance.
+    /// </summary>
+    /// <returns>A new PaddleOcrDetector instance with the same configuration.</returns>
     public PaddleOcrDetector Clone()
     {
         return new PaddleOcrDetector(_p.Clone());
     }
 
+    /// <summary>
+    /// Disposes the PaddlePredictor instance.
+    /// </summary>
     public void Dispose()
     {
         _p.Dispose();
     }
 
+    /// <summary>
+    /// Draws detected rectangles on the input image.
+    /// </summary>
+    /// <param name="src">Input image.</param>
+    /// <param name="rects">Array of detected rectangles.</param>
+    /// <param name="color">Color of the rectangles.</param>
+    /// <param name="thickness">Thickness of the rectangle lines.</param>
+    /// <returns>A new image with the detected rectangles drawn on it.</returns>
     public static Mat Visualize(Mat src, RotatedRect[] rects, Scalar color, int thickness)
     {
         Mat clone = src.Clone();
@@ -52,6 +100,14 @@ public class PaddleOcrDetector : IDisposable
         return clone;
     }
 
+    /// <summary>
+    /// Runs the text box detection process on the input image.
+    /// </summary>
+    /// <param name="src">Input image.</param>
+    /// <returns>An array of detected rotated rectangles representing text boxes.</returns>
+    /// <exception cref="ArgumentException">Thrown when input image is empty.</exception>
+    /// <exception cref="NotSupportedException">Thrown when input image channels are not 3 or 1.</exception>
+    /// <exception cref="Exception">Thrown when PaddlePredictor run fails.</exception>
     public RotatedRect[] Run(Mat src)
     {
         if (src.Empty())

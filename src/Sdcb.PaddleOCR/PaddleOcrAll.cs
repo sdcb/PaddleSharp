@@ -6,15 +6,41 @@ using System.Linq;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// Represents an OCR engine that uses PaddlePaddle models for object detection, classification, and recognition.
+/// </summary>
 public class PaddleOcrAll : IDisposable
 {
+    /// <summary>
+    /// Gets the object detector used by this OCR engine.
+    /// </summary>
     public PaddleOcrDetector Detector { get; }
+
+    /// <summary>
+    /// Gets the object classifier used by this OCR engine, or null if no classifier is used.
+    /// </summary>
     public PaddleOcrClassifier? Classifier { get; }
+
+    /// <summary>
+    /// Gets the text recognizer used by this OCR engine.
+    /// </summary>
     public PaddleOcrRecognizer Recognizer { get; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether to enable 180-degree classification.
+    /// </summary>
     public bool Enable180Classification { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to allow rotation detection.
+    /// </summary>
     public bool AllowRotateDetection { get; set; } = true;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified PaddlePaddle models and device configuration.
+    /// </summary>
+    /// <param name="model">The full OCR model containing detection, classification, and recognition models.</param>
+    /// <param name="device">The device configuration for running the models.</param>
     public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> device)
     {
         Detector = new PaddleOcrDetector(model.DetectionModel, device);
@@ -25,7 +51,14 @@ public class PaddleOcrAll : IDisposable
         Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, device);
     }
 
-    public PaddleOcrAll(FullOcrModel model, 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified PaddlePaddle models and device configurations for each model.
+    /// </summary>
+    /// <param name="model">The full OCR model containing detection, classification, and recognition models.</param>
+    /// <param name="detectorDevice">The device configuration for running the detection model.</param>
+    /// <param name="classifierDevice">The device configuration for running the classification model, or null if no classifier is used.</param>
+    /// <param name="recognizerDevice">The device configuration for running the recognition model.</param>
+    public PaddleOcrAll(FullOcrModel model,
         Action<PaddleConfig>? detectorDevice = null,
         Action<PaddleConfig>? classifierDevice = null,
         Action<PaddleConfig>? recognizerDevice = null)
@@ -38,18 +71,40 @@ public class PaddleOcrAll : IDisposable
         Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerDevice ?? PaddleDevice.Mkldnn());
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified model path, label file path, model version and configure action.
+    /// </summary>
+    /// <param name="modelPath">Path to the model.</param>
+    /// <param name="labelFilePath">Path to the label file.</param>
+    /// <param name="version">Version of the model.</param>
+    /// <param name="configure">Configure action for PaddleConfig.</param>
     [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
     public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
         : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version), configure)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the detection, classification, recognition model directories, label file path, model version and the configure action.
+    /// </summary>
+    /// <param name="detectionModelDir">Path to the detection model directory.</param>
+    /// <param name="classificationModelDir">Path to the classification model directory.</param>
+    /// <param name="recognitionModelDir">Path to the recognition model directory.</param>
+    /// <param name="labelFilePath">Path to the label file.</param>
+    /// <param name="version">Version of the model.</param>
+    /// <param name="configure">Configure action for PaddleConfig.</param>
     [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
     public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
         : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version), configure)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified PaddlePaddle models and device configuration.
+    /// </summary>
+    /// <param name="detector">The object detector to use.</param>
+    /// <param name="classifier">The object classifier to use, or null if no classifier is used.</param>
+    /// <param name="recognizer">The text recognizer to use.</param>
     public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)
     {
         Detector = detector;
@@ -57,6 +112,10 @@ public class PaddleOcrAll : IDisposable
         Recognizer = recognizer;
     }
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="PaddleOcrAll"/> class that is a deep copy of the current instance.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="PaddleOcrAll"/> class that is a deep copy of the current instance.</returns>
     public PaddleOcrAll Clone()
     {
         return new PaddleOcrAll(Detector.Clone(), Classifier?.Clone(), Recognizer.Clone())
@@ -66,6 +125,12 @@ public class PaddleOcrAll : IDisposable
         };
     }
 
+    /// <summary>
+    /// Gets the cropped region of the source image specified by the given rectangle, clamping the rectangle coordinates to the image bounds.
+    /// </summary>
+    /// <param name="rect">The rectangle to crop.</param>
+    /// <param name="size">The size of the source image.</param>
+    /// <returns>The cropped rectangle.</returns>
     private static Rect GetCropedRect(Rect rect, Size size)
     {
         return Rect.FromLTRB(
@@ -75,6 +140,13 @@ public class PaddleOcrAll : IDisposable
             MathUtil.Clamp(rect.Bottom, 0, size.Height));
     }
 
+    /// <summary>
+    /// Runs the OCR engine on the specified source image.
+    /// </summary>
+    /// <param name="src">The source image to run OCR on.</param>
+    /// <param name="recognizeBatchSize">The batch size for recognition.</param>
+    /// <returns>The OCR result.</returns>
+    /// <exception cref="Exception">Thrown if 180-degree classification is enabled but no classifier is set.</exception>
     public PaddleOcrResult Run(Mat src, int recognizeBatchSize = 0)
     {
         if (Enable180Classification && Classifier == null)
@@ -106,6 +178,12 @@ public class PaddleOcrAll : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the cropped and rotated image specified by the given rectangle from the source image.
+    /// </summary>
+    /// <param name="src">The source image to crop and rotate.</param>
+    /// <param name="rect">The rotated rectangle specifying the region to crop and rotate.</param>
+    /// <returns>The cropped and rotated image.</returns>
     public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
     {
         bool wider = rect.Size.Width > rect.Size.Height;
@@ -156,6 +234,9 @@ public class PaddleOcrAll : IDisposable
         return dest;
     }
 
+    /// <summary>
+    /// Releases the resources used by this OCR engine.
+    /// </summary>
     public void Dispose()
     {
         Detector.Dispose();

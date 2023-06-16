@@ -24,7 +24,7 @@ public abstract class ClassificationModel
     /// <summary>
     /// The default OcrShape used in the classification model.
     /// </summary>
-    public static OcrShape DefaultShape = new(3, 48, 192);
+    public static OcrShape DefaultShape = new(3, 192, 48);
 
     /// <summary>
     /// Creates a ClassificationModel object from the specified directory path.

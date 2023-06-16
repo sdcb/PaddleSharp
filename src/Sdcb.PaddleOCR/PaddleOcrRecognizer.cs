@@ -8,28 +8,57 @@ using System.Text;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// Class for recognizing OCR using PaddleOCR models.
+/// </summary>
 public class PaddleOcrRecognizer : IDisposable
 {
     private readonly PaddlePredictor _p;
 
+    /// <summary>
+    /// Recognization model being used for OCR.
+    /// </summary>
     public RecognizationModel Model { get; init; }
 
+    /// <summary>
+    /// Constructor for creating a new instance of the <see cref="PaddleOcrRecognizer"/> class using a specified model and a callback configuration.
+    /// </summary>
+    /// <param name="model">The RecognizationModel object.</param>
+    /// <param name="configure">Callback configuration for the Paddle OCR predictor.</param>
     public PaddleOcrRecognizer(RecognizationModel model, Action<PaddleConfig> configure)
     {
         Model = model;
         _p = Model.CreateConfig().Apply(configure).CreatePredictor();
     }
 
+    /// <summary>
+    /// Constructor for creating a new instance of the <see cref="PaddleOcrRecognizer"/> class using a model and an existing predictor.
+    /// </summary>
+    /// <param name="model">The RecognizationModel object.</param>
+    /// <param name="predictor">The Paddle OCR predictor.</param>
     public PaddleOcrRecognizer(RecognizationModel model, PaddlePredictor predictor)
     {
         Model = model;
         _p = predictor;
     }
 
+    /// <summary>
+    /// Creates a new <see cref="PaddleOcrRecognizer"/> instance that is a copy of the current instance.
+    /// </summary>
+    /// <returns>A copy of the current <see cref="PaddleOcrRecognizer"/> instance.</returns>
     public PaddleOcrRecognizer Clone() => new PaddleOcrRecognizer(Model, _p.Clone());
 
+    /// <summary>
+    /// Releases all resources used by the current instance of the <see cref="PaddleOcrRecognizer"/> class.
+    /// </summary>
     public void Dispose() => _p.Dispose();
 
+    /// <summary>
+    /// Run OCR recognition on multiple images in batches.
+    /// </summary>
+    /// <param name="srcs">Array of images for OCR recognition.</param>
+    /// <param name="batchSize">Size of the batch to run OCR recognition on.</param>
+    /// <returns>Array of <see cref="PaddleOcrRecognizerResult"/> instances corresponding to OCR recognition results of the images.</returns>
     public PaddleOcrRecognizerResult[] Run(Mat[] srcs, int batchSize = 0)
     {
         if (srcs.Length == 0)
@@ -51,6 +80,11 @@ public class PaddleOcrRecognizer : IDisposable
             .ToArray();
     }
 
+    /// <summary>
+    /// Run OCR recognition on a single image.
+    /// </summary>
+    /// <param name="src">Image for OCR recognition.</param>
+    /// <returns><see cref="PaddleOcrRecognizerResult"/> instance corresponding to OCR recognition result of the image.</returns>
     public PaddleOcrRecognizerResult Run(Mat src) => RunMulti(new[] { src }).Single();
 
     private PaddleOcrRecognizerResult[] RunMulti(Mat[] srcs)
@@ -69,7 +103,7 @@ public class PaddleOcrRecognizer : IDisposable
             }
         }
 
-        int modelHeight = Model.Shape.height;
+        int modelHeight = Model.Shape.Height;
         int maxWidth = (int)Math.Ceiling(srcs.Max(src =>
         {
             Size size = src.Size();

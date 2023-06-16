@@ -26,8 +26,8 @@ public abstract class VersionedRecognizationModel : RecognizationModel
     /// <inheritdoc/>
     public override OcrShape Shape => Version switch
     {
-        ModelVersion.V2 => new(3, 32, 320),
-        ModelVersion.V3 => new(3, 48, 320),
+        ModelVersion.V2 => new(3, 320, 32),
+        ModelVersion.V3 => new(3, 320, 48),
         _ => throw new ArgumentOutOfRangeException($"Unknown OCR model version: {Version}."),
     };
 

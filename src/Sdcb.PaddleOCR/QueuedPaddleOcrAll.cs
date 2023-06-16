@@ -6,6 +6,9 @@ using System.Threading;
 
 namespace Sdcb.PaddleOCR;
 
+/// <summary>
+/// A class for queuing multiple OCR requests using PaddleOCR.
+/// </summary>
 public class QueuedPaddleOcrAll : IDisposable
 {
     private readonly Func<PaddleOcrAll> _factory;
@@ -14,6 +17,12 @@ public class QueuedPaddleOcrAll : IDisposable
     private readonly CountdownEvent _countdownEvent;
     private bool _disposed;
 
+    /// <summary>
+    /// Constructs an instance of <see cref="QueuedPaddleOcrAll"/> class.
+    /// </summary>
+    /// <param name="factory">The function that constructs each individual instance of <see cref="PaddleOcrAll"/>.</param>
+    /// <param name="consumerCount">The number of consumers that process the OCR requests.</param>
+    /// <param name="boundedCapacity">The maximum number of queued OCR requests.</param>
     public QueuedPaddleOcrAll(Func<PaddleOcrAll> factory, int consumerCount = 1, int boundedCapacity = 64)
     {
         _factory = factory;
@@ -27,6 +36,10 @@ public class QueuedPaddleOcrAll : IDisposable
         }
     }
 
+    /// <summary>
+    /// Waits for the factory to become ready before processing OCR requests.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">The instance of <see cref="QueuedPaddleOcrAll"/> is disposed.</exception>
     public void WaitFactoryReady()
     {
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
@@ -34,6 +47,15 @@ public class QueuedPaddleOcrAll : IDisposable
         _countdownEvent.Wait();
     }
 
+    /// <summary>
+    /// Queues an OCR request to be processed.
+    /// </summary>
+    /// <param name="src">The image to be recognized.</param>
+    /// <param name="recognizeBatchSize">The number of images recognized with one call. 
+    /// Zero means single recognition only. Maximum value is limited by the model and hardware.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> that represents the queued OCR operation.</returns>
+    /// <exception cref="ObjectDisposedException">The instance of <see cref="QueuedPaddleOcrAll"/> is disposed.</exception>
     public Task<PaddleOcrResult> Run(Mat src, int recognizeBatchSize = 0, CancellationToken cancellationToken = default)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
@@ -71,6 +93,9 @@ public class QueuedPaddleOcrAll : IDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes this instance of <see cref="QueuedPaddleOcrAll"/> and releases associated resources.
+    /// </summary>
     public void Dispose()
     {
         _disposed = true;
