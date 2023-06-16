@@ -5,19 +5,43 @@ using System.Collections.Generic;
 
 namespace Sdcb.PaddleOCR.Models.LocalV3;
 
+/// <summary>
+/// Provides a local implementation of PaddleOCR model with the ability to recognize various languages such as Chinese, English, Korean, Japanese, Telugu and Devanagari
+/// </summary>
 public class LocalRecognizationModel : VersionedRecognizationModel
 {
+    /// <summary>
+    /// The name of the model.
+    /// </summary>
     public string Name { get; }
+    /// <summary>
+    /// A list of labels for recognition.
+    /// </summary>
     public IReadOnlyList<string> Labels { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocalRecognizationModel"/> class.
+    /// </summary>
+    /// <param name="name">The name of the model.</param>
+    /// <param name="dictName">The dictionary name of the model.</param>
+    /// <param name="version">The version of the model.</param>
     public LocalRecognizationModel(string name, string dictName, ModelVersion version) : base(version)
     {
         Name = name;
         Labels = Utils.LoadDicts(dictName);
     }
 
+    /// <summary>
+    /// Gets label by index for Labels.
+    /// </summary>
+    /// <param name="i">The index of the label to get</param>
+    /// <returns>The specified label</returns>
     public override string GetLabelByIndex(int i) => GetLabelByIndex(i, Labels);
 
+    /// <summary>
+    /// Creates and returns a PaddleConfig instance based on the Name property.
+    /// </summary>
+    /// <returns>A new instance of PaddleConfig</returns>
     public override PaddleConfig CreateConfig()
     {
         PaddleConfig config = Utils.LoadLocalModel(Name);
@@ -32,7 +56,7 @@ public class LocalRecognizationModel : VersionedRecognizationModel
     public static LocalRecognizationModel ChineseV3 => new("ch_PP-OCRv3_rec", "ppocr_keys_v1.txt", ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting english, English, multilingual text recognition
+    /// [New] Original lightweight model, supporting English, multilingual text recognition
     /// (Size: 9.6M)
     /// </summary>
     public static LocalRecognizationModel EnglishV3 => new("en_PP-OCRv3_rec", "en_dict.txt", ModelVersion.V3);
@@ -50,7 +74,7 @@ public class LocalRecognizationModel : VersionedRecognizationModel
     public static LocalRecognizationModel JapanV3 => new("japan_PP-OCRv3_rec", "japan_dict.txt", ModelVersion.V3);
 
     /// <summary>
-    /// Lightweight model for chinese cht
+    /// Lightweight model for TraditionalChinese recognition
     /// (Size: 12M)
     /// </summary>
     public static LocalRecognizationModel TraditionalChineseV3 => new("chinese_cht_PP-OCRv3_rec", "chinese_cht_dict.txt", ModelVersion.V3);
@@ -97,6 +121,9 @@ public class LocalRecognizationModel : VersionedRecognizationModel
     /// </summary>
     public static LocalRecognizationModel DevanagariV3 => new("devanagari_PP-OCRv3_rec", "devanagari_dict.txt", ModelVersion.V3);
 
+    /// <summary>
+    /// An array containing all instances of the LocalRecognizationModel
+    /// </summary>
     public static LocalRecognizationModel[] All => new[]
     {
         ChineseV3,
