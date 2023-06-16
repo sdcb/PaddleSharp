@@ -1,10 +1,7 @@
-﻿using Sdcb.PaddleOCR.Models;
-using Sdcb.PaddleOCR.Models.Details;
+﻿using Sdcb.PaddleOCR.Models.Details;
 using Sdcb.PaddleOCR.Models.Online.Details;
-using SharpCompress.Archives;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

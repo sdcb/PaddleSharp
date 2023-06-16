@@ -3,7 +3,6 @@ using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleOCR;

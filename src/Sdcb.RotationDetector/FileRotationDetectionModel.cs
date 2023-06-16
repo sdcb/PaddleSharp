@@ -1,5 +1,4 @@
-﻿using Sdcb.RotationDetector;
-using Sdcb.PaddleInference;
+﻿using Sdcb.PaddleInference;
 
 namespace Sdcb.RotationDetector;
 

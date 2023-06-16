@@ -1,22 +1,40 @@
 ﻿using Sdcb.PaddleInference;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Sdcb.PaddleOCR.Models.Details;
 
+/// <summary>
+/// Recognization model for file processing.
+/// </summary>
+/// <remarks>
+/// Represents a model used for file processing.
+/// </remarks>
 public class FileRecognizationModel : VersionedRecognizationModel
 {
     private readonly IReadOnlyList<string> _labels;
 
+    /// <summary>
+    /// Gets the directory path for the model.
+    /// </summary>
     public string DirectoryPath { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileRecognizationModel"/> class.
+    /// </summary>
+    /// <param name="directoryPath">The directory path for the model.</param>
+    /// <param name="labelFilePath">The path for the label file.</param>
+    /// <param name="version">The version of the model.</param>
     public FileRecognizationModel(string directoryPath, string labelFilePath, ModelVersion version) : base(version)
     {
         DirectoryPath = directoryPath;
         _labels = File.ReadAllLines(labelFilePath);
     }
 
+    /// <summary>
+    /// Overrides the function in <see cref="RecognizationModel"/> to create the configuration for the model.
+    /// </summary>
+    /// <returns>The configuration for the model.</returns>
     public override PaddleConfig CreateConfig()
     {
         PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
@@ -24,40 +42,10 @@ public class FileRecognizationModel : VersionedRecognizationModel
         return config;
     }
 
+    /// <summary>
+    /// Returns the label string for the given index.
+    /// </summary>
+    /// <param name="i">The index of the label.</param>
+    /// <returns>The label string for the given index.</returns>
     public override string GetLabelByIndex(int i) => GetLabelByIndex(i, _labels);
-}
-
-public abstract class VersionedRecognizationModel : RecognizationModel
-{
-    public VersionedRecognizationModel(ModelVersion version)
-    {
-        Version = version;
-    }
-
-    public ModelVersion Version { get; }
-
-    public override OcrShape Shape => Version switch
-    {
-        ModelVersion.V2 => new(3, 32, 320),
-        ModelVersion.V3 => new(3, 48, 320),
-        _ => throw new ArgumentOutOfRangeException($"Unknown OCR model version: {Version}."),
-    };
-
-    protected static string GetLabelByIndex(int i, IReadOnlyList<string> labels)
-    {
-        return i switch
-        {
-            var x when x > 0 && x <= labels.Count => labels[x - 1],
-            var x when x == labels.Count + 1 => " ",
-            _ => throw new Exception($"Unable to GetLabelByIndex: index {i} out of range {labels.Count}, OCR model or labels not matched?"),
-        };
-    }
-
-    protected void ConfigPostProcess(PaddleConfig config)
-    {
-        if (Version == ModelVersion.V3)
-        {
-            config.DeletePass("matmul_transpose_reshape_fuse_pass");
-        }
-    }
 }

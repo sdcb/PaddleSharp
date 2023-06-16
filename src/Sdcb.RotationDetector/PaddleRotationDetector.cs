@@ -6,23 +6,49 @@ using System.Linq;
 
 namespace Sdcb.RotationDetector;
 
+/// <summary>
+/// Provides methods for detecting rotation in an input image using the PaddlePaddle Inference engine.
+/// </summary>
 public class PaddleRotationDetector : IDisposable
 {
     private readonly RotationDetectionModel _model;
     private readonly PaddlePredictor _p;
 
+    /// <summary>
+    /// Represents the shape of the input tensor.
+    /// </summary>
     public InputShape Shape => _model.Shape;
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="PaddleRotationDetector"/> class.
+    /// </summary>
+    /// <param name="model">The rotation detection model to use for inference.</param>
     public PaddleRotationDetector(RotationDetectionModel model)
     {
         _model = model;
         _p = model.CreateConfig().CreatePredictor();
     }
 
-    public PaddleRotationDetector Clone() => new PaddleRotationDetector(_model);
+    /// <summary>
+    /// Creates and returns a new instance of the <see cref="PaddleRotationDetector"/> class with the same rotation detection model as the current instance.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="PaddleRotationDetector"/> class.</returns>
+    public PaddleRotationDetector Clone() => new(_model);
 
+    /// <summary>
+    /// Disposes of all resources used by the <see cref="PaddleRotationDetector"/> instance.
+    /// </summary>
     public void Dispose() => _p.Dispose();
 
+    /// <summary>
+    /// Detects the degree of rotation (if any) in the provided image.
+    /// </summary>
+    /// <param name="src">The input image to detect rotation in.</param>
+    /// <param name="rotateThreshold">The threshold for accepting a detected rotation result as valid. Defaults to 0.50.</param>
+    /// <returns>A <see cref="RotationResult"/> instance containing the detected degree of rotation and the confidence that the result is accurate.</returns>
+    /// <exception cref="ArgumentException">Thrown if the provided image size is 0.</exception>
+    /// <exception cref="NotSupportedException">Thrown if the provided image does not have exactly 1 or 3 channels.</exception>
+    /// <exception cref="Exception">Thrown if an error occurs during inference with the PaddlePaddle Inference engine.</exception>
     public RotationResult Run(Mat src, float rotateThreshold = 0.50f)
     {
         if (src.Empty())
@@ -77,7 +103,7 @@ public class PaddleRotationDetector : IDisposable
             IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
             for (int i = 0; i < src.Channels(); ++i)
             {
-                using Mat dest = new Mat(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
+                using Mat dest = new(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
                 Cv2.ExtractChannel(src, dest, i);
             }
         }
@@ -91,14 +117,14 @@ public class PaddleRotationDetector : IDisposable
     private static Mat ResizePadding(Mat src, InputShape shape)
     {
         OpenCvSharp.Size srcSize = src.Size();
-        using Mat roi = srcSize.Width / srcSize.Height > shape.width / shape.height ?
-            src[0, srcSize.Height, 0, (int)Math.Floor(1.0 * srcSize.Height * shape.width / shape.height)] :
+        using Mat roi = srcSize.Width / srcSize.Height > shape.Width / shape.Height ?
+            src[0, srcSize.Height, 0, (int)Math.Floor(1.0 * srcSize.Height * shape.Width / shape.Height)] :
             src.Clone();
-        double scaleRate = 1.0 * shape.height / srcSize.Height;
-        Mat resized = roi.Resize(new OpenCvSharp.Size(Math.Floor(roi.Width * scaleRate), shape.height));
-        if (resized.Width < shape.width)
+        double scaleRate = 1.0 * shape.Height / srcSize.Height;
+        Mat resized = roi.Resize(new Size(Math.Floor(roi.Width * scaleRate), shape.Height));
+        if (resized.Width < shape.Width)
         {
-            Cv2.CopyMakeBorder(resized, resized, 0, 0, 0, shape.width - resized.Width, BorderTypes.Constant, Scalar.Black);
+            Cv2.CopyMakeBorder(resized, resized, 0, 0, 0, shape.Width - resized.Width, BorderTypes.Constant, Scalar.Black);
         }
         return resized;
     }

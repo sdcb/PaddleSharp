@@ -1,5 +1,3 @@
-using OpenCvSharp;
-using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
 using Xunit.Abstractions;
 
