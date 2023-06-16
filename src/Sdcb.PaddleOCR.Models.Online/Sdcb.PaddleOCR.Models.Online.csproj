@@ -14,6 +14,8 @@
     <Description>Known models for PaddleOCR</Description>
     <Authors>sdcb</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="dicts\*.txt" />
