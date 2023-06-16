@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class Preprocessor
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class Preprocessor
 	{
 		private readonly Dictionary<string, PreprocessOperation> Operations = new();
 		private readonly InitializeOperation InitializeOperation;
@@ -52,5 +52,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 		PreprocessOperation.Permute
 		};
 	}
-
-}

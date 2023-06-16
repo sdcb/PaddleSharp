@@ -1,8 +1,7 @@
-﻿namespace Sdcb.PaddleOCR.Models
-{
+﻿namespace Sdcb.PaddleOCR.Models;
 
-    public enum ModelVersion
-    {
-        V2, V3,
-    }
+
+public enum ModelVersion
+{
+    V2, V3,
 }

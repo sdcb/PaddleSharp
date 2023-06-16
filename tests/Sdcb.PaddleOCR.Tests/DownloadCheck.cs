@@ -3,21 +3,20 @@ using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
 using Xunit.Abstractions;
 
-namespace Sdcb.PaddleOCR.Tests
+namespace Sdcb.PaddleOCR.Tests;
+
+public class DownloadCheckTest
 {
-    public class DownloadCheckTest
+    private readonly ITestOutputHelper _console;
+
+    public DownloadCheckTest(ITestOutputHelper console)
     {
-        private readonly ITestOutputHelper _console;
+        _console = console;
+    }
 
-        public DownloadCheckTest(ITestOutputHelper console)
-        {
-            _console = console;
-        }
-
-        [Fact]
-        public async Task DownloadCheck()
-        {
-            await LocalDictOnlineRecognizationModel.ChineseMobileV2.DownloadAsync();
-        }
+    [Fact]
+    public async Task DownloadCheck()
+    {
+        await LocalDictOnlineRecognizationModel.ChineseMobileV2.DownloadAsync();
     }
 }

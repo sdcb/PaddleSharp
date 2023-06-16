@@ -1,9 +1,9 @@
 ﻿using OpenCvSharp;
 using System;
 
-namespace Sdcb.PaddleDetection
-{
-    public record DetectionResult
+namespace Sdcb.PaddleDetection;
+
+public record DetectionResult
 	{
 		public int[] RectArray { get; }
 		public int LabelId { get; }
@@ -28,5 +28,3 @@ namespace Sdcb.PaddleDetection
 		{
 		}
 	}
-
-}

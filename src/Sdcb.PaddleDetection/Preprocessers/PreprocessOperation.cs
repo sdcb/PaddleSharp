@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal abstract class PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal abstract class PreprocessOperation
 	{
 		public abstract string Name { get; }
 
@@ -60,5 +60,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 		public const string PadStride = nameof(PadStride);
 		public const string Permute = nameof(Permute);
 	}
-
-}

@@ -1,9 +1,9 @@
 ﻿using OpenCvSharp;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class NormalizeImageOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class NormalizeImageOperation : PreprocessOperation
 	{
 		public override string Name => PreprocessOperation.NormalizeImage;
 		public float[] Means { get; set; }
@@ -35,5 +35,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			}
 		}
 	}
-
-}

@@ -1,10 +1,9 @@
-﻿namespace Sdcb.RotationDetector
+﻿namespace Sdcb.RotationDetector;
+
+public enum RotationDegree
 {
-    public enum RotationDegree
-    {
-        _0, 
-        _90, 
-        _180, 
-        _270, 
-    }
+    _0, 
+    _90, 
+    _180, 
+    _270, 
 }

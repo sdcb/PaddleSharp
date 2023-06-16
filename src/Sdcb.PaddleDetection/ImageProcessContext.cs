@@ -1,8 +1,8 @@
 ﻿using OpenCvSharp;
 
-namespace Sdcb.PaddleDetection
-{
-    internal class ImageProcessContext
+namespace Sdcb.PaddleDetection;
+
+internal class ImageProcessContext
 	{
 		public Size Shape;
 		public float[] Data;
@@ -10,4 +10,3 @@ namespace Sdcb.PaddleDetection
 		public Point2f ScaleFactor;
 		public Mat NetMat;
 	}
-}

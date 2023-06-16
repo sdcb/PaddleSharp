@@ -2,71 +2,70 @@
 using System;
 using System.Text;
 
-namespace Sdcb.PaddleInference
+namespace Sdcb.PaddleInference;
+
+public class PaddlePredictor : IDisposable
 {
-    public class PaddlePredictor : IDisposable
+    private IntPtr _ptr;
+
+    public PaddlePredictor(IntPtr predictorPointer)
     {
-        private IntPtr _ptr;
-
-        public PaddlePredictor(IntPtr predictorPointer)
+        if (predictorPointer == IntPtr.Zero)
         {
-            if (predictorPointer == IntPtr.Zero)
-            {
-                throw new ArgumentNullException(nameof(predictorPointer));
-            }
-            _ptr = predictorPointer;
+            throw new ArgumentNullException(nameof(predictorPointer));
         }
+        _ptr = predictorPointer;
+    }
 
-        public PaddlePredictor Clone() => new(PaddleNative.PD_PredictorClone(_ptr));
+    public PaddlePredictor Clone() => new(PaddleNative.PD_PredictorClone(_ptr));
 
-        public string[] InputNames
+    public string[] InputNames
+    {
+        get
         {
-            get
-            {
-                using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetInputNames(_ptr) };
-                return wrapper.ToArray();
-            }
+            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetInputNames(_ptr) };
+            return wrapper.ToArray();
         }
+    }
 
-        public string[] OutputNames
+    public string[] OutputNames
+    {
+        get
         {
-            get
-            {
-                using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetOutputNames(_ptr) };
-                return wrapper.ToArray();
-            }
+            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetOutputNames(_ptr) };
+            return wrapper.ToArray();
         }
+    }
 
-        public unsafe PaddleTensor GetInputTensor(string name)
+    public unsafe PaddleTensor GetInputTensor(string name)
+    {
+        byte[] nameBytes = Encoding.UTF8.GetBytes(name);
+        fixed(byte* ptr = nameBytes)
         {
-            byte[] nameBytes = Encoding.UTF8.GetBytes(name);
-            fixed(byte* ptr = nameBytes)
-            {
-                return new PaddleTensor(PaddleNative.PD_PredictorGetInputHandle(_ptr, (IntPtr)ptr));
-            }
+            return new PaddleTensor(PaddleNative.PD_PredictorGetInputHandle(_ptr, (IntPtr)ptr));
         }
+    }
 
-        public unsafe PaddleTensor GetOutputTensor(string name)
+    public unsafe PaddleTensor GetOutputTensor(string name)
+    {
+        byte[] nameBytes = Encoding.UTF8.GetBytes(name);
+        fixed (byte* ptr = nameBytes)
         {
-            byte[] nameBytes = Encoding.UTF8.GetBytes(name);
-            fixed (byte* ptr = nameBytes)
-            {
-                return new PaddleTensor(PaddleNative.PD_PredictorGetOutputHandle(_ptr, (IntPtr)ptr));
-            }
+            return new PaddleTensor(PaddleNative.PD_PredictorGetOutputHandle(_ptr, (IntPtr)ptr));
         }
+    }
 
-        public long InputSize => PaddleNative.PD_PredictorGetInputNum(_ptr);
-        public long OutputSize => PaddleNative.PD_PredictorGetOutputNum(_ptr);
+    public long InputSize => PaddleNative.PD_PredictorGetInputNum(_ptr);
+    public long OutputSize => PaddleNative.PD_PredictorGetOutputNum(_ptr);
 
-        public bool Run() => PaddleNative.PD_PredictorRun(_ptr) != 0;
+    public bool Run() => PaddleNative.PD_PredictorRun(_ptr) != 0;
 
-        public void Dispose()
+    public void Dispose()
+    {
+        if (_ptr != IntPtr.Zero)
         {
-            if (_ptr != IntPtr.Zero)
-            {
-                PaddleNative.PD_PredictorDestroy(_ptr);
-                _ptr = IntPtr.Zero;
-            }
+            PaddleNative.PD_PredictorDestroy(_ptr);
+            _ptr = IntPtr.Zero;
         }
     }
 }

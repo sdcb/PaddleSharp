@@ -1,4 +1,3 @@
-﻿namespace Sdcb.PaddleOCR
-{
-    public record struct OcrShape(int channel, int height, int width);
-}
+﻿namespace Sdcb.PaddleOCR;
+
+public record struct OcrShape(int channel, int height, int width);

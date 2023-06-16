@@ -1,9 +1,8 @@
-﻿namespace Sdcb.PaddleInference
+﻿namespace Sdcb.PaddleInference;
+
+public enum PaddlePrecision
 {
-    public enum PaddlePrecision
-    {
-        Float32 = 0, 
-        Int8 = 1, 
-        Float16 = 2, 
-    }
+    Float32 = 0, 
+    Int8 = 1, 
+    Float16 = 2, 
 }

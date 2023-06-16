@@ -1,22 +1,21 @@
-﻿namespace Sdcb.PaddleOCR
+﻿namespace Sdcb.PaddleOCR;
+
+internal static class MathUtil
 {
-    internal static class MathUtil
+    public static int Clamp(int val, int min, int max)
     {
-        public static int Clamp(int val, int min, int max)
-        {
 #if NET6_0_OR_GREATER
-            return Math.Clamp(val, min, max);
+        return Math.Clamp(val, min, max);
 #else
-            if (val < min)
-            {
-                return min;
-            }
-            else if (val > max)
-            {
-                return max;
-            }
-            return val;
-#endif
+        if (val < min)
+        {
+            return min;
         }
+        else if (val > max)
+        {
+            return max;
+        }
+        return val;
+#endif
     }
 }

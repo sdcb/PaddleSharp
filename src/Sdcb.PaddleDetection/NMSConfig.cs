@@ -1,8 +1,8 @@
 ﻿using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection
-{
-    public class NMSConfig
+namespace Sdcb.PaddleDetection;
+
+public class NMSConfig
 	{
 		public int KeepTopK { get; set; }
 		public string Name { get; set; }
@@ -22,5 +22,3 @@ namespace Sdcb.PaddleDetection
 			};
 		}
 	}
-
-}

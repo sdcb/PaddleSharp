@@ -2,9 +2,9 @@
 using System;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class LetterBoxResizeOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class LetterBoxResizeOperation : PreprocessOperation
 	{
 		public Size TargetSize { get; set; }
 		public Size NetShape { get; set; }
@@ -50,5 +50,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			data.ScaleFactor = new Point2f(scale, scale);
 		}
 	}
-
-}

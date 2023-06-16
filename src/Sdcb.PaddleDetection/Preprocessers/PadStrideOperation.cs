@@ -2,9 +2,9 @@
 using System;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class PadStrideOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class PadStrideOperation : PreprocessOperation
 	{
 		public int Stride { get; set; }
 		public override string Name => PreprocessOperation.PadStride;
@@ -30,5 +30,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			data.NetShape = new Size2f(src.Width, src.Height);
 		}
 	}
-
-}

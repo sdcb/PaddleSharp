@@ -2,9 +2,9 @@
 using System;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class ResizeOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class ResizeOperation : PreprocessOperation
 	{
 		public override string Name => PreprocessOperation.Resize;
 		public InterpolationFlags Interpolation { get; }
@@ -48,5 +48,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			data.ScaleFactor = scale;
 		}
 	}
-
-}

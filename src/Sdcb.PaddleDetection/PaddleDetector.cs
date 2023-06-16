@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection
-{
-    public class PaddleDetector : IDisposable
+namespace Sdcb.PaddleDetection;
+
+public class PaddleDetector : IDisposable
 	{
 		private readonly PaddlePredictor _p;
 		private readonly Preprocessor _preprocessor;
@@ -364,4 +364,3 @@ namespace Sdcb.PaddleDetection
 			}
 		}
 	}
-}

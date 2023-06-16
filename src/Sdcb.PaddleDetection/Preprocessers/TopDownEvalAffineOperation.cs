@@ -1,9 +1,9 @@
 ﻿using OpenCvSharp;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class TopDownEvalAffineOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class TopDownEvalAffineOperation : PreprocessOperation
 	{
 		public override string Name => PreprocessOperation.TopDownEvalAffine;
 		public InterpolationFlags Interpolation { get; set; } = InterpolationFlags.Linear;
@@ -20,5 +20,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			data.NetShape = new Size2f(TrainSize.Width, TrainSize.Height);
 		}
 	}
-
-}

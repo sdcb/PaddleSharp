@@ -2,9 +2,9 @@
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Sdcb.PaddleDetection
-{
-    public class DetectionModelConfig
+namespace Sdcb.PaddleDetection;
+
+public class DetectionModelConfig
 	{
 		public static DetectionModelConfig Parse(YamlMappingNode config)
 		{
@@ -105,5 +105,3 @@ namespace Sdcb.PaddleDetection
 		public bool UseDynamicShape { get; set; }
 		public float ConfigThreshold { get; set; }
 	}
-
-}

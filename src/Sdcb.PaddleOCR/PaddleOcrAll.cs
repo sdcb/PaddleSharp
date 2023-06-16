@@ -4,163 +4,162 @@ using Sdcb.PaddleOCR.Models;
 using System;
 using System.Linq;
 
-namespace Sdcb.PaddleOCR
+namespace Sdcb.PaddleOCR;
+
+public class PaddleOcrAll : IDisposable
 {
-    public class PaddleOcrAll : IDisposable
+    public PaddleOcrDetector Detector { get; }
+    public PaddleOcrClassifier? Classifier { get; }
+    public PaddleOcrRecognizer Recognizer { get; }
+
+    public bool Enable180Classification { get; set; } = false;
+    public bool AllowRotateDetection { get; set; } = true;
+
+    public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> device)
     {
-        public PaddleOcrDetector Detector { get; }
-        public PaddleOcrClassifier? Classifier { get; }
-        public PaddleOcrRecognizer Recognizer { get; }
-
-        public bool Enable180Classification { get; set; } = false;
-        public bool AllowRotateDetection { get; set; } = true;
-
-        public PaddleOcrAll(FullOcrModel model, Action<PaddleConfig> device)
+        Detector = new PaddleOcrDetector(model.DetectionModel, device);
+        if (model.ClassificationModel != null)
         {
-            Detector = new PaddleOcrDetector(model.DetectionModel, device);
-            if (model.ClassificationModel != null)
+            Classifier = new PaddleOcrClassifier(model.ClassificationModel, device);
+        }
+        Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, device);
+    }
+
+    public PaddleOcrAll(FullOcrModel model, 
+        Action<PaddleConfig>? detectorDevice = null,
+        Action<PaddleConfig>? classifierDevice = null,
+        Action<PaddleConfig>? recognizerDevice = null)
+    {
+        Detector = new PaddleOcrDetector(model.DetectionModel, detectorDevice ?? PaddleDevice.Mkldnn());
+        if (model.ClassificationModel != null)
+        {
+            Classifier = new PaddleOcrClassifier(model.ClassificationModel, classifierDevice ?? PaddleDevice.Mkldnn());
+        }
+        Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerDevice ?? PaddleDevice.Mkldnn());
+    }
+
+    [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
+    public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
+        : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version), configure)
+    {
+    }
+
+    [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
+    public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
+        : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version), configure)
+    {
+    }
+
+    public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)
+    {
+        Detector = detector;
+        Classifier = classifier;
+        Recognizer = recognizer;
+    }
+
+    public PaddleOcrAll Clone()
+    {
+        return new PaddleOcrAll(Detector.Clone(), Classifier?.Clone(), Recognizer.Clone())
+        {
+            AllowRotateDetection = AllowRotateDetection,
+            Enable180Classification = Enable180Classification,
+        };
+    }
+
+    private static Rect GetCropedRect(Rect rect, Size size)
+    {
+        return Rect.FromLTRB(
+            MathUtil.Clamp(rect.Left, 0, size.Width),
+            MathUtil.Clamp(rect.Top, 0, size.Height),
+            MathUtil.Clamp(rect.Right, 0, size.Width),
+            MathUtil.Clamp(rect.Bottom, 0, size.Height));
+    }
+
+    public PaddleOcrResult Run(Mat src, int recognizeBatchSize = 0)
+    {
+        if (Enable180Classification && Classifier == null)
+        {
+            throw new Exception($"Unable to do 180 degree Classification when classifier model is not set.");
+        }
+
+        RotatedRect[] rects = Detector.Run(src);
+
+        Mat[] mats =
+            rects.Select(rect =>
             {
-                Classifier = new PaddleOcrClassifier(model.ClassificationModel, device);
-            }
-            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, device);
-        }
-
-        public PaddleOcrAll(FullOcrModel model, 
-            Action<PaddleConfig>? detectorDevice = null,
-            Action<PaddleConfig>? classifierDevice = null,
-            Action<PaddleConfig>? recognizerDevice = null)
+                Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[GetCropedRect(rect.BoundingRect(), src.Size())];
+                return Enable180Classification ? Classifier!.Run(roi) : roi;
+            })
+            .ToArray();
+        try
         {
-            Detector = new PaddleOcrDetector(model.DetectionModel, detectorDevice ?? PaddleDevice.Mkldnn());
-            if (model.ClassificationModel != null)
+            return new PaddleOcrResult(Recognizer.Run(mats, recognizeBatchSize)
+                .Select((result, i) => new PaddleOcrResultRegion(rects[i], result.Text, result.Score))
+                .ToArray());
+        }
+        finally
+        {
+            foreach (Mat mat in mats)
             {
-                Classifier = new PaddleOcrClassifier(model.ClassificationModel, classifierDevice ?? PaddleDevice.Mkldnn());
-            }
-            Recognizer = new PaddleOcrRecognizer(model.RecognizationModel, recognizerDevice ?? PaddleDevice.Mkldnn());
-        }
-
-        [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-        public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
-            : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version), configure)
-        {
-        }
-
-        [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-        public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
-            : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version), configure)
-        {
-        }
-
-        public PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)
-        {
-            Detector = detector;
-            Classifier = classifier;
-            Recognizer = recognizer;
-        }
-
-        public PaddleOcrAll Clone()
-        {
-            return new PaddleOcrAll(Detector.Clone(), Classifier?.Clone(), Recognizer.Clone())
-            {
-                AllowRotateDetection = AllowRotateDetection,
-                Enable180Classification = Enable180Classification,
-            };
-        }
-
-        private static Rect GetCropedRect(Rect rect, Size size)
-        {
-            return Rect.FromLTRB(
-                MathUtil.Clamp(rect.Left, 0, size.Width),
-                MathUtil.Clamp(rect.Top, 0, size.Height),
-                MathUtil.Clamp(rect.Right, 0, size.Width),
-                MathUtil.Clamp(rect.Bottom, 0, size.Height));
-        }
-
-        public PaddleOcrResult Run(Mat src, int recognizeBatchSize = 0)
-        {
-            if (Enable180Classification && Classifier == null)
-            {
-                throw new Exception($"Unable to do 180 degree Classification when classifier model is not set.");
-            }
-
-            RotatedRect[] rects = Detector.Run(src);
-
-            Mat[] mats =
-                rects.Select(rect =>
-                {
-                    Mat roi = AllowRotateDetection ? GetRotateCropImage(src, rect) : src[GetCropedRect(rect.BoundingRect(), src.Size())];
-                    return Enable180Classification ? Classifier!.Run(roi) : roi;
-                })
-                .ToArray();
-            try
-            {
-                return new PaddleOcrResult(Recognizer.Run(mats, recognizeBatchSize)
-                    .Select((result, i) => new PaddleOcrResultRegion(rects[i], result.Text, result.Score))
-                    .ToArray());
-            }
-            finally
-            {
-                foreach (Mat mat in mats)
-                {
-                    mat.Dispose();
-                }
+                mat.Dispose();
             }
         }
+    }
 
-        public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
+    public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
+    {
+        bool wider = rect.Size.Width > rect.Size.Height;
+        float angle = rect.Angle;
+        Size srcSize = src.Size();
+        Rect boundingRect = rect.BoundingRect();
+
+        int expTop = Math.Max(0, 0 - boundingRect.Top);
+        int expBottom = Math.Max(0, boundingRect.Bottom - srcSize.Height);
+        int expLeft = Math.Max(0, 0 - boundingRect.Left);
+        int expRight = Math.Max(0, boundingRect.Right - srcSize.Width);
+
+        Rect rectToExp = boundingRect + new Point(expTop, expLeft);
+        Rect roiRect = Rect.FromLTRB(
+            boundingRect.Left + expLeft,
+            boundingRect.Top + expTop,
+            boundingRect.Right - expRight,
+            boundingRect.Bottom - expBottom);
+        using Mat boundingMat = src[roiRect];
+        using Mat expanded = boundingMat.CopyMakeBorder(expTop, expBottom, expLeft, expRight, BorderTypes.Replicate);
+        Point2f[] rp = rect.Points()
+            .Select(v => new Point2f(v.X - rectToExp.X, v.Y - rectToExp.Y))
+            .ToArray();
+
+        Point2f[] srcPoints = (wider, angle) switch
         {
-            bool wider = rect.Size.Width > rect.Size.Height;
-            float angle = rect.Angle;
-            Size srcSize = src.Size();
-            Rect boundingRect = rect.BoundingRect();
+            (true, >= 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
+            _ => new[] { rp[0], rp[3], rp[2], rp[1] }
+        };
 
-            int expTop = Math.Max(0, 0 - boundingRect.Top);
-            int expBottom = Math.Max(0, boundingRect.Bottom - srcSize.Height);
-            int expLeft = Math.Max(0, 0 - boundingRect.Left);
-            int expRight = Math.Max(0, boundingRect.Right - srcSize.Width);
+        var ptsDst0 = new Point2f(0, 0);
+        var ptsDst1 = new Point2f(rect.Size.Width, 0);
+        var ptsDst2 = new Point2f(rect.Size.Width, rect.Size.Height);
+        var ptsDst3 = new Point2f(0, rect.Size.Height);
 
-            Rect rectToExp = boundingRect + new Point(expTop, expLeft);
-            Rect roiRect = Rect.FromLTRB(
-                boundingRect.Left + expLeft,
-                boundingRect.Top + expTop,
-                boundingRect.Right - expRight,
-                boundingRect.Bottom - expBottom);
-            using Mat boundingMat = src[roiRect];
-            using Mat expanded = boundingMat.CopyMakeBorder(expTop, expBottom, expLeft, expRight, BorderTypes.Replicate);
-            Point2f[] rp = rect.Points()
-                .Select(v => new Point2f(v.X - rectToExp.X, v.Y - rectToExp.Y))
-                .ToArray();
+        using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, new[] { ptsDst0, ptsDst1, ptsDst2, ptsDst3 });
 
-            Point2f[] srcPoints = (wider, angle) switch
-            {
-                (true, >= 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
-                _ => new[] { rp[0], rp[3], rp[2], rp[1] }
-            };
+        Mat dest = expanded.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
 
-            var ptsDst0 = new Point2f(0, 0);
-            var ptsDst1 = new Point2f(rect.Size.Width, 0);
-            var ptsDst2 = new Point2f(rect.Size.Width, rect.Size.Height);
-            var ptsDst3 = new Point2f(0, rect.Size.Height);
-
-            using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, new[] { ptsDst0, ptsDst1, ptsDst2, ptsDst3 });
-
-            Mat dest = expanded.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
-
-            if (!wider)
-            {
-                Cv2.Transpose(dest, dest);
-            }
-            else if (angle > 45)
-            {
-                Cv2.Flip(dest, dest, FlipMode.X);
-            }
-            return dest;
-        }
-
-        public void Dispose()
+        if (!wider)
         {
-            Detector.Dispose();
-            Classifier?.Dispose();
-            Recognizer.Dispose();
+            Cv2.Transpose(dest, dest);
         }
+        else if (angle > 45)
+        {
+            Cv2.Flip(dest, dest, FlipMode.X);
+        }
+        return dest;
+    }
+
+    public void Dispose()
+    {
+        Detector.Dispose();
+        Classifier?.Dispose();
+        Recognizer.Dispose();
     }
 }

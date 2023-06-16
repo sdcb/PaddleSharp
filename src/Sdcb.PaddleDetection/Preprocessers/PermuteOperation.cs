@@ -2,9 +2,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class PermuteOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class PermuteOperation : PreprocessOperation
 	{
 		public override string Name => PreprocessOperation.Permute;
 
@@ -35,5 +35,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			}
 		}
 	}
-
-}

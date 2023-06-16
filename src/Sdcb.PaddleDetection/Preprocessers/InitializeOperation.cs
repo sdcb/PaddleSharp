@@ -1,8 +1,8 @@
 ﻿using OpenCvSharp;
 
-namespace Sdcb.PaddleDetection.Preprocesses
-{
-    internal class InitializeOperation : PreprocessOperation
+namespace Sdcb.PaddleDetection.Preprocesses;
+
+internal class InitializeOperation : PreprocessOperation
 	{
 		public override string Name => PreprocessOperation.InitInfo;
 
@@ -14,5 +14,3 @@ namespace Sdcb.PaddleDetection.Preprocesses
 			desc.NetShape = new Size2f(size.Width, size.Height);
 		}
 	}
-
-}
