@@ -13,11 +13,11 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 
 ### Infrastructure packages 🏗️
 
-| NuGet Package 💼                               | Version 📌                                                                                                                                                            | Description 📚                                          |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| NuGet Package 💼                            | Version 📌                                                                                                                                                        | Description 📚                                          |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
 | Sdcb.PaddleInference                        | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                               | Paddle Inference C API .NET binding ⚙️                  |
-| Sdcb.PaddleInference.runtime.win64.openblas | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas) | Paddle Inference native windows-x64-openblas binding 🔗 |
 | Sdcb.PaddleInference.runtime.win64.mkl      | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)           | Paddle Inference native windows-x64-mkldnn binding 🔗   |
+| Sdcb.PaddleInference.runtime.win64.openblas | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas) | Paddle Inference native windows-x64-openblas binding 🔗 |
 
 **Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile 🐳](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle2.2.2) to development:
 
