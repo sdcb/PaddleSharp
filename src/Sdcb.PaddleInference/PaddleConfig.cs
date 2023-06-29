@@ -114,60 +114,24 @@ public sealed class PaddleConfig : IDisposable
 #endif
         PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
 
-#if LINQPAD
-			SearchPathLoad();
-#elif NET6_0_OR_GREATER
-        SearchPathLoad();
+#if LINQPAD || NET6_0_OR_GREATER
+        PaddleInferenceLibLoader.Init();
 #elif NETSTANDARD2_0_OR_GREATER || NET45_OR_GREATER
-			AutoLoad();
+		WindowsLoad();
 #endif
     }
 
-    private static void AutoLoad()
+#pragma warning disable IDE0051 // It will be used in .NET Framework or Windows .net standard 2.0
+    private static void WindowsLoad()
+#pragma warning restore IDE0051 // 删除未使用的私有成员
     {
         // Linux would not supported in this case.
-        _ = Version;
+        _ = PaddleConfig.Version;
         string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
             .Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
             .FileName)!;
         PaddleNative.AddLibPathToEnvironment(mkldnnPath);
     }
-
-#if NET6_0_OR_GREATER || LINQPAD
-    private static void SearchPathLoad()
-    {
-        string? dirs = (string?)AppContext.GetData("NATIVE_DLL_SEARCH_DIRECTORIES");
-        if (dirs != null)
-        {
-            bool windows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            bool linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-            if (windows)
-            {
-                string libName = windows ?
-                    $"{PaddleNative.PaddleInferenceCLib}.dll" :
-                    $"lib{PaddleNative.PaddleInferenceCLib}.so";
-
-                string? libPath = dirs.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries)
-                    .FirstOrDefault(dir => File.Exists(Path.Combine(dir, libName)));
-                if (libPath != null)
-                {
-                    PaddleNative.AddLibPathToEnvironment(libPath);
-                }
-                else
-                {
-#if !LINQPAD
-                    Console.WriteLine($"Warn: {libName} not found from {dirs}, fallback to use auto load.");
-#endif
-                    AutoLoad();
-                }
-            }
-            else if (!linux)
-            {
-                Console.WriteLine("Warn: OSPlatform is not windows or linux, platform might not supported.");
-            }
-        }
-    }
-#endif
 
     /// <summary>Get version info.</summary>
     public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
@@ -291,11 +255,11 @@ public sealed class PaddleConfig : IDisposable
     /// <param name="useStatic">Serialize optimization information to disk for reusing.</param>
     /// <param name="useCalibMode">Use TRT int8 calibration(post training quantization)</param>
     public void EnableTensorRtEngine(
-        long workspaceSize = 1 << 20, 
-        int maxBatchSize = 1, 
-        int minSubgraphSize = 20, 
-        PaddlePrecision precision = PaddlePrecision.Float32, 
-        bool useStatic = true, 
+        long workspaceSize = 1 << 20,
+        int maxBatchSize = 1,
+        int minSubgraphSize = 20,
+        PaddlePrecision precision = PaddlePrecision.Float32,
+        bool useStatic = true,
         bool useCalibMode = false)
         => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, (int)precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
 

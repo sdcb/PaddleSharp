@@ -1,0 +1,17 @@
+﻿{
+  "version": "1",
+  "environments": [
+    // 请参阅 https://aka.ms/remotetesting 获取更多信息
+    // 了解如何配置远程环境。
+    //{
+    //  "name": "WSL Ubuntu",
+    //  "type": "wsl",
+    //  "wslDistribution": "Ubuntu"
+    //},
+    {
+      "name": "Docker dotnet/sdk6",
+      "type": "docker",
+      "dockerImage": "mcr.microsoft.com/dotnet/sdk:6.0-focal"
+    }
+  ]
+}
