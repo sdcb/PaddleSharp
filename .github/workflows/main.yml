@@ -14,10 +14,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Restore depedencies
-        run: dotnet restore -c Release
       - name: Build code
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
   linux-ubuntu:
@@ -25,9 +23,7 @@ jobs:
     container: sdflysha/dotnet6sdk-paddle:2.4.2-ubuntu22
     steps:
       - uses: actions/checkout@v3
-      - name: Restore depedencies
-        run: dotnet restore -c Release
       - name: Build code
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
