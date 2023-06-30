@@ -29,8 +29,8 @@ public class OfflineModelsTest
 
         using (PaddleOcrAll all = new(model)
         {
-            AllowRotateDetection = true, /* 允许识别有角度的文字 */
-            Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+            AllowRotateDetection = true,
+            Enable180Classification = false,
         })
         {
             // Load local file by following code:
@@ -60,16 +60,13 @@ public class OfflineModelsTest
             sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
         }
 
-        using QueuedPaddleOcrAll all = new            (() => new PaddleOcrAll(model) // 如果使用GPU，请用改成：PaddleOcrAll(model, PaddleDevice.Gpu())
-            {
-                AllowRotateDetection = true, /* 允许识别有角度的文字 */
-                Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
-            }, 
-            consumerCount: 4,    // 消费者线程数量
-            boundedCapacity: 64  // 队列最大数量
-            );
-        all.WaitFactoryReady(); // 可以不需要，表示等待所有的消费者被创建
-        
+        using QueuedPaddleOcrAll all = new(() => new PaddleOcrAll(model)
+        {
+            AllowRotateDetection = true,
+            Enable180Classification = false,
+        }, consumerCount: 1, boundedCapacity: 64);
+        all.WaitFactoryReady();
+
         {
             // Load local file by following code:
             // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
