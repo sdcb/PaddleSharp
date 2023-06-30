@@ -1,20 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleInference.Native;
 
 public partial class PaddleNative
 {
-    internal static void AddLibPathToEnvironment(string libPath)
+    static PaddleNative()
     {
-#if NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER
-        bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-#else
-			const bool isWindows = true;
+#if LINQPAD || NET6_0_OR_GREATER
+        PaddleInferenceLibLoader.Init();
+#elif NETSTANDARD2_0_OR_GREATER || NET45_OR_GREATER
+		PaddleInferenceLibLoader.WindowsLoad();
 #endif
-        string envId = isWindows ? "PATH" : "LD_LIBRARY_PATH";
-        Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + libPath);
     }
 
     private unsafe struct PdStringArray
@@ -123,11 +120,11 @@ public partial class PaddleNative
     /// Path of the Paddle Inference C library.
     /// </summary>
     public const string PaddleInferenceCLib =
-        #if NET45_OR_GREATER
+#if NET45_OR_GREATER
             @"dll\x64\paddle_inference_c.dll";
-        #elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER || LINQPAD
+#elif NETSTANDARD2_0_OR_GREATER || NET6_0_OR_GREATER || LINQPAD
             @"paddle_inference_c";
-        #endif
+#endif
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct PdCStr

@@ -9,9 +9,9 @@
     //  "wslDistribution": "Ubuntu"
     //},
     {
-      "name": "Docker dotnet/sdk6",
+      "name": "Docker dotnet6-paddle",
       "type": "docker",
-      "dockerImage": "mcr.microsoft.com/dotnet/sdk:6.0-focal"
+      "dockerImage": "sdflysha/dotnet6-paddle:2.4.2-ubuntu22"
     }
   ]
 }

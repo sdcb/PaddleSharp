@@ -113,24 +113,6 @@ public sealed class PaddleConfig : IDisposable
         }
 #endif
         PaddleEncoding = Environment.OSVersion.Platform == PlatformID.Win32NT ? Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage) : Encoding.UTF8;
-
-#if LINQPAD || NET6_0_OR_GREATER
-        PaddleInferenceLibLoader.Init();
-#elif NETSTANDARD2_0_OR_GREATER || NET45_OR_GREATER
-		WindowsLoad();
-#endif
-    }
-
-#pragma warning disable IDE0051 // It will be used in .NET Framework or Windows .net standard 2.0
-    private static void WindowsLoad()
-#pragma warning restore IDE0051 // 删除未使用的私有成员
-    {
-        // Linux would not supported in this case.
-        _ = PaddleConfig.Version;
-        string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
-            .Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
-            .FileName)!;
-        PaddleNative.AddLibPathToEnvironment(mkldnnPath);
     }
 
     /// <summary>Get version info.</summary>
