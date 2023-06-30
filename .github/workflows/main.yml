@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Restore depedencies
-        run: dotnet restore
+        run: dotnet restore -c Release
       - name: Build code
         run: dotnet build -c Release --no-restore
       - name: Test
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Restore depedencies
-        run: dotnet restore
+        run: dotnet restore -c Release
       - name: Build code
         run: dotnet build -c Release --no-restore
       - name: Test
