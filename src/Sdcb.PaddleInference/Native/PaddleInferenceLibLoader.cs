@@ -1,20 +1,31 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Sdcb.PaddleInference.Native;
 
-#if LINQPad || NETCOREAPP3_1_OR_GREATER
-
 /// <summary>
 /// Loads PaddleInference native library and dependencies.
 /// </summary>
 public class PaddleInferenceLibLoader
 {
-    static PaddleInferenceLibLoader()
+    internal static void WindowsLoad()
     {
-        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), PaddleImportResolver);
+        // Linux would not supported in this case.
+        _ = PaddleConfig.Version;
+        string mkldnnPath = Path.GetDirectoryName(Process.GetCurrentProcess().Modules.Cast<ProcessModule>()
+            .Single(x => Path.GetFileNameWithoutExtension(x.ModuleName) == "paddle_inference_c")
+            .FileName)!;
+        AddLibPathToWindowsEnvironment(mkldnnPath);
+    }
+
+    internal static void AddLibPathToWindowsEnvironment(string libPath)
+    {
+        const string envId = "PATH";
+        Environment.SetEnvironmentVariable(envId, Environment.GetEnvironmentVariable(envId) + Path.PathSeparator + libPath);
     }
 
     /// <summary>
@@ -23,6 +34,13 @@ public class PaddleInferenceLibLoader
     public static void Init()
     {
         // stub to ensure static constructor executed at least once.
+    }
+
+#if LINQPad || NETCOREAPP3_1_OR_GREATER
+
+    static PaddleInferenceLibLoader()
+    {
+        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), PaddleImportResolver);
     }
 
     /// <summary>
@@ -101,6 +119,5 @@ public class PaddleInferenceLibLoader
                 $"Unable to load shared library '{libraryName}', dependencies load status:{Environment.NewLine}{dependenciesLoadStatus}", ex);
         }
     }
-}
-
 #endif
+}

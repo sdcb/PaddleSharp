@@ -22,12 +22,8 @@ internal static class Utils
 
     static byte[] ReadResourceAsBytes(string key)
     {
-        using Stream? stream = RootAssembly.GetManifestResourceStream(key);
-        if (stream == null)
-        {
-            throw new Exception($"Unable to load model embedded resource {key} from assembly, model not exists?");
-        }
-
+        using Stream? stream = RootAssembly.GetManifestResourceStream(key) 
+            ?? throw new Exception($"Unable to load model embedded resource {key} from assembly, model not exists?");
         using MemoryStream ms = new ();
         stream.CopyTo(ms);
         return ms.ToArray();
@@ -37,12 +33,8 @@ internal static class Utils
     {
         string ns = RootType.Namespace;
         string resourcePath = $"{ns}.models.dicts.{EmbeddedResourceTransform(dictName)}";
-        using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath);
-        if (dictStream == null)
-        {
-            throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
-        }
-
+        using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath) 
+            ?? throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
         return ReadLinesFromStream(dictStream).ToList();
 
         static IEnumerable<string> ReadLinesFromStream(Stream stream)

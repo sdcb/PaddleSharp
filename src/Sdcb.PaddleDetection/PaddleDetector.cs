@@ -9,16 +9,35 @@ using YamlDotNet.RepresentationModel;
 
 namespace Sdcb.PaddleDetection;
 
+/// <summary>
+/// Provides methods to run Paddle models for object detection.
+/// </summary>
 public class PaddleDetector : IDisposable
 {
     private readonly PaddlePredictor _p;
     private readonly Preprocessor _preprocessor;
+
+    /// <summary>
+    /// Gets the <see cref="DetectionModelConfig"/> instance associated with the current <see cref="PaddleDetector"/>.
+    /// </summary>
+    /// <value>The <see cref="DetectionModelConfig"/> instance.</value>
     public DetectionModelConfig Config { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleDetector"/> class using the provided <paramref name="config"/> and <paramref name="configYmlPath"/>.
+    /// </summary>
+    /// <param name="config">The <see cref="PaddleConfig"/> object containing the configuration settings for the paddle detector.</param>
+    /// <param name="configYmlPath">The path to the YAML configuration file.</param>
+    /// <param name="configure">Optional delegate to configure the <see cref="PaddleConfig"/> object. If null, default settings will be used.</param>
     public PaddleDetector(PaddleConfig config, string configYmlPath, Action<PaddleConfig> configure = null) : this(config.Apply(configure ?? PaddleDevice.Mkldnn()).CreatePredictor(), configYmlPath)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleDetector"/> class using a <see cref="PaddlePredictor"/> and a YAML configuration file.
+    /// </summary>
+    /// <param name="predictor">The <see cref="PaddlePredictor"/> to use for detection.</param>
+    /// <param name="configYmlPath">The path to the YAML configuration file for the detector.</param>
     public PaddleDetector(PaddlePredictor predictor, string configYmlPath)
     {
         _p = predictor;
@@ -30,17 +49,34 @@ public class PaddleDetector : IDisposable
         _preprocessor = new Preprocessor((YamlSequenceNode)doc.RootNode["Preprocess"]);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddleDetector"/> class using the specified model directory, configuration YAML file path, and optional configuration action.
+    /// </summary>
+    /// <param name="modelDir">The directory containing the model files (model.pdmodel and model.pdiparams).</param>
+    /// <param name="configYmlPath">The path to the configuration YAML file.</param>
+    /// <param name="configure">An optional action to configure the <see cref="PaddleConfig"/> instance. If not provided, the default configuration is used.</param>
     public PaddleDetector(string modelDir, string configYmlPath, Action<PaddleConfig> configure = null) : this(PaddleConfig.FromModelFiles(
-        Path.Combine(modelDir, "model.pdmodel"),
-        Path.Combine(modelDir, "model.pdiparams")), configYmlPath, configure)
+            Path.Combine(modelDir, "model.pdmodel"),
+            Path.Combine(modelDir, "model.pdiparams")), configYmlPath, configure)
     {
     }
 
+    /// <summary>
+    /// Releases all resources used by the current instance of the <see cref="PaddleDetector"/> class.
+    /// </summary>
     public void Dispose()
     {
         _p.Dispose();
     }
 
+    /// <summary>
+    /// Runs the detection process on the input image using the configured PaddleDetector.
+    /// </summary>
+    /// <param name="src">The input image as a Mat object.</param>
+    /// <returns>An array of <see cref="DetectionResult"/> containing the detected objects and their associated information.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input image is empty.</exception>
+    /// <exception cref="Exception">Thrown when the PaddlePredictor run fails.</exception>
+    /// <exception cref="NotSupportedException">Thrown when an unexpected datatype is encountered.</exception>
     public DetectionResult[] Run(Mat src)
     {
         if (src.Empty())
@@ -307,6 +343,13 @@ public class PaddleDetector : IDisposable
         return dest.Select(x => x / denominator).ToArray();
     }
 
+    /// <summary>
+    /// Visualizes the detection results on the input image.
+    /// </summary>
+    /// <param name="src">The input image as a <see cref="Mat"/> object.</param>
+    /// <param name="results">A collection of <see cref="DetectionResult"/> objects representing the detection results.</param>
+    /// <param name="labelCount">The number of labels in the dataset.</param>
+    /// <returns>A new <see cref="Mat"/> object with the detection results visualized.</returns>
     public static Mat Visualize(Mat src, IEnumerable<DetectionResult> results, int labelCount)
     {
         Mat dest = src.Clone();
@@ -320,7 +363,7 @@ public class PaddleDetector : IDisposable
             {
                 for (int k = 0; k < 4; ++k)
                 {
-                    Point pt1 = new(r.RectArray[(k * 2) % 8], r.RectArray[(k * 2 + 1) % 8]);
+                    Point pt1 = new(r.RectArray[k * 2 % 8], r.RectArray[(k * 2 + 1) % 8]);
                     Point pt2 = new(r.RectArray[(k * 2 + 2) % 8], r.RectArray[(k * 2 + 3) % 8]);
                     dest.Line(pt1, pt2, roiColor, thickness: 2);
                 }

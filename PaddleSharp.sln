@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6
 		build\01-build-native.linq = build\01-build-native.linq
 		build\02-build-packages.linq = build\02-build-packages.linq
 		build\03-publish-proget-nuget.linq = build\03-publish-proget-nuget.linq
+		build\04-chatgpt-parse-code.linq = build\04-chatgpt-parse-code.linq
 		build\icon.jpg = build\icon.jpg
 		build\Sdcb.PaddleInference.runtime.nuspec = build\Sdcb.PaddleInference.runtime.nuspec
 		build\Sdcb.PaddleInference.runtime.props = build\Sdcb.PaddleInference.runtime.props
