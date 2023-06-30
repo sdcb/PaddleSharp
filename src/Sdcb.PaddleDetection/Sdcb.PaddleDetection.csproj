@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Sdcb;AI;Paddle;PaddleDetection;yolo;PicoDet;</PackageTags>
+    <PackageTags>Sdcb;AI;Paddle;PaddleDetection;yolo;PicoDet;PaddleSharp</PackageTags>
     <VersionPrefix>2.2.1</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Object Detection toolkit based on PaddlePaddle. It supports object detection, instance segmentation, multiple object tracking and real-time multi-person keypoint detection.</Description>

@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Sdcb;AI;Paddle;OCR;PaddleOCR</PackageTags>
+    <PackageTags>Sdcb;AI;Paddle;OCR;PaddleOCR;PaddleSharp</PackageTags>
     <VersionPrefix>2.6</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Awesome multilingual OCR toolkits based on PaddlePaddle (practical ultra lightweight OCR system, support 80+ languages recognition)</Description>

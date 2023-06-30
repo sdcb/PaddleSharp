@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Sdcb;AI;Paddle;PaddleClas;</PackageTags>
+    <PackageTags>Sdcb;AI;Paddle;PaddleClas;PaddleSharp</PackageTags>
     <VersionPrefix>1.0.0</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
     <Description>Paddle rotation detector based on PULC Classification Model of Text Image Orientation: https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/PULC/PULC_text_image_orientation_en.md</Description>

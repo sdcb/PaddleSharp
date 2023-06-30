@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6
 		build\icon.jpg = build\icon.jpg
 		build\Sdcb.PaddleInference.runtime.nuspec = build\Sdcb.PaddleInference.runtime.nuspec
 		build\Sdcb.PaddleInference.runtime.props = build\Sdcb.PaddleInference.runtime.props
-		build\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec = build\win64\Sdcb.PaddleInference.runtime.win64.mkl.nuspec
-		build\win64\Sdcb.PaddleInference.runtime.win64.mkl.props = build\win64\Sdcb.PaddleInference.runtime.win64.mkl.props
 		build\test.linq = build\test.linq
 	EndProjectSection
 EndProject

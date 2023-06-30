@@ -13,7 +13,7 @@
         <summary>Native binding for paddle_inference_c to work on {titleRid}.</summary>
         <releaseNotes></releaseNotes>
         <copyright>Copyright 2021</copyright>
-        <tags>AI Paddle OCR PaddleOCR Sdcb linqpad-samples</tags>
+        <tags>Sdcb PaddleSharp AI Paddle OCR PaddleOCR Sdcb linqpad-samples</tags>
         <repository type="git" url="https://github.com/sdcb/PaddleSharp.git" />
         <dependencies>
             <group targetFramework="net461"></group>
