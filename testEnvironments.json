@@ -11,7 +11,7 @@
     {
       "name": "Docker dotnet6-paddle",
       "type": "docker",
-      "dockerImage": "sdflysha/dotnet6-paddle:2.4.2-ubuntu22"
+      "dockerImage": "sdflysha/dotnet6-paddle:2.5.0-ubuntu22"
     }
   ]
 }
