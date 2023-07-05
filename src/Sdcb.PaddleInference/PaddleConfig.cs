@@ -13,7 +13,7 @@ namespace Sdcb.PaddleInference;
 /// <summary>
 /// Provides a configuration for Paddle Inference.
 /// </summary>
-public sealed class PaddleConfig : IDisposable
+public class PaddleConfig : IDisposable
 {
     private IntPtr _ptr;
 
@@ -428,16 +428,6 @@ public sealed class PaddleConfig : IDisposable
         }
     }
 
-    /// <summary>Destroy the paddle config</summary>
-    public void Dispose()
-    {
-        if (_ptr != IntPtr.Zero)
-        {
-            PaddleNative.PD_ConfigDestroy(_ptr);
-            _ptr = IntPtr.Zero;
-        }
-    }
-
     /// <summary>
     /// Apply the configuration to the PaddleConfig.
     /// </summary>
@@ -447,5 +437,40 @@ public sealed class PaddleConfig : IDisposable
     {
         configure(this);
         return this;
+    }
+
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this); // tell GC not to invoke the finalizer.
+    }
+
+    /// <summary>
+    /// Finalizes an instance of the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    ~PaddleConfig()
+    {
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    /// <param name="disposing">true if called from Dispose(); false if called from Finalize().</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_ptr != IntPtr.Zero)
+        {
+            PaddleNative.PD_ConfigDestroy(_ptr);
+            _ptr = IntPtr.Zero;
+        }
+
+        if (disposing)
+        {
+            // Release other managed resources
+        }
     }
 }
