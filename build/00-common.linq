@@ -21,7 +21,7 @@ static void DotNetRun(string args) => Run("dotnet", args, Encoding.GetEncoding("
 static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, args, encoding);
 static ProjectVersion[] Projects = new[]
 {
-	new ProjectVersion("Sdcb.PaddleInference", "2.5.0"), 
+	new ProjectVersion("Sdcb.PaddleInference", "2.5.0-preview.1"), 
 	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.5"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0.5"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0.5"), 
@@ -31,17 +31,28 @@ static ProjectVersion[] Projects = new[]
 
 static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
 {
-	using HttpClient http = new();
-
-	HttpResponseMessage resp = await http.GetAsync(uri, cancellationToken);
-	if (!resp.IsSuccessStatusCode)
+	if (uri.Scheme == "https" || uri.Scheme == "http")
 	{
-		throw new Exception($"Failed to download: {uri}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
+		using HttpClient http = new();
+
+		HttpResponseMessage resp = await http.GetAsync(uri, cancellationToken);
+		if (!resp.IsSuccessStatusCode)
+		{
+			throw new Exception($"Failed to download: {uri}, status code: {(int)resp.StatusCode}({resp.StatusCode})");
+		}
+
+		using (FileStream file = File.OpenWrite(localFile))
+		{
+			await resp.Content.CopyToAsync(file, cancellationToken);
+		}
 	}
-
-	using (FileStream file = File.OpenWrite(localFile))
+	else if (uri.Scheme == "file")
 	{
-		await resp.Content.CopyToAsync(file, cancellationToken);
+		File.Copy(uri.ToString()[8..], localFile, overwrite: true);
+	}
+	else
+	{
+		throw new Exception($"Uri scheme: {uri.Scheme} not supported.");
 	}
 }
 

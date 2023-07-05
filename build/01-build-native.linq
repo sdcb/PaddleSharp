@@ -20,16 +20,12 @@ async Task Main()
 	//	.Process(QueryCancelToken);
 	//await new WindowsNugetSource("win-x64", "win64.openblas", "paddle_inference_c.dll", new Uri(@"https://paddle-inference-lib.bj.bcebos.com/2.5.0/cxx_c/Windows/CPU/x86-64_avx-openblas-vs2017/paddle_inference_c.zip"))
 	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn76_tr70", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.5.0/cxx_c/Windows/GPU/x86-64_cuda10.2_cudnn7.6.5_trt7.0.0.11_mkl_avx_vs2017/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda112_cudnn82_tr82", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.4.0/cxx_c/Windows/GPU/x86-64_cuda11.2_cudnn8.2.1_trt8.0.1.6_mkl_avx_vs2019/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda116_cudnn84_tr84", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.4.0/cxx_c/Windows/GPU/x86-64_cuda11.6_cudnn8.4.0_trt8.4.1.5_mkl_avx_vs2019/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn84_tr84", "paddle_inference_c.dll", new Uri("https://paddle-inference-lib.bj.bcebos.com/2.4.0/cxx_c/Windows/GPU/x86-64_cuda11.7_cudnn8.4.1_trt8.4.2.4_mkl_avx_vs2019/paddle_inference_c.zip"))
-	//	.Process(QueryCancelToken);
-	//await new WindowsNugetSource("win-x64", "win64.cuda117_cudnn84_tr84_sm86", "paddle_inference_c.dll", new Uri("https://io.starworks.cc:88/paddlesharp/native-libs/2.4.0/vs2019-cuda117-cudnn84-sm86-onnx-trt.zip"))
-	//	.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.openblas-noavx", "paddle_inference_c.dll", new Uri(@"C:\Users\ZhouJie\Downloads\2.5.0\x64-openblas-noavx.zip"))
+		.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda102_cudnn76_tr72_sm61_75", "paddle_inference_c.dll", new Uri(@"C:\Users\ZhouJie\Downloads\2.5.0\cuda102-cudnn76-tr72-sm61,75.zip"))
+		.Process(QueryCancelToken);
+	await new WindowsNugetSource("win-x64", "win64.cuda118_cudnn86_tr85_sm86_89", "paddle_inference_c.dll", new Uri(@"C:\Users\ZhouJie\Downloads\2.5.0\cuda118-cudnn86-tr85-sm86,89.zip"))
+		.Process(QueryCancelToken);
 }
 
 static string BuildNuspec(string[] libs, string rid, string titleRid)
