@@ -144,7 +144,7 @@ public class PaddleTensor : IDisposable
     /// <summary>
     /// Gets the data type of this tensor.
     /// </summary>
-    public DataTypes DataType => (DataTypes)PaddleNative.PD_TensorGetDataType(_ptr);
+    public PaddleDataType DataType => PaddleNative.PD_TensorGetDataType(_ptr);
 
     /// <summary>
     /// Disposes any resources held by this tensor.

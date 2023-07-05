@@ -78,7 +78,7 @@ public class DetectionModelConfig
 
         if (config.Children.TryGetValue("tracker", out YamlNode trackerNode))
         {
-            if (((YamlMappingNode)config).Children.TryGetValue("conf_thres", out YamlNode configThresholdNode))
+            if (config.Children.TryGetValue("conf_thres", out YamlNode configThresholdNode))
             {
                 r.ConfigThreshold = float.Parse(((YamlScalarNode)configThresholdNode).Value);
             }
