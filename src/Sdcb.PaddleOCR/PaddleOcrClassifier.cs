@@ -26,8 +26,8 @@ public class PaddleOcrClassifier : IDisposable
     /// Initializes a new instance of the <see cref="PaddleOcrClassifier"/> class with a specified model and configuration.
     /// </summary>
     /// <param name="model">The <see cref="ClassificationModel"/> to use.</param>
-    /// <param name="configure">An <see cref="Action{T}"/> to configure the PaddleConfig object.</param>
-    public PaddleOcrClassifier(ClassificationModel model, Action<PaddleConfig> configure) : this(model.CreateConfig().Apply(configure).CreatePredictor())
+    /// <param name="configure">The device and configure of the PaddleConfig, pass null to using model's DefaultDevice.</param>
+    public PaddleOcrClassifier(ClassificationModel model, Action<PaddleConfig>? configure = null) : this(model.CreateConfig().Apply(configure ?? model.DefaultDevice))
     {
         Shape = model.Shape;
     }

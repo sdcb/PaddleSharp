@@ -38,8 +38,8 @@ public class PaddleOcrDetector : IDisposable
     /// Initializes a new instance of the PaddleOcrDetector class with the provided DetectionModel and PaddleConfig.
     /// </summary>
     /// <param name="model">The DetectionModel to use.</param>
-    /// <param name="configure">The action to configure the PaddleConfig.</param>
-    public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig> configure) : this(model.CreateConfig().Apply(configure))
+    /// <param name="configure">The device and configure of the PaddleConfig, pass null to using model's DefaultDevice.</param>
+    public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig>? configure = null) : this(model.CreateConfig().Apply(configure ?? model.DefaultDevice))
     {
     }
 
