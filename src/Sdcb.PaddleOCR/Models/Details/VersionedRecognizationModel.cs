@@ -28,6 +28,7 @@ public abstract class VersionedRecognizationModel : RecognizationModel
     {
         ModelVersion.V2 => new(3, 320, 32),
         ModelVersion.V3 => new(3, 320, 48),
+        ModelVersion.V4 => new(3, 320, 48),
         _ => throw new ArgumentOutOfRangeException($"Unknown OCR model version: {Version}."),
     };
 
@@ -53,7 +54,7 @@ public abstract class VersionedRecognizationModel : RecognizationModel
     /// <param name="config">The PaddleConfig to modify.</param>
     protected void ConfigPostProcess(PaddleConfig config)
     {
-        if (Version == ModelVersion.V3)
+        if (Version == ModelVersion.V3 || Version == ModelVersion.V4)
         {
             config.DeletePass("matmul_transpose_reshape_fuse_pass");
         }

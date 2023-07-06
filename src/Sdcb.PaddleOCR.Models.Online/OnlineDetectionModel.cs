@@ -30,25 +30,31 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     }
 
     /// <summary>
-    /// [New] slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection
+    /// [New] v4 model, supporting Chinese, English, multilingual text detection
+    /// (Size: 4.66M)
+    /// </summary>
+    public static OnlineDetectionModel ChineseV4 => new("ch_PP-OCRv4_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar"), ModelVersion.V4);
+
+    /// <summary>
+    /// slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection
     /// (Size: 1.1M)
     /// </summary>
     public static OnlineDetectionModel ChineseV3Slim => new("ch_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting Chinese, English, multilingual text detection
+    /// Original lightweight model, supporting Chinese, English, multilingual text detection
     /// (Size: 3.8M)
     /// </summary>
     public static OnlineDetectionModel ChineseV3 => new("ch_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection
+    /// slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection
     /// (Size: 3M)
     /// </summary>
     public static OnlineDetectionModel ChineseV2Slim => new("ch_PP-OCRv2_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_det_slim_quant_infer.tar"), ModelVersion.V2);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting Chinese, English, multilingual text detection
+    /// Original lightweight model, supporting Chinese, English, multilingual text detection
     /// (Size: 3M)
     /// </summary>
     public static OnlineDetectionModel ChineseV2 => new("ch_PP-OCRv2_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv2/chinese/ch_PP-OCRv2_det_infer.tar"), ModelVersion.V2);
@@ -72,25 +78,25 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     public static OnlineDetectionModel ChineseServerV2 => new("ch_ppocr_server_v2.0_det", new Uri("https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_det_infer.tar"), ModelVersion.V2);
 
     /// <summary>
-    /// [New] Slim qunatization with distillation lightweight detection model, supporting English
+    /// Slim qunatization with distillation lightweight detection model, supporting English
     /// (Size: 1.1M)
     /// </summary>
     public static OnlineDetectionModel EnglishV3Slim => new("en_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight detection model, supporting English
+    /// Original lightweight detection model, supporting English
     /// (Size: 3.8M)
     /// </summary>
     public static OnlineDetectionModel EnglishV3 => new("en_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Slim qunatization with distillation lightweight detection model, supporting English
+    /// Slim qunatization with distillation lightweight detection model, supporting English
     /// (Size: 1.1M)
     /// </summary>
     public static OnlineDetectionModel MultiLanguageV3Slim => new("ml_PP-OCRv3_det_slim", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_slim_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight detection model, supporting English
+    /// Original lightweight detection model, supporting English
     /// (Size: 3.8M)
     /// </summary>
     public static OnlineDetectionModel MultiLanguageV3 => new("ml_PP-OCRv3_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_infer.tar"), ModelVersion.V3);
@@ -100,6 +106,7 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     /// </summary>
     public static OnlineDetectionModel[] All => new[]
     {
+        ChineseV4,
         ChineseV3Slim,
         ChineseV3,
         ChineseV2Slim,
