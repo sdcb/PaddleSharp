@@ -26,7 +26,7 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     {
         await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
 
-        return new FileDetectionModel(RootDirectory);
+        return new FileDetectionModel(RootDirectory, Version);
     }
 
     /// <summary>

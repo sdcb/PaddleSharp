@@ -14,19 +14,13 @@ public class LocalDetectionModel : DetectionModel
     public string Name { get; }
 
     /// <summary>
-    /// Gets the version of this model.
-    /// </summary>
-    public ModelVersion Version { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="LocalDetectionModel"/> class with the specified name and version.
     /// </summary>
     /// <param name="name">The name of the model.</param>
     /// <param name="version">The version of the model.</param>
-    public LocalDetectionModel(string name, ModelVersion version)
+    public LocalDetectionModel(string name, ModelVersion version) : base(version)
     {
         Name = name;
-        Version = version;
     }
 
     /// <inheritdoc/>

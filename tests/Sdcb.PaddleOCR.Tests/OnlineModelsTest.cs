@@ -21,6 +21,7 @@ public class OnlineModelsTest
     {
         FullOcrModel model = await OnlineFullModels.EnglishV3.DownloadAsync();
 
+        // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
         byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
         using (PaddleOcrAll all = new(model)
@@ -47,15 +48,16 @@ public class OnlineModelsTest
     public async Task V4FastCheckOCR()
     {
         OnlineFullModels onlineModels = new OnlineFullModels(
-            OnlineDetectionModel.ChineseV4, null, LocalDictOnlineRecognizationModel.EnglishV4);
+            OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.EnglishV4);
         FullOcrModel model = await onlineModels.DownloadAsync();
 
+        // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
         byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
-        using (PaddleOcrAll all = new(model, PaddleDevice.Openblas(), PaddleDevice.Mkldnn(), PaddleDevice.Openblas())
+        using (PaddleOcrAll all = new(model)
         {
-            AllowRotateDetection = true, /* 允许识别有角度的文字 */
-            Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+            AllowRotateDetection = true,
+            Enable180Classification = false,
         })
         {
             // Load local file by following code:
@@ -63,16 +65,11 @@ public class OnlineModelsTest
             using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
             {
                 PaddleOcrResult result = null!;
-                int count = 1;
-                double total = 0;
-                for (int i = 0; i < 5; ++i)
-                {
-                    Stopwatch sw = Stopwatch.StartNew();
-                    result = all.Run(src);
-                    total += sw.Elapsed.TotalMilliseconds;
-                }
+                Stopwatch sw = Stopwatch.StartNew();
+                result = all.Run(src);
+                sw.Stop();
 
-                _console.WriteLine($"average elapsed={total / count:N2}ms");
+                _console.WriteLine($"elapsed={sw.ElapsedMilliseconds}ms");
                 _console.WriteLine("Detected all texts: \n" + result.Text);
             }
         }

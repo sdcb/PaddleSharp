@@ -15,17 +15,12 @@ public class OfflineModelsTest
     }
 
     [Fact]
-    public async Task FastCheckOCR()
+    public void FastCheckOCR()
     {
         FullOcrModel model = LocalFullModels.EnglishV3;
 
-        byte[] sampleImageData;
-        string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
-        using (HttpClient http = new())
-        {
-            _console.WriteLine("Download sample image from: " + sampleImageUrl);
-            sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
-        }
+        // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
+        byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
         using (PaddleOcrAll all = new(model)
         {
@@ -52,13 +47,8 @@ public class OfflineModelsTest
     {
         FullOcrModel model = LocalFullModels.EnglishV3;
 
-        byte[] sampleImageData;
-        string sampleImageUrl = @"https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png";
-        using (HttpClient http = new())
-        {
-            _console.WriteLine("Download sample image from: " + sampleImageUrl);
-            sampleImageData = await http.GetByteArrayAsync(sampleImageUrl);
-        }
+        // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
+        byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
         using QueuedPaddleOcrAll all = new(() => new PaddleOcrAll(model)
         {

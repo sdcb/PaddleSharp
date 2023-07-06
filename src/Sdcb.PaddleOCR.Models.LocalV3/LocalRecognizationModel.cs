@@ -8,7 +8,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3;
 /// <summary>
 /// Provides a local implementation of PaddleOCR model with the ability to recognize various languages such as Chinese, English, Korean, Japanese, Telugu and Devanagari
 /// </summary>
-public class LocalRecognizationModel : VersionedRecognizationModel
+public class LocalRecognizationModel : RecognizationModel
 {
     /// <summary>
     /// The name of the model.

@@ -10,7 +10,7 @@ namespace Sdcb.PaddleOCR.Models.Details;
 /// <remarks>
 /// Represents a model used for file processing.
 /// </remarks>
-public class FileRecognizationModel : VersionedRecognizationModel
+public class FileRecognizationModel : RecognizationModel
 {
     private readonly IReadOnlyList<string> _labels;
 

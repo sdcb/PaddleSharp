@@ -1,5 +1,6 @@
 ﻿using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models.Details;
+using System;
 
 namespace Sdcb.PaddleOCR.Models;
 
@@ -25,6 +26,11 @@ public abstract class ClassificationModel
     /// The default OcrShape used in the classification model.
     /// </summary>
     public static OcrShape DefaultShape = new(3, 192, 48);
+
+    /// <summary>
+    /// Gets the default device for the classification model.
+    /// </summary>
+    public virtual Action<PaddleConfig> DefaultDevice => PaddleDevice.Mkldnn();
 
     /// <summary>
     /// Creates a ClassificationModel object from the specified directory path.

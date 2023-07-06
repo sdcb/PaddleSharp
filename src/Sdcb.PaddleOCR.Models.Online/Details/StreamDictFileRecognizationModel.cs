@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Sdcb.PaddleOCR.Models.Online.Details;
 
-internal class StreamDictFileRecognizationModel : VersionedRecognizationModel
+internal class StreamDictFileRecognizationModel : RecognizationModel
 {
     private readonly IReadOnlyList<string> _labels;
 
