@@ -180,6 +180,36 @@ public class PaddleConfig : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets a bool indicating whether ONNX Runtime is enabled.
+    /// </summary>
+    /// <remarks>
+    /// If true, ONNX Runtime is enabled, otherwise disabled.
+    /// </remarks>
+    public bool OnnxEnabled
+    {
+        get => PaddleNative.PD_ConfigONNXRuntimeEnabled(_ptr) != 0;
+        set
+        {
+            if (value)
+            {
+                PaddleNative.PD_ConfigEnableONNXRuntime(_ptr);
+            }
+            else
+            {
+                PaddleNative.PD_ConfigDisableONNXRuntime(_ptr);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Enable ONNX Runtime optimization.
+    /// </summary>
+    public void EnableOnnxOptimization()
+    {
+        PaddleNative.PD_ConfigEnableORTOptimization(_ptr);
+    }
+
     /// <summary>Turn on profiling report. If not turned on, no profiling report will be generated.</summary>
     public bool ProfileEnabled
     {
