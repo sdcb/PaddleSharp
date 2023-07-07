@@ -26,8 +26,8 @@ public class OnlineModelsTest
 
         using (PaddleOcrAll all = new(model)
         {
-            AllowRotateDetection = true, /* 允许识别有角度的文字 */
-            Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
+            AllowRotateDetection = true, 
+            Enable180Classification = false, 
         })
         {
             // Load local file by following code:
