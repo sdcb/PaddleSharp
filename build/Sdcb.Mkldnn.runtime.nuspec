@@ -11,16 +11,16 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright {year}</copyright>
 
-    <icon>images\icon.jpg</icon>
+    <icon>images\icon.png</icon>
     <license type="expression">Apache-2.0</license>
-    <projectUrl>https://github.com/sdcb/PaddleSharp</projectUrl>
-    <tags>Sdcb PaddleSharp AI Paddle OCR PaddleOCR linqpad-samples</tags>
-    <repository type="git" url="https://github.com/sdcb/PaddleSharp.git" />
+    <projectUrl>https://github.com/oneapi-src/oneDNN</projectUrl>
+    <tags>Sdcb PaddleSharp Mkldnn oneDNN AI Paddle OCR PaddleOCR linqpad-samples</tags>
+    <repository type="git" url="https://github.com/oneapi-src/oneDNN.git" />
     <dependencies></dependencies>
     <frameworkAssemblies>
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\icon.jpg" target="images\" />
+    <file src="..\oneapi.png" target="images\icon.png" />
   </files>
 </package>
