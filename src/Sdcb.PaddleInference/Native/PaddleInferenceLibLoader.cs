@@ -58,14 +58,20 @@ public class PaddleInferenceLibLoader
             {
                 LoadPaddleDependencies(libraryName, assembly, searchPath, new[]
                 {
-                    "openblas.dll",
-
+                    // Sdcb.Mkldnn
                     "libiomp5md.dll",
-                    "mkldnn.dll",
                     "mklml.dll",
 
+                    // Sdcb.Onnx
                     "onnxruntime.dll",
+                    "onnxruntime_providers_shared.dll",
+
+                    // Sdcb.Paddle2Onnx
                     "paddle2onnx.dll",
+
+                    // Primary deps
+                    "openblas.dll",
+                    "mkldnn.dll",
                 });
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

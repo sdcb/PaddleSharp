@@ -29,7 +29,8 @@ public class PaddleOcrTableRecognizer : IDisposable
     /// </summary>
     /// <param name="model">The table recognition model.</param>
     /// <param name="configure">The action to configure Paddle device.</param>
-    public PaddleOcrTableRecognizer(TableRecognitionModel model, Action<PaddleConfig>? configure = null) : this(model, model.CreateConfig().Apply(configure ?? PaddleDevice.Openblas()).CreatePredictor())
+    public PaddleOcrTableRecognizer(TableRecognitionModel model, Action<PaddleConfig>? configure = null) : this(model, 
+        model.CreateConfig().Apply(configure ?? PaddleDevice.Mkldnn()).CreatePredictor())
     {
     }
 

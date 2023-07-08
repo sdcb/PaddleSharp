@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
 
 namespace Sdcb.PaddleOCR;
 
@@ -45,6 +46,10 @@ public class QueuedPaddleOcrAll : IDisposable
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
 
         _countdownEvent.Wait();
+        if (_workers.Any(x => x.Exception != null))
+        {
+            throw new AggregateException(_workers.Where(x => x.Exception != null).Select(x => x.Exception!));
+        }
     }
 
     /// <summary>
@@ -70,9 +75,19 @@ public class QueuedPaddleOcrAll : IDisposable
 
     private void ProcessQueue()
     {
-        using PaddleOcrAll paddleOcr = _factory();
-        _countdownEvent.Signal();
+        PaddleOcrAll paddleOcr = null!;
+        try
+        {
+            paddleOcr = _factory();
+            _countdownEvent.Signal();
+        }
+        catch (Exception)
+        {
+            _countdownEvent.Signal();
+            throw;
+        }
 
+        using var _ = paddleOcr;
         foreach (ThreadedQueueItem item in _queue.GetConsumingEnumerable())
         {
             if (item.CancellationToken.IsCancellationRequested || _disposed)

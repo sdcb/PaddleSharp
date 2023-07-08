@@ -69,8 +69,8 @@ public abstract class RecognizationModel
     /// </summary>
     public virtual Action<PaddleConfig> DefaultDevice => Version switch
     {
-        ModelVersion.V4 => PaddleDevice.Onnx(),
-        _ => PaddleDevice.Mkldnn(),
+        ModelVersion.V2 => PaddleDevice.Mkldnn(),
+        _ => PaddleDevice.Onnx(),
     };
 
     /// <summary>

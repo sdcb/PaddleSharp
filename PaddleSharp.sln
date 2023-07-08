@@ -73,6 +73,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-9
 		docs\rotation-detection.md = docs\rotation-detection.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleInference.Tests", "tests\Sdcb.PaddleInference.Tests\Sdcb.PaddleInference.Tests.csproj", "{F0962D28-49F5-4A50-9CB4-8F25E0436230}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +135,7 @@ Global
 		{69BF0B03-E1FE-4CF8-97A5-40E32B758E1A} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
 		{026E4A25-94D0-4143-A1CD-39FF2F1E24A6} = {CCC0070E-E444-42B2-84F7-EE999ADA0750}
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
