@@ -44,9 +44,7 @@ public class LocalRecognizationModel : RecognizationModel
     /// <returns>A new instance of PaddleConfig</returns>
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = Utils.LoadLocalModel(Name);
-        ConfigPostProcess(config);
-        return config;
+        return Utils.LoadLocalModel(Name);
     }
 
     /// <summary>

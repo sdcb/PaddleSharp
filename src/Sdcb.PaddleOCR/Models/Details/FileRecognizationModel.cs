@@ -37,9 +37,7 @@ public class FileRecognizationModel : RecognizationModel
     /// <returns>The configuration for the model.</returns>
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
-        ConfigPostProcess(config);
-        return config;
+        return PaddleConfig.FromModelDir(DirectoryPath);
     }
 
     /// <summary>

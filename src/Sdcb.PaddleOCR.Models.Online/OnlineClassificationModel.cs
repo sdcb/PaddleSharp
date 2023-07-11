@@ -25,7 +25,7 @@ public record OnlineClassificationModel(string Name, Uri Uri, ModelVersion Versi
     public async Task<FileClassificationModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
-        return new FileClassificationModel(RootDirectory);
+        return new FileClassificationModel(RootDirectory, Version);
     }
 
     /// <summary>

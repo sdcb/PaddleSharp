@@ -9,36 +9,22 @@ namespace Sdcb.PaddleOCR.Models;
 /// <summary>
 /// Represents a detection model.
 /// </summary>
-public abstract class DetectionModel
+public abstract class DetectionModel : OcrBaseModel
 {
     /// <summary>
     /// Constructor for initializing an instance of the <see cref="DetectionModel"/> class.
     /// </summary>
     /// <param name="version">The version of detection model.</param>
-    public DetectionModel(ModelVersion version)
+    public DetectionModel(ModelVersion version) : base(version)
     {
-        Version = version;
     }
 
-    /// <summary>
-    /// Gets the version of the OCR model.
-    /// </summary>
-    public ModelVersion Version { get; }
-
-    /// <summary>
-    /// Gets the default device for the classification model.
-    /// </summary>
-    public virtual Action<PaddleConfig> DefaultDevice => Version switch
+    /// <inheritdoc/>
+    public override Action<PaddleConfig> DefaultDevice => Version switch
     {
         ModelVersion.V4 => PaddleDevice.Onnx(),
         _ => PaddleDevice.Mkldnn(),
     };
-
-    /// <summary>
-    /// Creates and returns the configuration object of the model.
-    /// </summary>
-    /// <returns>The configuration object.</returns>
-    public abstract PaddleConfig CreateConfig();
 
     /// <summary>
     /// Returns an instance of the DetectionModel class from the directory path.

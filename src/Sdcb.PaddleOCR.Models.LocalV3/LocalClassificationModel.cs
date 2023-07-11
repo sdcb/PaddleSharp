@@ -14,11 +14,6 @@ public class LocalClassificationModel : ClassificationModel
     public string Name { get; }
 
     /// <summary>
-    /// Gets the version of the model.
-    /// </summary>
-    public ModelVersion Version { get; }
-
-    /// <summary>
     /// Gets the shape of the model.
     /// </summary>
     public override OcrShape Shape => DefaultShape;
@@ -28,10 +23,9 @@ public class LocalClassificationModel : ClassificationModel
     /// </summary>
     /// <param name="name">The name of the model.</param>
     /// <param name="version">The version of the model.</param>
-    public LocalClassificationModel(string name, ModelVersion version)
+    public LocalClassificationModel(string name, ModelVersion version) : base(version)
     {
         Name = name;
-        Version = version;
     }
 
     /// <summary>

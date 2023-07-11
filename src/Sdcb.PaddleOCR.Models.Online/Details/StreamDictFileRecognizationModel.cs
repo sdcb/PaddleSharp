@@ -18,9 +18,7 @@ internal class StreamDictFileRecognizationModel : RecognizationModel
 
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
-        ConfigPostProcess(config);
-        return config;
+        return PaddleConfig.FromModelDir(DirectoryPath);
     }
 
     public override string GetLabelByIndex(int i) => GetLabelByIndex(i, _labels);

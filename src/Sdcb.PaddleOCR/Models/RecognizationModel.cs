@@ -8,21 +8,15 @@ namespace Sdcb.PaddleOCR.Models;
 /// <summary>
 /// The abstract base class for recognition model.
 /// </summary>
-public abstract class RecognizationModel
+public abstract class RecognizationModel : OcrBaseModel
 {
     /// <summary>
     /// Constructor for initializing an instance of the <see cref="RecognizationModel"/> class.
     /// </summary>
     /// <param name="version">The version of recognition model.</param>
-    public RecognizationModel(ModelVersion version)
+    public RecognizationModel(ModelVersion version) : base(version)
     {
-        Version = version;
     }
-
-    /// <summary>
-    /// Gets the version of the OCR model.
-    /// </summary>
-    public ModelVersion Version { get; }
 
     /// <summary>
     /// Get the label by specifying the index.
@@ -48,12 +42,6 @@ public abstract class RecognizationModel
     }
 
     /// <summary>
-    /// Create the paddle config for recognition model.
-    /// </summary>
-    /// <returns>The paddle config for recognition model.</returns>
-    public abstract PaddleConfig CreateConfig();
-
-    /// <summary>
     /// Get the OcrShape of recognition model.
     /// </summary>
     public virtual OcrShape Shape => Version switch
@@ -67,18 +55,16 @@ public abstract class RecognizationModel
     /// <summary>
     /// Gets the default device for the classification model.
     /// </summary>
-    public virtual Action<PaddleConfig> DefaultDevice => Version switch
+    public override Action<PaddleConfig> DefaultDevice => Version switch
     {
         ModelVersion.V2 => PaddleDevice.Mkldnn(),
         _ => PaddleDevice.Onnx(),
     };
 
-    /// <summary>
-    /// Deletes a pass from the PaddleConfig if the OCR model version is V3.
-    /// </summary>
-    /// <param name="config">The PaddleConfig to modify.</param>
-    protected void ConfigPostProcess(PaddleConfig config)
+    /// <inheritdoc/>
+    public override void ConfigureDevice(PaddleConfig config, Action<PaddleConfig>? configure = null)
     {
+        base.ConfigureDevice(config, configure);
         if (config.MkldnnEnabled)
         {
             if (Version == ModelVersion.V3 || Version == ModelVersion.V4)

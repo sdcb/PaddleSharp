@@ -45,6 +45,23 @@ public class OnlineModelsTest
     }
 
     [Fact]
+    public async Task V4MkldnnRecTest()
+    {
+        RecognizationModel recModel = await LocalDictOnlineRecognizationModel.ChineseV4.DownloadAsync();
+
+        using (Mat src = Cv2.ImRead(@"./samples/5ghz.jpg"))
+        using (PaddleOcrRecognizer r = new PaddleOcrRecognizer(recModel, PaddleDevice.Mkldnn()))
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            PaddleOcrRecognizerResult result = r.Run(src);
+            _console.WriteLine($"elapsed={sw.ElapsedMilliseconds}ms");
+            _console.WriteLine(result.ToString());
+            Assert.Equal("5GHz频段流数多一倍", result.Text);
+            Assert.True(result.Score > 0.9);
+        }
+    }
+
+    [Fact]
     public async Task V4FastCheckOCR()
     {
         OnlineFullModels onlineModels = new OnlineFullModels(

@@ -27,9 +27,13 @@ public class PaddleOcrClassifier : IDisposable
     /// </summary>
     /// <param name="model">The <see cref="ClassificationModel"/> to use.</param>
     /// <param name="configure">The device and configure of the PaddleConfig, pass null to using model's DefaultDevice.</param>
-    public PaddleOcrClassifier(ClassificationModel model, Action<PaddleConfig>? configure = null) : this(model.CreateConfig().Apply(configure ?? model.DefaultDevice))
+    public PaddleOcrClassifier(ClassificationModel model, Action<PaddleConfig>? configure = null)
     {
         Shape = model.Shape;
+        PaddleConfig c = model.CreateConfig();
+        model.ConfigureDevice(c, configure);
+
+        _p = c.CreatePredictor();
     }
 
     /// <summary>

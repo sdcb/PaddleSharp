@@ -39,8 +39,12 @@ public class PaddleOcrDetector : IDisposable
     /// </summary>
     /// <param name="model">The DetectionModel to use.</param>
     /// <param name="configure">The device and configure of the PaddleConfig, pass null to using model's DefaultDevice.</param>
-    public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig>? configure = null) : this(model.CreateConfig().Apply(configure ?? model.DefaultDevice))
+    public PaddleOcrDetector(DetectionModel model, Action<PaddleConfig>? configure = null)
     {
+        PaddleConfig c = model.CreateConfig();
+        model.ConfigureDevice(c, configure);
+
+        _p = c.CreatePredictor();
     }
 
     /// <summary>
