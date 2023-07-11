@@ -26,11 +26,5 @@ internal unsafe struct ModelTensorInfo
         }
     }
 
-    public int[] Shape
-    {
-        get
-        {
-            return new ReadOnlySpan<int>(_shape, _rank).ToArray();
-        }
-    }
+    public readonly int[] Shape => new ReadOnlySpan<int>(_shape, _rank).ToArray();
 }
