@@ -79,9 +79,16 @@ public abstract class RecognizationModel
     /// <param name="config">The PaddleConfig to modify.</param>
     protected void ConfigPostProcess(PaddleConfig config)
     {
-        if (Version == ModelVersion.V3 || Version == ModelVersion.V4)
+        if (config.MkldnnEnabled)
         {
-            config.DeletePass("matmul_transpose_reshape_fuse_pass");
+            if (Version == ModelVersion.V3 || Version == ModelVersion.V4)
+            {
+                config.DeletePass("matmul_transpose_reshape_fuse_pass");
+
+                // https://github.com/PaddlePaddle/Paddle/issues/55290#issuecomment-1629924892
+                config.DeletePass("fc_mkldnn_pass");
+                config.DeletePass("fc_act_mkldnn_fuse_pass");
+            }
         }
     }
 
