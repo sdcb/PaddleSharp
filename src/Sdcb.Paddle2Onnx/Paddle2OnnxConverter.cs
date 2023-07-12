@@ -22,15 +22,15 @@ public static class Paddle2OnnxConverter
     /// <param name="deployBackend">The backend to deploy the ONNX model. Default is "onnxruntime".</param>
     /// <returns>true if the model can be exported to an ONNX file, otherwise false.</returns>
     public static unsafe bool CanConvert(
-        string modelFile, 
+        string modelFile,
         string paramsFile,
-        int opsetVersion = 11, 
-        bool autoUpgradeOpset = true, 
-        bool verbose = false, 
-        bool enableOnnxChecker = true, 
-        bool enableExperimentalOp = false, 
+        int opsetVersion = 11,
+        bool autoUpgradeOpset = true,
+        bool verbose = false,
+        bool enableOnnxChecker = true,
+        bool enableExperimentalOp = false,
         bool enableOptimize = true,
-        CustomOp[]? customOps = null, 
+        CustomOp[]? customOps = null,
         string deployBackend = "onnxruntime")
     {
         if (!File.Exists(modelFile)) throw new FileNotFoundException("Model file not found.", modelFile);
@@ -90,14 +90,12 @@ public static class Paddle2OnnxConverter
 
         CCustomOp[]? customOpsNative = new CCustomOp[customOps?.Length ?? 0];
         GCHandle handle = CustomOpsToHandle(customOps, customOpsNative);
-        GCHandle modelHandle = GCHandle.Alloc(modelBuffer, GCHandleType.Pinned);
-        GCHandle paramsHandle = GCHandle.Alloc(paramsBuffer, GCHandleType.Pinned);
 
         try
         {
             return Paddle2OnnxLib.IsExportable(
-                modelHandle.AddrOfPinnedObject(), modelBuffer.Length,
-                paramsHandle.AddrOfPinnedObject(), paramsBuffer.Length,
+                modelBuffer, modelBuffer.Length,
+                paramsBuffer, paramsBuffer.Length,
                 opsetVersion,
                 autoUpgradeOpset,
                 verbose,
@@ -111,8 +109,6 @@ public static class Paddle2OnnxConverter
         finally
         {
             handle.Free();
-            modelHandle.Free();
-            paramsHandle.Free();
         }
     }
 
@@ -133,13 +129,13 @@ public static class Paddle2OnnxConverter
     public static unsafe byte[] ConvertToOnnx(
         string modelFile,
         string paramsFile,
-        int opsetVersion = 11, 
-        bool autoUpgradeOpset = true, 
-        bool verbose = false, 
-        bool enableOnnxChecker = true, 
-        bool enableExperimentalOp = false, 
-        bool enableOptimize = true, 
-        CustomOp[]? customOps = null, 
+        int opsetVersion = 11,
+        bool autoUpgradeOpset = true,
+        bool verbose = false,
+        bool enableOnnxChecker = true,
+        bool enableExperimentalOp = false,
+        bool enableOptimize = true,
+        CustomOp[]? customOps = null,
         string deployBackend = "onnxruntime")
     {
         if (!File.Exists(modelFile)) throw new FileNotFoundException("Model file not found.", modelFile);
@@ -205,14 +201,12 @@ public static class Paddle2OnnxConverter
 
         CCustomOp[]? customOpsNative = new CCustomOp[customOps?.Length ?? 0];
         GCHandle handle = CustomOpsToHandle(customOps, customOpsNative);
-        GCHandle modelHandle = GCHandle.Alloc(modelBuffer, GCHandleType.Pinned);
-        GCHandle paramsHandle = GCHandle.Alloc(paramsBuffer, GCHandleType.Pinned);
 
         try
         {
             bool ok = Paddle2OnnxLib.Export(
-                modelHandle.AddrOfPinnedObject(), modelBuffer.Length, 
-                paramsHandle.AddrOfPinnedObject(), paramsBuffer.Length,
+                modelBuffer, modelBuffer.Length,
+                paramsBuffer, paramsBuffer.Length,
                 out IntPtr output, out int outputSize,
                 opsetVersion,
                 autoUpgradeOpset,
@@ -237,20 +231,12 @@ public static class Paddle2OnnxConverter
 
     public static unsafe byte[] RemoveOnnxMultiClassNMS(byte[] onnxModel)
     {
-        GCHandle handle = GCHandle.Alloc(onnxModel, GCHandleType.Pinned);
-        try
-        {
-            bool ok = Paddle2OnnxLib.RemoveMultiClassNMS(handle.AddrOfPinnedObject(), onnxModel.Length, out IntPtr outModel, out int outSize);
-            if (!ok || outModel == IntPtr.Zero) throw new Exception("Failed to remove MultiClassNMS.");
+        bool ok = Paddle2OnnxLib.RemoveMultiClassNMS(onnxModel, onnxModel.Length, out IntPtr outModel, out int outSize);
+        if (!ok || outModel == IntPtr.Zero) throw new Exception("Failed to remove MultiClassNMS.");
 
-            byte[] result = new ReadOnlySpan<byte>((void*)outModel, outSize).ToArray();
-            MsvcLib.free(outModel);
-            return result;
-        }
-        finally
-        {
-            handle.Free();
-        }
+        byte[] result = new ReadOnlySpan<byte>((void*)outModel, outSize).ToArray();
+        MsvcLib.free(outModel);
+        return result;
     }
 
     private static unsafe GCHandle CustomOpsToHandle(CustomOp[]? customOps, CCustomOp[] customOpsNative)
@@ -265,5 +251,49 @@ public static class Paddle2OnnxConverter
         }
 
         return GCHandle.Alloc(customOpsNative, GCHandleType.Pinned);
+    }
+
+    /// <summary>
+    /// Describe a PaddlePaddle model from a byte array buffer.
+    /// </summary>
+    /// <param name="paddleModelBuffer">The byte array buffer of the PaddlePaddle model.</param>
+    /// <returns>A <see cref="PaddleModelInfo"/> object containing the input and output names of the PaddlePaddle model.</returns>
+    public static PaddleModelInfo DescribePaddleModel(byte[] paddleModelBuffer)
+    {
+        CPaddleReader pthis = new();
+        Paddle2OnnxLib.PaddleReaderInit(ref pthis, paddleModelBuffer, paddleModelBuffer.Length);
+
+        return new PaddleModelInfo(pthis.InputNames, pthis.OutputNames);
+    }
+
+    /// <summary>
+    /// Describes an Onnx model from a byte array buffer.
+    /// </summary>
+    /// <param name="onnxModelBuffer">The buffer containing the Onnx model.</param>
+    /// <returns>The Onnx model information in the <see cref="OnnxModelInfo"/> class.</returns>
+    public static OnnxModelInfo DescribeOnnxModel(byte[] onnxModelBuffer)
+    {
+        COnnxReader pthis = new();
+        Paddle2OnnxLib.OnnxReaderInit(ref pthis, onnxModelBuffer, onnxModelBuffer.Length);
+
+        string[] inputNames = pthis.InputNames;
+        int[][] inputShapes = pthis.InputShapes;
+        int[] inputRanks = pthis.InputRanks;
+        ModelTensorInfo[] inputs = new ModelTensorInfo[pthis.NumInputs];
+        for (int i = 0; i < inputs.Length; ++i)
+        {
+            inputs[i] = new ModelTensorInfo(inputNames[i], inputShapes[i], inputRanks[i]);
+        }
+
+        string[] outputNames = pthis.OutputNames;
+        int[][] outputShapes = pthis.OutputShapes;
+        int[] outputRanks = pthis.OutputRanks;
+        ModelTensorInfo[] outputs = new ModelTensorInfo[pthis.NumOutputs];
+        for (int i = 0; i < outputs.Length; ++i)
+        {
+            outputs[i] = new ModelTensorInfo(outputNames[i], outputShapes[i], outputRanks[i]);
+        }
+
+        return new OnnxModelInfo(inputs, outputs);
     }
 }

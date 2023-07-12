@@ -119,8 +119,10 @@ internal static class Paddle2OnnxLib
 
     // bool __cdecl paddle2onnx::Export(void const * __ptr64,int,void const * __ptr64,int,char * __ptr64 * __ptr64,int * __ptr64,int,bool,bool,bool,bool,bool,struct paddle2onnx::CustomOp * __ptr64,int,char const * __ptr64)
     [DllImport(Dll, EntryPoint = "?Export@paddle2onnx@@YA_NPEBXH0HPEAPEADPEAHH_N3333PEAUCustomOp@1@HPEBD@Z")]
-    public static extern bool Export(IntPtr modelBuffer, int modelSize, IntPtr paramsBuffer,
-        int paramsSize, out IntPtr output, out int outputSize,
+    public static extern bool Export(
+        [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int modelSize,
+        [MarshalAs(UnmanagedType.LPArray)] byte[] paramsBuffer, int paramsSize, 
+        out IntPtr output, out int outputSize,
         int opsetVersion = 11, bool autoUpgradeOpset = true,
         bool verbose = false, bool enableOnnxChecker = true,
         bool enableExperimentalOp = false, bool enableOptimize = true,
@@ -138,8 +140,10 @@ internal static class Paddle2OnnxLib
 
     // bool __cdecl paddle2onnx::IsExportable(void const * __ptr64,int,void const * __ptr64,int,int,bool,bool,bool,bool,bool,struct paddle2onnx::CustomOp * __ptr64,int,char const * __ptr64)
     [DllImport(Dll, EntryPoint = "?IsExportable@paddle2onnx@@YA_NPEBXH0HH_N1111PEAUCustomOp@1@HPEBD@Z")]
-    public static extern bool IsExportable(IntPtr modelBuffer, int modelSize, IntPtr paramsBuffer,
-        int paramsSize, int opsetVersion = 11, bool autoUpgradeOpset = true,
+    public static extern bool IsExportable(
+        [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int modelSize, 
+        [MarshalAs(UnmanagedType.LPArray)] byte[] paramsBuffer, int paramsSize, 
+        int opsetVersion = 11, bool autoUpgradeOpset = true,
         bool verbose = false, bool enableOnnxChecker = true,
         bool enableExperimentalOp = false, bool enableOptimize = true,
         IntPtr customeOp = default, int opCount = 0,
@@ -147,5 +151,5 @@ internal static class Paddle2OnnxLib
 
     // bool __cdecl paddle2onnx::RemoveMultiClassNMS(char const * __ptr64,int,char * __ptr64 * __ptr64,int * __ptr64)
     [DllImport(Dll, EntryPoint = "?RemoveMultiClassNMS@paddle2onnx@@YA_NPEBDHPEAPEADPEAH@Z")]
-    public static extern bool RemoveMultiClassNMS(IntPtr onnxModel, int modelSize, out IntPtr outModel, out int outModelSize);
+    public static extern bool RemoveMultiClassNMS([MarshalAs(UnmanagedType.LPArray)] byte[] onnxModel, int modelSize, out IntPtr outModel, out int outModelSize);
 }
