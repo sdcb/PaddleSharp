@@ -43,7 +43,7 @@ internal struct COnnxReader
                 for (int i = 0; i < NumInputs; i++)
                 {
                     byte* p = pi + i * MaxStringLength;
-                    string s = Marshal.PtrToStringAnsi((IntPtr)p, MaxStringLength);
+                    string s = ((IntPtr)p).PtrToStringAnsi(MaxStringLength);
                     result[i] = s;
                 }
                 return result;
@@ -61,7 +61,7 @@ internal struct COnnxReader
                 for (int i = 0; i < NumOutputs; i++)
                 {
                     byte* p = pi + i * MaxStringLength;
-                    string s = Marshal.PtrToStringAnsi((IntPtr)p, MaxStringLength);
+                    string s = ((IntPtr)p).PtrToStringAnsi(MaxStringLength);
                     result[i] = s;
                 }
                 return result;
