@@ -5,6 +5,14 @@ using System.Runtime.InteropServices;
 
 namespace Sdcb.Paddle2Onnx;
 
+/// <summary>
+/// Paddle2OnnxConverter provides methods to:
+/// <list type="bullet">
+/// <item>Convert PaddlePaddle models to ONNX format.</item>
+/// <item>Describe PaddlePaddle models.</item>
+/// <item>Describe ONNX models.</item>
+/// </list>
+/// </summary>
 public static class Paddle2OnnxConverter
 {
     /// <summary>
@@ -229,6 +237,11 @@ public static class Paddle2OnnxConverter
         }
     }
 
+    /// <summary>
+    /// Removes the MultiClassNMS from given onnxModel.
+    /// </summary>
+    /// <param name="onnxModel">The onnx model buffer to remove MultiClassNMS from.</param>
+    /// <returns>byte[] buffer of onnx model without MultiClassNMS.</returns>
     public static unsafe byte[] RemoveOnnxMultiClassNMS(byte[] onnxModel)
     {
         bool ok = Paddle2OnnxLib.RemoveMultiClassNMS(onnxModel, onnxModel.Length, out IntPtr outModel, out int outSize);
