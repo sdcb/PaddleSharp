@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Sdcb.Paddle2Onnx;
+namespace Sdcb.Paddle2Onnx.Natives;
 
 [StructLayout(LayoutKind.Explicit, Size = 112)]
-internal unsafe struct ModelTensorInfo
+internal readonly unsafe struct CModelTensorInfo
 {
     [FieldOffset(0)]
-    private byte _name;
+    private readonly byte _name;
 
     [FieldOffset(100)]
-    private int* _shape;
+    private readonly int* _shape;
 
     [FieldOffset(108)]
-    private int _rank;
+    private readonly int _rank;
 
     public string Name
     {

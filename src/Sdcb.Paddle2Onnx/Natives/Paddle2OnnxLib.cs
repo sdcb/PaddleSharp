@@ -1,43 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace Sdcb.Paddle2Onnx;
+namespace Sdcb.Paddle2Onnx.Natives;
 
-internal static class Paddle2Onnx
+internal static class Paddle2OnnxLib
 {
     const string Dll = @"C:\_\3rd\paddle\inference_cpp\third_party\install\paddle2onnx\lib\paddle2onnx.dll";
 
     // public: __cdecl paddle2onnx::PaddleReader::PaddleReader(char const * __ptr64,int) __ptr64
     [DllImport(Dll, EntryPoint = "??0PaddleReader@paddle2onnx@@QEAA@PEBDH@Z")]
-    public static extern void CreatePaddleReader(ref PaddleReader pthis, [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int bufferSize);
+    public static extern void PaddleReaderInit(ref CPaddleReader pthis, [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int bufferSize);
 
     // public: struct paddle2onnx::PaddleReader & __ptr64 __cdecl paddle2onnx::PaddleReader::operator=(struct paddle2onnx::PaddleReader && __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4PaddleReader@paddle2onnx@@QEAAAEAU01@$$QEAU01@@Z")]
-    public static extern IntPtr PaddleReaderAssign(ref PaddleReader pthis, ref PaddleReader src);
+    public static extern IntPtr PaddleReaderAssign(ref CPaddleReader pthis, ref CPaddleReader src);
 
     // public: struct paddle2onnx::PaddleReader & __ptr64 __cdecl paddle2onnx::PaddleReader::operator=(struct paddle2onnx::PaddleReader const & __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4PaddleReader@paddle2onnx@@QEAAAEAU01@AEBU01@@Z")]
-    public static extern IntPtr PaddleReaderAssignConst(ref PaddleReader pthis, in PaddleReader src);
+    public static extern IntPtr PaddleReaderAssignConst(ref CPaddleReader pthis, in CPaddleReader src);
 
     // public: int __cdecl paddle2onnx::PaddleReader::GetInputIndex(char const * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetInputIndex@PaddleReader@paddle2onnx@@QEBAHPEBD@Z")]
-    public static extern int PaddleReaderGetInputIndex(ref PaddleReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
+    public static extern int PaddleReaderGetInputIndex(ref CPaddleReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
 
     // public: int __cdecl paddle2onnx::PaddleReader::NumOutputs(void)const __ptr64
     [DllImport(Dll, EntryPoint = "?NumOutputs@PaddleReader@paddle2onnx@@QEBAHXZ")]
-    public static extern int PaddleReaderNumOutputs(ref PaddleReader pthis);
+    public static extern int PaddleReaderNumOutputs(ref CPaddleReader pthis);
 
     // public: int __cdecl paddle2onnx::PaddleReader::NumInputs(void)const __ptr64
     [DllImport(Dll, EntryPoint = "?NumInputs@PaddleReader@paddle2onnx@@QEBAHXZ")]
-    public static extern int PaddleReaderNumInputs(ref PaddleReader pthis);
+    public static extern int PaddleReaderNumInputs(ref CPaddleReader pthis);
 
     // public: int __cdecl paddle2onnx::PaddleReader::GetOutputIndex(char const * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetOutputIndex@PaddleReader@paddle2onnx@@QEBAHPEBD@Z")]
-    public static extern int PaddleReaderGetOutputIndex(ref PaddleReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
-
-
+    public static extern int PaddleReaderGetOutputIndex(ref CPaddleReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
 
 
 
@@ -45,15 +41,15 @@ internal static class Paddle2Onnx
 
     // public: __cdecl paddle2onnx::CustomOp::CustomOp(void) __ptr64
     [DllImport(Dll, EntryPoint = "??0CustomOp@paddle2onnx@@QEAA@XZ")]
-    public static extern void CreateCustomOp(ref CustomOp pthis);
+    public static extern void CustomOpInit(ref CCustomOp pthis);
 
     // public: struct paddle2onnx::CustomOp & __ptr64 __cdecl paddle2onnx::CustomOp::operator=(struct paddle2onnx::CustomOp && __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4CustomOp@paddle2onnx@@QEAAAEAU01@$$QEAU01@@Z")]
-    public static extern IntPtr AssignCustomOp(IntPtr pthis, IntPtr src);
+    public static extern IntPtr CustomOpAssign(ref CCustomOp op, ref CCustomOp src);
 
     // public: struct paddle2onnx::CustomOp & __ptr64 __cdecl paddle2onnx::CustomOp::operator=(struct paddle2onnx::CustomOp const & __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4CustomOp@paddle2onnx@@QEAAAEAU01@AEBU01@@Z")]
-    public static extern IntPtr AssignCustomOp(IntPtr pthis, ref CustomOp src);
+    public static extern IntPtr CustomOpAssignConst(ref CCustomOp op, in CCustomOp src);
 
 
 
@@ -61,54 +57,54 @@ internal static class Paddle2Onnx
 
     // public: __cdecl paddle2onnx::ModelTensorInfo::ModelTensorInfo(void) __ptr64
     [DllImport(Dll, EntryPoint = "??0ModelTensorInfo@paddle2onnx@@QEAA@XZ")]
-    public static extern void CreateModelTensorInfo(IntPtr pthis);
+    public static extern void ModelTensorInfoInit(ref CModelTensorInfo info);
 
     // public: __cdecl paddle2onnx::ModelTensorInfo::~ModelTensorInfo(void) __ptr64
     [DllImport(Dll, EntryPoint = "??1ModelTensorInfo@paddle2onnx@@QEAA@XZ")]
-    public static extern void DeleteModelTensorInfo(IntPtr pthis);
+    public static extern void ModelTensorInfoRelease(ref CModelTensorInfo info);
 
     // public: struct paddle2onnx::ModelTensorInfo & __ptr64 __cdecl paddle2onnx::ModelTensorInfo::operator=(struct paddle2onnx::ModelTensorInfo const & __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4ModelTensorInfo@paddle2onnx@@QEAAAEAU01@AEBU01@@Z")]
-    public static extern IntPtr AssignModelTensorInfo(IntPtr pthis, ref ModelTensorInfo src);
+    public static extern IntPtr ModelTensorInfoAssign(ref CModelTensorInfo info, in CModelTensorInfo src);
 
 
 
 
     // public: __cdecl paddle2onnx::OnnxReader::OnnxReader(char const * __ptr64,int) __ptr64
     [DllImport(Dll, EntryPoint = "??0OnnxReader@paddle2onnx@@QEAA@PEBDH@Z")]
-    public static extern void CreateOnnxReader(IntPtr pthis, [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int bufferSize);
+    public static extern void OnnxReaderInit(ref COnnxReader pthis, [MarshalAs(UnmanagedType.LPArray)] byte[] modelBuffer, int bufferSize);
 
     // public: struct paddle2onnx::OnnxReader & __ptr64 __cdecl paddle2onnx::OnnxReader::operator=(struct paddle2onnx::OnnxReader && __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4OnnxReader@paddle2onnx@@QEAAAEAU01@$$QEAU01@@Z")]
-    public static extern IntPtr AssignOnnxReader(IntPtr pthis, IntPtr src);
+    public static extern IntPtr OnnxReaderAssign(ref COnnxReader dest, ref COnnxReader src);
 
     // public: struct paddle2onnx::OnnxReader & __ptr64 __cdecl paddle2onnx::OnnxReader::operator=(struct paddle2onnx::OnnxReader const & __ptr64) __ptr64
     [DllImport(Dll, EntryPoint = "??4OnnxReader@paddle2onnx@@QEAAAEAU01@AEBU01@@Z")]
-    public static extern IntPtr AssignOnnxReader(IntPtr pthis, ref OnnxReader src);
+    public static extern IntPtr OnnxReaderAssignConst(ref COnnxReader dest, in COnnxReader src);
 
     // public: int __cdecl paddle2onnx::OnnxReader::GetInputIndex(char const * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetInputIndex@OnnxReader@paddle2onnx@@QEBAHPEBD@Z")]
-    public static extern int GetInputIndexOnnxReader(IntPtr pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
+    public static extern int OnnxReaderGetInputIndex(ref COnnxReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
 
     // public: void __cdecl paddle2onnx::OnnxReader::GetInputInfo(int,struct paddle2onnx::ModelTensorInfo * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetInputInfo@OnnxReader@paddle2onnx@@QEBAXHPEAUModelTensorInfo@2@@Z")]
-    public static extern void GetInputInfoOnnxReader(IntPtr pthis, int index, IntPtr info);
+    public static extern void OnnxReaderGetInputInfo(ref COnnxReader pthis, int index, ref CModelTensorInfo info);
 
     // public: int __cdecl paddle2onnx::OnnxReader::GetOutputIndex(char const * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetOutputIndex@OnnxReader@paddle2onnx@@QEBAHPEBD@Z")]
-    public static extern int GetOutputIndexOnnxReader(IntPtr pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
+    public static extern int OnnxReaderGetOutputIndex(ref COnnxReader pthis, [MarshalAs(UnmanagedType.LPStr)] string name);
 
     // public: void __cdecl paddle2onnx::OnnxReader::GetOutputInfo(int,struct paddle2onnx::ModelTensorInfo * __ptr64)const __ptr64
     [DllImport(Dll, EntryPoint = "?GetOutputInfo@OnnxReader@paddle2onnx@@QEBAXHPEAUModelTensorInfo@2@@Z")]
-    public static extern void GetOutputInfoOnnxReader(IntPtr pthis, int index, IntPtr info);
+    public static extern void OnnxReaderGetOutputInfo(ref COnnxReader pthis, int index, ref CModelTensorInfo info);
 
     // public: int __cdecl paddle2onnx::OnnxReader::NumInputs(void)const __ptr64
     [DllImport(Dll, EntryPoint = "?NumInputs@OnnxReader@paddle2onnx@@QEBAHXZ")]
-    public static extern int NumInputsOnnxReader(IntPtr pthis);
+    public static extern int OnnxReaderNumInputs(ref COnnxReader pthis);
 
     // public: int __cdecl paddle2onnx::OnnxReader::NumOutputs(void)const __ptr64
     [DllImport(Dll, EntryPoint = "?NumOutputs@OnnxReader@paddle2onnx@@QEBAHXZ")]
-    public static extern int NumOutputsOnnxReader(IntPtr pthis);
+    public static extern int OnnxReaderNumOutputs(ref COnnxReader pthis);
 
 
 
@@ -151,5 +147,5 @@ internal static class Paddle2Onnx
 
     // bool __cdecl paddle2onnx::RemoveMultiClassNMS(char const * __ptr64,int,char * __ptr64 * __ptr64,int * __ptr64)
     [DllImport(Dll, EntryPoint = "?RemoveMultiClassNMS@paddle2onnx@@YA_NPEBDHPEAPEADPEAH@Z")]
-    public static extern bool RemoveMultiClassNMS([MarshalAs(UnmanagedType.LPStr)] string onnxModel, int modelSize, ref IntPtr outModel, ref int outModelSize);
+    public static extern bool RemoveMultiClassNMS([MarshalAs(UnmanagedType.LPArray)] byte[] onnxModel, int modelSize, out IntPtr outModel, out int outModelSize);
 }

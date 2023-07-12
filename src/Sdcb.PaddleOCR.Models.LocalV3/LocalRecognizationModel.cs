@@ -1,5 +1,4 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.Details;
 using Sdcb.PaddleOCR.Models.LocalV3.Details;
 using System.Collections.Generic;
 

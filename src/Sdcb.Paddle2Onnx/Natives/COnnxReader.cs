@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Sdcb.Paddle2Onnx;
+namespace Sdcb.Paddle2Onnx.Natives;
 
 [StructLayout(LayoutKind.Explicit, Size = 42208)]
-public struct OnnxReader
+internal struct COnnxReader
 {
     [FieldOffset(0)]
     public byte _inputNames;

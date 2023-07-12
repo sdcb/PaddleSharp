@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Sdcb.Paddle2Onnx;
+namespace Sdcb.Paddle2Onnx.Natives;
 
 [StructLayout(LayoutKind.Explicit, Size = 40012)]
-internal struct PaddleReader
+internal readonly struct CPaddleReader
 {
     [FieldOffset(0)]
-    public byte _inputNames; // char[100][200]
+    public readonly byte _inputNames; // char[100][200]
 
     [FieldOffset(20000)]
-    public byte _outputNames; // char[100][200]
+    public readonly byte _outputNames; // char[100][200]
 
     [FieldOffset(40000)]
-    public int NumInputs;
+    public readonly int NumInputs;
 
     [FieldOffset(40004)]
-    public int NumOutputs;
+    public readonly int NumOutputs;
 
     [FieldOffset(40008)]
-    public int HasNms;
+    public readonly int HasNms;
 
     const int MaxStringLength = 200;
 
