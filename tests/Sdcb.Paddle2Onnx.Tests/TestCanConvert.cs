@@ -8,7 +8,9 @@ namespace Sdcb.Paddle2Onnx.Tests;
 
 public class TestCanConvert
 {
+#pragma warning disable IDE0052 // 删除未读的私有成员
     private readonly ITestOutputHelper _console;
+#pragma warning restore IDE0052 // 删除未读的私有成员
 
     public TestCanConvert(ITestOutputHelper console)
     {
@@ -41,7 +43,7 @@ public class TestCanConvert
         byte[] paramsBuffer = File.ReadAllBytes(paramsFile);
 
         // Act
-        bool can = Paddle2OnnxConverter.CanConvert(modelBuffer, paramsBuffer, verbose: true);
+        bool can = Paddle2OnnxConverter.CanConvert(modelBuffer, paramsBuffer);
 
         // Assert
         Assert.True(can);

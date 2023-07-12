@@ -116,6 +116,115 @@ public static class Paddle2OnnxConverter
         }
     }
 
+    public static unsafe byte[] ConvertToOnnx(
+        string modelFile,
+        string paramsFile,
+        int opsetVersion = 11, 
+        bool autoUpgradeOpset = true, 
+        bool verbose = false, 
+        bool enableOnnxChecker = true, 
+        bool enableExperimentalOp = false, 
+        bool enableOptimize = true, 
+        CustomOp[]? customOps = null, 
+        string deployBackend = "onnxruntime")
+    {
+        if (!File.Exists(modelFile)) throw new FileNotFoundException("Model file not found.", modelFile);
+        if (!File.Exists(paramsFile)) throw new FileNotFoundException("Params file not found.", paramsFile);
+
+        CCustomOp[]? customOpsNative = new CCustomOp[customOps?.Length ?? 0];
+        GCHandle handle = CustomOpsToHandle(customOps, customOpsNative);
+
+        try
+        {
+            bool ok = Paddle2OnnxLib.Export(
+                modelFile, paramsFile,
+                out IntPtr output, out int outputSize,
+                opsetVersion,
+                autoUpgradeOpset,
+                verbose,
+                enableOnnxChecker,
+                enableExperimentalOp,
+                enableOptimize,
+                handle.AddrOfPinnedObject(),
+                customOpsNative.Length,
+                deployBackend);
+            if (!ok || output == IntPtr.Zero) throw new Exception("Failed to export model.");
+
+            byte[] result = new ReadOnlySpan<byte>((void*)output, outputSize).ToArray();
+            MsvcLib.free(output);
+            return result;
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
+    public static unsafe byte[] ConvertToOnnx(
+        byte[] modelBuffer,
+        byte[] paramsBuffer,
+        int opsetVersion = 11,
+        bool autoUpgradeOpset = true,
+        bool verbose = false,
+        bool enableOnnxChecker = true,
+        bool enableExperimentalOp = false,
+        bool enableOptimize = true,
+        CustomOp[]? customOps = null,
+        string deployBackend = "onnxruntime")
+    {
+        if (modelBuffer == null) throw new ArgumentNullException(nameof(modelBuffer));
+        if (paramsBuffer == null) throw new ArgumentNullException(nameof(paramsBuffer));
+
+        CCustomOp[]? customOpsNative = new CCustomOp[customOps?.Length ?? 0];
+        GCHandle handle = CustomOpsToHandle(customOps, customOpsNative);
+        GCHandle modelHandle = GCHandle.Alloc(modelBuffer, GCHandleType.Pinned);
+        GCHandle paramsHandle = GCHandle.Alloc(paramsBuffer, GCHandleType.Pinned);
+
+        try
+        {
+            bool ok = Paddle2OnnxLib.Export(
+                modelHandle.AddrOfPinnedObject(), modelBuffer.Length, 
+                paramsHandle.AddrOfPinnedObject(), paramsBuffer.Length,
+                out IntPtr output, out int outputSize,
+                opsetVersion,
+                autoUpgradeOpset,
+                verbose,
+                enableOnnxChecker,
+                enableExperimentalOp,
+                enableOptimize,
+                handle.AddrOfPinnedObject(),
+                customOpsNative.Length,
+                deployBackend);
+            if (!ok || output == IntPtr.Zero) throw new Exception("Failed to export model.");
+
+            byte[] result = new ReadOnlySpan<byte>((void*)output, outputSize).ToArray();
+            MsvcLib.free(output);
+            return result;
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
+    public static unsafe byte[] RemoveOnnxMultiClassNMS(byte[] onnxModel)
+    {
+        GCHandle handle = GCHandle.Alloc(onnxModel, GCHandleType.Pinned);
+        try
+        {
+            bool ok = Paddle2OnnxLib.RemoveMultiClassNMS(handle.AddrOfPinnedObject(), onnxModel.Length, out IntPtr outModel, out int outSize);
+            if (!ok || outModel == IntPtr.Zero) throw new Exception("Failed to remove MultiClassNMS.");
+
+            byte[] result = new ReadOnlySpan<byte>((void*)outModel, outSize).ToArray();
+            MsvcLib.free(outModel);
+            return result;
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
     private static unsafe GCHandle CustomOpsToHandle(CustomOp[]? customOps, CCustomOp[] customOpsNative)
     {
         if (customOps != null)
@@ -127,7 +236,6 @@ public static class Paddle2OnnxConverter
             }
         }
 
-        GCHandle handle = GCHandle.Alloc(customOpsNative, GCHandleType.Pinned);
-        return handle;
+        return GCHandle.Alloc(customOpsNative, GCHandleType.Pinned);
     }
 }
