@@ -70,6 +70,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-9
 	ProjectSection(SolutionItems) = preProject
 		docs\detection.md = docs\detection.md
 		docs\ocr.md = docs\ocr.md
+		docs\paddle2onnx.md = docs\paddle2onnx.md
 		docs\rotation-detection.md = docs\rotation-detection.md
 	EndProjectSection
 EndProject

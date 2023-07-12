@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Sdcb.Paddle2Onnx;
 
@@ -13,6 +14,9 @@ namespace Sdcb.Paddle2Onnx;
 /// <item>Describe ONNX models.</item>
 /// </list>
 /// </summary>
+#if !NETSTANDARD2_0
+[SupportedOSPlatform("windows")]
+#endif
 public static class Paddle2OnnxConverter
 {
     /// <summary>
