@@ -116,6 +116,20 @@ public static class Paddle2OnnxConverter
         }
     }
 
+    /// <summary>
+    /// Convert PaddlePaddle models to ONNX format.
+    /// </summary>
+    /// <param name="modelFile">Path to the PaddlePaddle model file.</param>
+    /// <param name="paramsFile">Path to the parameter file associated with the PaddlePaddle model file.</param>
+    /// <param name="opsetVersion">The ONNX opset version.</param>
+    /// <param name="autoUpgradeOpset">Whether or not to auto-upgrade the opset to the latest supported version.</param>
+    /// <param name="verbose">Whether to enable verbose logging information.</param>
+    /// <param name="enableOnnxChecker">Whether or not to perform model optimization.</param>
+    /// <param name="enableExperimentalOp">Whether or not to enable the use of experimental ops, which may not be available for all ONNX inference runtime implementations.</param>
+    /// <param name="enableOptimize">Whether or not to perform model checks.</param>
+    /// <param name="customOps">Custom operator definitions to be used for model conversion.</param>
+    /// <param name="deployBackend">Backend for deployment, defaults to ONNXRuntime.</param>
+    /// <returns>The ONNX model.</returns>
     public static unsafe byte[] ConvertToOnnx(
         string modelFile,
         string paramsFile,
@@ -160,6 +174,20 @@ public static class Paddle2OnnxConverter
         }
     }
 
+    /// <summary>
+    /// Exports a PaddlePaddle model to an ONNX model
+    /// </summary>
+    /// <param name="modelBuffer">The buffer containing the model data. Must not be null.</param>
+    /// <param name="paramsBuffer">The buffer containing the parameters. Must not be null.</param>
+    /// <param name="opsetVersion">The version of the operator set to use. Default is 11.</param>
+    /// <param name="autoUpgradeOpset">Whether to automatically upgrade opset. Default is true.</param>
+    /// <param name="verbose">Whether to write verbose output. Default is false.</param>
+    /// <param name="enableOnnxChecker">Whether to enable checking of the generated ONNX model. Default is true.</param>
+    /// <param name="enableExperimentalOp">Whether to enable experimental operators. Default is false.</param>
+    /// <param name="enableOptimize">Whether to enable model optimization. Default is true.</param>
+    /// <param name="customOps">An optional array of custom operators. Default is null.</param>
+    /// <param name="deployBackend">The backend to use. Default is "onnxruntime".</param>
+    /// <returns>The ONNX model as a byte array.</returns>
     public static unsafe byte[] ConvertToOnnx(
         byte[] modelBuffer,
         byte[] paramsBuffer,
