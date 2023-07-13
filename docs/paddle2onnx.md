@@ -20,7 +20,7 @@ Install-Package Sdcb.Paddle2Onnx.runtime.win64
 | NuGet Package 💼                | Version 📌                                                                                                                                | Description 📚                    |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | Sdcb.Paddle2Onnx               | [![NuGet](https://img.shields.io/nuget/v/Sdcb.Paddle2Onnx.svg)](https://nuget.org/packages/Sdcb.Paddle2Onnx)                             | Paddle2Onnx C++ API .NET binding |
-| Sdcb.Paddle2Onnx.runtime.win64 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.Paddle2Onnx.runtime.win64.svg)](https://nuget.org/packages/Sdcb.Paddle2Onnx.runtime.win64) | wi-x64 Paddle2Onnx runtime       |
+| Sdcb.Paddle2Onnx.runtime.win64 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.Paddle2Onnx.runtime.win64.svg)](https://nuget.org/packages/Sdcb.Paddle2Onnx.runtime.win64) | win-x64 Paddle2Onnx runtime      |
 
 ## Usage
 
