@@ -26,4 +26,4 @@ jobs:
       - name: Build code
         run: dotnet build -c Release
       - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+        run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LinuxExclude"

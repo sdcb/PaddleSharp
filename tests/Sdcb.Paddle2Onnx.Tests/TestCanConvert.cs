@@ -1,11 +1,10 @@
 using Sdcb.PaddleOCR.Models.Details;
-using Sdcb.PaddleOCR.Models.LocalV3;
 using Sdcb.PaddleOCR.Models.Online;
-using System.Reflection;
 using Xunit.Abstractions;
 
 namespace Sdcb.Paddle2Onnx.Tests;
 
+[Trait("Category", "LinuxExclude")]
 public class TestCanConvert
 {
 #pragma warning disable IDE0052 // 删除未读的私有成员
