@@ -15,4 +15,9 @@ public enum ModelVersion
     /// Version 3 of the OCR model.
     /// </summary>
     V3,
+
+    /// <summary>
+    /// Version 4 of the OCR model.
+    /// </summary>
+    V4,
 }

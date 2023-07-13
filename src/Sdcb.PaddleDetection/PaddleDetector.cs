@@ -125,8 +125,8 @@ public class PaddleDetector : IDisposable
                     Name = x,
                     Data = tensor.DataType switch
                     {
-                        DataTypes.Int32 => tensor.GetData<int>(),
-                        DataTypes.Float32 => tensor.GetData<float>(),
+                        PaddleDataType.Int32 => tensor.GetData<int>(),
+                        PaddleDataType.Float32 => tensor.GetData<float>(),
                         _ => throw new NotSupportedException($"Unexpected datatype: {tensor.DataType}.")
                     },
                 };
@@ -203,7 +203,7 @@ public class PaddleDetector : IDisposable
         List<DetectionResult> boxs = srcBoxs
             .OrderByDescending(x => x.Confidence)
             .ToList();
-        List<int> areas = boxs.Select(x => (int)((x.Rect.Width + 1) * (x.Rect.Height + 1))).ToList();
+        List<int> areas = boxs.Select(x => (x.Rect.Width + 1) * (x.Rect.Height + 1)).ToList();
 
         for (int i = 0; i < boxs.Count; ++i)
         {

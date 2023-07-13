@@ -104,10 +104,33 @@ public class PaddlePredictor : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Dispose(true);
+        GC.SuppressFinalize(this); // tell GC not to invoke the finalizer.
+    }
+
+    /// <summary>
+    /// Finalizes an instance of the <see cref="PaddlePredictor"/> class.
+    /// </summary>
+    ~PaddlePredictor()
+    {
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddlePredictor"/> class.
+    /// </summary>
+    /// <param name="disposing">true if called from Dispose(); false if called from Finalize().</param>
+    protected virtual void Dispose(bool disposing)
+    {
         if (_ptr != IntPtr.Zero)
         {
             PaddleNative.PD_PredictorDestroy(_ptr);
             _ptr = IntPtr.Zero;
+        }
+
+        if (disposing)
+        {
+            // Release other managed resources
         }
     }
 }

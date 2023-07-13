@@ -1,10 +1,9 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.Details;
 using System.Collections.Generic;
 
 namespace Sdcb.PaddleOCR.Models.Online.Details;
 
-internal class StreamDictFileRecognizationModel : VersionedRecognizationModel
+internal class StreamDictFileRecognizationModel : RecognizationModel
 {
     private readonly IReadOnlyList<string> _labels;
 
@@ -18,9 +17,7 @@ internal class StreamDictFileRecognizationModel : VersionedRecognizationModel
 
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
-        ConfigPostProcess(config);
-        return config;
+        return PaddleConfig.FromModelDir(DirectoryPath);
     }
 
     public override string GetLabelByIndex(int i) => GetLabelByIndex(i, _labels);

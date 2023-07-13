@@ -16,7 +16,8 @@ public class FileDetectionModel : DetectionModel
     /// Initializes a new instance of the <see cref="FileDetectionModel"/> class with the specified directory path.
     /// </summary>
     /// <param name="directoryPath">The directory path containing the model files.</param>
-    public FileDetectionModel(string directoryPath)
+    /// <param name="version">The version of detection model.</param>
+    public FileDetectionModel(string directoryPath, ModelVersion version) : base(version)
     {
         DirectoryPath = directoryPath;
     }

@@ -1,5 +1,4 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.Details;
 using Sdcb.PaddleOCR.Models.LocalV3.Details;
 using System.Collections.Generic;
 
@@ -8,7 +7,7 @@ namespace Sdcb.PaddleOCR.Models.LocalV3;
 /// <summary>
 /// Provides a local implementation of PaddleOCR model with the ability to recognize various languages such as Chinese, English, Korean, Japanese, Telugu and Devanagari
 /// </summary>
-public class LocalRecognizationModel : VersionedRecognizationModel
+public class LocalRecognizationModel : RecognizationModel
 {
     /// <summary>
     /// The name of the model.
@@ -44,9 +43,7 @@ public class LocalRecognizationModel : VersionedRecognizationModel
     /// <returns>A new instance of PaddleConfig</returns>
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = Utils.LoadLocalModel(Name);
-        ConfigPostProcess(config);
-        return config;
+        return Utils.LoadLocalModel(Name);
     }
 
     /// <summary>

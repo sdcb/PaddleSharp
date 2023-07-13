@@ -58,7 +58,7 @@ public class FullOcrModel
     public static FullOcrModel FromDirectory(string modelFolderPath, string labelFilePath, ModelVersion version)
     {
         return new FullOcrModel(
-            DetectionModel.FromDirectory(Path.Combine(modelFolderPath, "det")),
+            DetectionModel.FromDirectory(Path.Combine(modelFolderPath, "det"), version),
             ClassificationModel.FromDirectory(Path.Combine(modelFolderPath, "cls")),
             RecognizationModel.FromDirectory(Path.Combine(modelFolderPath, "rec"), labelFilePath, version));
     }
@@ -76,7 +76,7 @@ public class FullOcrModel
     public static FullOcrModel FromDirectory(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version)
     {
         return new FullOcrModel(
-            DetectionModel.FromDirectory(detectionModelDir),
+            DetectionModel.FromDirectory(detectionModelDir, version),
             ClassificationModel.FromDirectory(classificationModelDir),
             RecognizationModel.FromDirectory(recognitionModelDir, labelFilePath, version));
     }

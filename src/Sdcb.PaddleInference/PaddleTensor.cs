@@ -144,17 +144,40 @@ public class PaddleTensor : IDisposable
     /// <summary>
     /// Gets the data type of this tensor.
     /// </summary>
-    public DataTypes DataType => (DataTypes)PaddleNative.PD_TensorGetDataType(_ptr);
+    public PaddleDataType DataType => PaddleNative.PD_TensorGetDataType(_ptr);
 
     /// <summary>
-    /// Disposes any resources held by this tensor.
+    /// Frees the unmanaged resources used by the <see cref="PaddleTensor"/> class.
     /// </summary>
     public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this); // tell GC not to invoke the finalizer.
+    }
+
+    /// <summary>
+    /// Finalizes an instance of the <see cref="PaddleTensor"/> class.
+    /// </summary>
+    ~PaddleTensor()
+    {
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddleTensor"/> class.
+    /// </summary>
+    /// <param name="disposing">true if called from Dispose(); false if called from Finalize().</param>
+    protected virtual void Dispose(bool disposing)
     {
         if (_ptr != IntPtr.Zero)
         {
             PaddleNative.PD_TensorDestroy(_ptr);
             _ptr = IntPtr.Zero;
+        }
+
+        if (disposing)
+        {
+            // Release other managed resources
         }
     }
 }

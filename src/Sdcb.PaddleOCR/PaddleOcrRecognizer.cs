@@ -24,11 +24,14 @@ public class PaddleOcrRecognizer : IDisposable
     /// Constructor for creating a new instance of the <see cref="PaddleOcrRecognizer"/> class using a specified model and a callback configuration.
     /// </summary>
     /// <param name="model">The RecognizationModel object.</param>
-    /// <param name="configure">Callback configuration for the Paddle OCR predictor.</param>
-    public PaddleOcrRecognizer(RecognizationModel model, Action<PaddleConfig> configure)
+    /// <param name="configure">The device and configure of the <see cref="PaddleConfig"/>, pass null to using model's <see cref="RecognizationModel.DefaultDevice"/>.</param>
+    public PaddleOcrRecognizer(RecognizationModel model, Action<PaddleConfig>? configure = null)
     {
         Model = model;
-        _p = Model.CreateConfig().Apply(configure).CreatePredictor();
+        PaddleConfig c = model.CreateConfig();
+        model.ConfigureDevice(c, configure);
+
+        _p = c.CreatePredictor();
     }
 
     /// <summary>

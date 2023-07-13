@@ -1,10 +1,10 @@
 ﻿namespace Sdcb.PaddleInference;
 
 /// <summary>
-/// An enumeration representing the different data types
-/// that can be used in Paddle Inference.
+/// An enumeration representing the different data types that can be used in Paddle Inference.
 /// </summary>
-public enum DataTypes
+/// <remarks>C API enum: PD_DataType.</remarks>
+public enum PaddleDataType
 {
     /// <summary>
     /// The data type is unknown.

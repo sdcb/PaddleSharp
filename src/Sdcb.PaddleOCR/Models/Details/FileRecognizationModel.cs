@@ -10,7 +10,7 @@ namespace Sdcb.PaddleOCR.Models.Details;
 /// <remarks>
 /// Represents a model used for file processing.
 /// </remarks>
-public class FileRecognizationModel : VersionedRecognizationModel
+public class FileRecognizationModel : RecognizationModel
 {
     private readonly IReadOnlyList<string> _labels;
 
@@ -37,9 +37,7 @@ public class FileRecognizationModel : VersionedRecognizationModel
     /// <returns>The configuration for the model.</returns>
     public override PaddleConfig CreateConfig()
     {
-        PaddleConfig config = PaddleConfig.FromModelDir(DirectoryPath);
-        ConfigPostProcess(config);
-        return config;
+        return PaddleConfig.FromModelDir(DirectoryPath);
     }
 
     /// <summary>

@@ -13,51 +13,60 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 
 ### Infrastructure packages 🏗️
 
-| NuGet Package 💼                            | Version 📌                                                                                                                                                        | Description 📚                                          |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Sdcb.PaddleInference                        | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference)                                               | Paddle Inference C API .NET binding ⚙️                  |
-| Sdcb.PaddleInference.runtime.win64.mkl      | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)           | Paddle Inference native windows-x64-mkldnn binding 🔗   |
-| Sdcb.PaddleInference.runtime.win64.openblas | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas) | Paddle Inference native windows-x64-openblas binding 🔗 |
+| NuGet Package 💼      | Version 📌                                                                                                            | Description 📚                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Sdcb.PaddleInference | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference) | Paddle Inference C API .NET binding ⚙️ |
 
-**Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a [Dockerfile 🐳](https://hub.docker.com/r/sdflysha/dotnet6-focal-paddle2.2.2) to development:
+### Native packages 🏗️
 
-| Docker Images 🐳              | Version 📌                                                                                                                      | Description 📚                                                                        |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle)       | PaddleInference 2.4.2, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 Runtime 🌐 |
-| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.4.2, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 SDK 🌐     |
+| Package 💼                                                       | Source 🔗 | Version 📌                                                                                                                                                                                                  | Description 📚                                    |
+| --------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Sdcb.PaddleInference.runtime.win64.mkl                          | Baidu    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                                                   | win64+mkldnn                                     |
+| Sdcb.PaddleInference.runtime.win64.openblas                     | Baidu    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)                                         | win64+openblas                                   |
+| Sdcb.PaddleInference.runtime.win64.openblas-noavx               | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx)                             | win64+openblas(no AVX, for old CPUs)             |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
+| Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
+| Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86    | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86)       | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86      |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75      | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)           | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75              |
+| Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx    | Sdcb     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx)       | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx              |
 
-### Paddle Inference GPU package 🎮
-Since GPU package are too large(>1.5GB), I cannot publish a NuGet package to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
+Other packages that starts with `Sdcb.PaddleInference.runtime` might deprecated.
+
+Baidu packages were downloaded from here: https://www.paddlepaddle.org.cn/inference/master/guides/install/download_lib.html#windows
+
+My Sdcb packages were self compiled.
+
+Baidu official GPU packages are too large(>1.5GB) to publish to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
 
 * https://github.com/PaddlePaddle/Paddle/issues/43874 ❌
 * https://github.com/NuGet/Home/issues/11706#issuecomment-1167305006 ❌
 
-However, you're good to build your own GPU nuget package using `01-build-native.linq` 🛠️.
+But You're good to build your own GPU nuget package using `01-build-native.linq` 🛠️.
 
-Here is the GPU package that I compiled (not from Baidu official) 🛠️:
-| NuGet Package 💼             | Version 📌                                                                                                                                                                                              | Description 📚                                         |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| cuda117_cudnn84_tr84_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86) | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86 binding 🔗 |
-| cuda102_cudnn76_sm61_75   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)     | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75 binding 🔗         |
-| cuda116_cudnn84_sm86_onnx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx) | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx binding 🔗              |
+**Note**: Linux does not need a native binding `NuGet` package like windows(`Sdcb.PaddleInference.runtime.win64.mkl`), instead, you can/should based from a Dockerfile🐳 to development:
+
+| Docker Images 🐳            | Version 📌                                                                                                                    | Description 📚                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle)       | PaddleInference 2.5.0, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 Runtime 🌐 |
+| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.5.0, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 SDK 🌐     |
 
 ### PaddleOCR packages 📖
 
-| NuGet Package 💼                 | Version 📌                                                                                                                                | Description 📚                                             |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| NuGet Package 💼               | Version 📌                                                                                                                              | Description 📚                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference) ⚙️        |
 | Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using 🌐 |
 | Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~130MB) 🗺️ |
 
 ### Rotation Detection packages (part of PaddleCls) 🔄
-| NuGet Package 💼         | Version 📌                                                                                                                | Description 📚                                             |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| NuGet Package 💼       | Version 📌                                                                                                              | Description 📚                                             |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Sdcb.RotationDetector | [![NuGet](https://img.shields.io/nuget/v/Sdcb.RotationDetector.svg)](https://nuget.org/packages/Sdcb.RotationDetector) | RotationDetector library(based on Sdcb.PaddleInference) ⚙️ |
 
 ### PaddleDetection packages 🎯
 
-| NuGet Package 💼        | Version 📌                                                                                                              | Description 📚                                            |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| NuGet Package 💼      | Version 📌                                                                                                            | Description 📚                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | Sdcb.PaddleDetection | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleDetection.svg)](https://nuget.org/packages/Sdcb.PaddleDetection) | PaddleDetection library(based on Sdcb.PaddleInference) ⚙️ |
 
 # Usage 📚
@@ -126,6 +135,8 @@ The first round of `TensorRT` running will generate a shape info `**.txt` file i
 In this case, if something strange happens (for example, you mistakenly create the same `shape-info.txt` file for different models), you can delete this folder to generate TensorRT cache again: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. 🗑️
 
 # Thanks & Sponsors 🙏
+* 崔亮  https://github.com/cuiliang
+* 梁现伟
 * 深圳-钱文松
 * iNeuOS工业互联网操作系统：http://www.ineuos.net
 

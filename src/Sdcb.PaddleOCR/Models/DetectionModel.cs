@@ -9,20 +9,30 @@ namespace Sdcb.PaddleOCR.Models;
 /// <summary>
 /// Represents a detection model.
 /// </summary>
-public abstract class DetectionModel
+public abstract class DetectionModel : OcrBaseModel
 {
     /// <summary>
-    /// Creates and returns the configuration object of the model.
+    /// Constructor for initializing an instance of the <see cref="DetectionModel"/> class.
     /// </summary>
-    /// <returns>The configuration object.</returns>
-    public abstract PaddleConfig CreateConfig();
+    /// <param name="version">The version of detection model.</param>
+    public DetectionModel(ModelVersion version) : base(version)
+    {
+    }
+
+    /// <inheritdoc/>
+    public override Action<PaddleConfig> DefaultDevice => Version switch
+    {
+        ModelVersion.V4 => PaddleDevice.Onnx(),
+        _ => PaddleDevice.Mkldnn(),
+    };
 
     /// <summary>
     /// Returns an instance of the DetectionModel class from the directory path.
     /// </summary>
     /// <param name="directoryPath">The directory path where model files are located.</param>
+    /// <param name="version">The version of detection model.</param>
     /// <returns>An instance of the DetectionModel class.</returns>
-    public static DetectionModel FromDirectory(string directoryPath) => new FileDetectionModel(directoryPath);
+    public static DetectionModel FromDirectory(string directoryPath, ModelVersion version) => new FileDetectionModel(directoryPath, version);
 
     /// <summary>
     /// Configures PaddleDevice to use TensorRt dynamic shape group and returns an action that takes PaddleConfig as input.

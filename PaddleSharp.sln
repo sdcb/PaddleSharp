@@ -19,8 +19,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6
 		build\03-publish-proget-nuget.linq = build\03-publish-proget-nuget.linq
 		build\04-chatgpt-parse-code.linq = build\04-chatgpt-parse-code.linq
 		build\icon.jpg = build\icon.jpg
+		build\oneapi.png = build\oneapi.png
+		build\onnxruntime.png = build\onnxruntime.png
+		build\Sdcb.Mkldnn.runtime.nuspec = build\Sdcb.Mkldnn.runtime.nuspec
+		build\Sdcb.Onnx.runtime.nuspec = build\Sdcb.Onnx.runtime.nuspec
+		build\Sdcb.Paddle2Onnx.runtime.nuspec = build\Sdcb.Paddle2Onnx.runtime.nuspec
 		build\Sdcb.PaddleInference.runtime.nuspec = build\Sdcb.PaddleInference.runtime.nuspec
-		build\Sdcb.PaddleInference.runtime.props = build\Sdcb.PaddleInference.runtime.props
 		build\test.linq = build\test.linq
 	EndProjectSection
 EndProject
@@ -66,8 +70,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-9
 	ProjectSection(SolutionItems) = preProject
 		docs\detection.md = docs\detection.md
 		docs\ocr.md = docs\ocr.md
+		docs\paddle2onnx.md = docs\paddle2onnx.md
 		docs\rotation-detection.md = docs\rotation-detection.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleInference.Tests", "tests\Sdcb.PaddleInference.Tests\Sdcb.PaddleInference.Tests.csproj", "{F0962D28-49F5-4A50-9CB4-8F25E0436230}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.Paddle2Onnx", "src\Sdcb.Paddle2Onnx\Sdcb.Paddle2Onnx.csproj", "{1F5298BA-FB77-4863-A457-51A1659D76E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.Paddle2Onnx.Tests", "tests\Sdcb.Paddle2Onnx.Tests\Sdcb.Paddle2Onnx.Tests.csproj", "{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,6 +118,18 @@ Global
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F5298BA-FB77-4863-A457-51A1659D76E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F5298BA-FB77-4863-A457-51A1659D76E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F5298BA-FB77-4863-A457-51A1659D76E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F5298BA-FB77-4863-A457-51A1659D76E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +148,9 @@ Global
 		{69BF0B03-E1FE-4CF8-97A5-40E32B758E1A} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{6EE2E06A-0C0D-4BAE-8830-1E43D8B5FD3A} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
 		{026E4A25-94D0-4143-A1CD-39FF2F1E24A6} = {CCC0070E-E444-42B2-84F7-EE999ADA0750}
+		{F0962D28-49F5-4A50-9CB4-8F25E0436230} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
+		{1F5298BA-FB77-4863-A457-51A1659D76E6} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+		{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}

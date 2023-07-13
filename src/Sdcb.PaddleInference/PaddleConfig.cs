@@ -2,11 +2,9 @@
 using Sdcb.PaddleInference.TensorRt;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Sdcb.PaddleInference;
@@ -14,7 +12,7 @@ namespace Sdcb.PaddleInference;
 /// <summary>
 /// Provides a configuration for Paddle Inference.
 /// </summary>
-public sealed class PaddleConfig : IDisposable
+public class PaddleConfig : IDisposable
 {
     private IntPtr _ptr;
 
@@ -181,6 +179,36 @@ public sealed class PaddleConfig : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets a bool indicating whether ONNX Runtime is enabled.
+    /// </summary>
+    /// <remarks>
+    /// If true, ONNX Runtime is enabled, otherwise disabled.
+    /// </remarks>
+    public bool OnnxEnabled
+    {
+        get => PaddleNative.PD_ConfigONNXRuntimeEnabled(_ptr) != 0;
+        set
+        {
+            if (value)
+            {
+                PaddleNative.PD_ConfigEnableONNXRuntime(_ptr);
+            }
+            else
+            {
+                PaddleNative.PD_ConfigDisableONNXRuntime(_ptr);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Enable ONNX Runtime optimization.
+    /// </summary>
+    public void EnableOnnxOptimization()
+    {
+        PaddleNative.PD_ConfigEnableORTOptimization(_ptr);
+    }
+
     /// <summary>Turn on profiling report. If not turned on, no profiling report will be generated.</summary>
     public bool ProfileEnabled
     {
@@ -243,7 +271,7 @@ public sealed class PaddleConfig : IDisposable
         PaddlePrecision precision = PaddlePrecision.Float32,
         bool useStatic = true,
         bool useCalibMode = false)
-        => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, (int)precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
+        => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
 
     /// <summary>A boolean state telling whether the TensorRT engine is used.</summary>
     public bool TensorRtEngineEnabled => PaddleNative.PD_ConfigTensorRtEngineEnabled(_ptr) != 0;
@@ -352,9 +380,9 @@ public sealed class PaddleConfig : IDisposable
     public bool Valid => PaddleNative.PD_ConfigIsValid(_ptr) != 0;
 
     /// <summary>Turn on GPU.</summary>
-    public void EnableUseGpu(int initialMemoryMB, int deviceId)
+    public void EnableUseGpu(int initialMemoryMB, int deviceId, PaddlePrecision precision = PaddlePrecision.Float32)
     {
-        PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId);
+        PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId, precision);
     }
 
     /// <summary>Set the combined model with two specific pathes for program and parameters.</summary>
@@ -411,23 +439,21 @@ public sealed class PaddleConfig : IDisposable
         }
     }
 
-    /// <summary>Delete all passes that has a certain type 'pass'.</summary>
+    /// <summary>
+    /// Deletes a pass with the specified name.
+    /// </summary>
+    /// <param name="passName">The name of the pass to be deleted.</param>
+    /// <remarks>
+    /// This method deletes a pass from the configuration using the provided name.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="passName"/> is null.</exception>
+    /// <seealso cref="PaddleNative.PD_ConfigDeletePass(IntPtr, IntPtr)"/>
     public unsafe void DeletePass(string passName)
     {
         byte[] passNameBytes = PaddleEncoding.GetBytes(passName);
         fixed (byte* ptr = passNameBytes)
         {
             PaddleNative.PD_ConfigDeletePass(_ptr, (IntPtr)ptr);
-        }
-    }
-
-    /// <summary>Destroy the paddle config</summary>
-    public void Dispose()
-    {
-        if (_ptr != IntPtr.Zero)
-        {
-            PaddleNative.PD_ConfigDestroy(_ptr);
-            _ptr = IntPtr.Zero;
         }
     }
 
@@ -441,62 +467,39 @@ public sealed class PaddleConfig : IDisposable
         configure(this);
         return this;
     }
-}
 
-class PtrFromStringArray : IDisposable
-{
-    readonly IntPtr[] internalArray;
-    readonly GCHandle[] handles;
-    readonly GCHandle mainHandle;
-
-    public PtrFromStringArray(string[] data)
-    {
-        handles = new GCHandle[data.Length];
-        internalArray = new IntPtr[data.Length];
-
-        for (int i = 0; i < data.Length; ++i)
-        {
-            byte[] byteArray = Encoding.UTF8.GetBytes(data[i] + '\0');
-            handles[i] = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-            internalArray[i] = handles[i].AddrOfPinnedObject();
-        }
-
-        mainHandle = GCHandle.Alloc(internalArray, GCHandleType.Pinned);
-    }
-
-    public IntPtr Ptr => mainHandle.AddrOfPinnedObject();
-
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddleConfig"/> class.
+    /// </summary>
     public void Dispose()
     {
-        foreach (GCHandle handle in handles) handle.Free();
-        mainHandle.Free();
+        Dispose(true);
+        GC.SuppressFinalize(this); // tell GC not to invoke the finalizer.
     }
-}
 
-class PtrFromIntArray : IDisposable
-{
-    readonly IntPtr[] internalArray;
-    readonly GCHandle[] handles;
-    readonly GCHandle mainHandle;
-
-    public PtrFromIntArray(int[][] data)
+    /// <summary>
+    /// Finalizes an instance of the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    ~PaddleConfig()
     {
-        handles = new GCHandle[data.Length];
-        internalArray = new IntPtr[data.Length];
-        mainHandle = GCHandle.Alloc(internalArray, GCHandleType.Pinned);
+        Dispose(false);
+    }
 
-        for (int i = 0; i < data.Length; ++i)
+    /// <summary>
+    /// Frees the unmanaged resources used by the <see cref="PaddleConfig"/> class.
+    /// </summary>
+    /// <param name="disposing">true if called from Dispose(); false if called from Finalize().</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_ptr != IntPtr.Zero)
         {
-            handles[i] = GCHandle.Alloc(data[i], GCHandleType.Pinned);
-            internalArray[i] = handles[i].AddrOfPinnedObject();
+            PaddleNative.PD_ConfigDestroy(_ptr);
+            _ptr = IntPtr.Zero;
         }
-    }
 
-    public IntPtr Ptr => mainHandle.AddrOfPinnedObject();
-
-    public void Dispose()
-    {
-        foreach (GCHandle handle in handles) handle.Free();
-        mainHandle.Free();
+        if (disposing)
+        {
+            // Release other managed resources
+        }
     }
 }

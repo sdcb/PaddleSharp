@@ -17,7 +17,7 @@ public static class PaddleDevice
     /// <param name="cpuMathThreadCount">The number of CPU math threads to use. Default value is 0.</param>
     /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
     /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
-    /// <returns>An Action that accepts a PaddleConfig as parameter.</returns>
+    /// <returns>The MKLDNN paddle device definition.</returns>
     public static Action<PaddleConfig> Mkldnn(int cacheCapacity = 1, int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
     {
         return cfg =>
@@ -37,7 +37,7 @@ public static class PaddleDevice
     /// <param name="multiStream">Whether to use multi-stream for concurrency. Default value is false.</param>
     /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
     /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
-    /// <returns>An Action that accepts a PaddleConfig as parameter.</returns>
+    /// <returns>The GPU paddle device definition.</returns>
     public static Action<PaddleConfig> Gpu(int initialMemoryMB = 500, int deviceId = 0, bool multiStream = false, bool memoryOptimized = true, bool glogEnabled = false)
     {
         return cfg =>
@@ -59,7 +59,7 @@ public static class PaddleDevice
     /// <param name="precision">The Precision mode for TensorRT engine. Default value is Float32.</param>
     /// <param name="useStatic">Whether to use static engine optimization or dynamic engine optimization. Default value is true.</param>
     /// <param name="useCalibMode">Whether to use TensorRT optimization with calibration mode. Default value is false.</param>
-    /// <returns>An Action that accepts a PaddleConfig as parameter.</returns>
+    /// <returns>The TensorRT paddle device definition.</returns>
     public static Action<PaddleConfig> TensorRt(string rangeShapeInfoKey, string? cacheDir = null,
         long workspaceSize = 1 << 20,
         int maxBatchSize = 1,
@@ -97,7 +97,7 @@ public static class PaddleDevice
     /// <param name="precision">The Precision mode for TensorRT engine. Default value is Float32.</param>
     /// <param name="useStatic">Whether to use static engine optimization or dynamic engine optimization. Default value is true.</param>
     /// <param name="useCalibMode">Whether to use TensorRT optimization with calibration mode. Default value is false.</param>
-    /// <returns>An Action that accepts a PaddleConfig as parameter.</returns>
+    /// <returns>The TensorRT paddle device definition.</returns>
     public static Action<PaddleConfig> TensorRt(Dictionary<string, TensorRtDynamicShapeGroup> shapeInfo, string? cacheDir = null,
         long workspaceSize = 1 << 20,
         int maxBatchSize = 1,
@@ -122,12 +122,35 @@ public static class PaddleDevice
     /// <param name="cpuMathThreadCount">The number of CPU math threads to use. Default value is 0.</param>
     /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
     /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
-    /// <returns>An Action that accepts a PaddleConfig as parameter.</returns>
+    /// <returns>The openblas paddle device definition.</returns>
     public static Action<PaddleConfig> Openblas(int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
     {
         return cfg =>
         {
             cfg.CpuMathThreadCount = cpuMathThreadCount;
+            CommonAction(cfg, memoryOptimized, glogEnabled);
+        };
+    }
+
+    /// <summary>
+    /// Returns an Action delegate that configures PaddleConfig for use with Onnx.
+    /// </summary>
+    /// <param name="cpuMathThreadCount">The number of CPU threads to use for math operations. A value of 0 sets it to minimum of 4 and the available number of processors.</param>
+    /// <param name="enableOnnxOptimization">Flag to enable or disable Onnx runtime optimization.</param>
+    /// <param name="memoryOptimized">Flag to enable or disable memory optimization.</param>
+    /// <param name="glogEnabled">Flag to enable or disable logging with glog.</param>
+    /// <returns>The ONNX Runtime paddle device definition.</returns>
+    public static Action<PaddleConfig> Onnx(int cpuMathThreadCount = 0, bool enableOnnxOptimization = true, bool memoryOptimized = true, bool glogEnabled = false)
+    {
+        return cfg =>
+        {
+            cfg.OnnxEnabled = true;
+            if (enableOnnxOptimization) cfg.EnableOnnxOptimization();
+            cfg.CpuMathThreadCount = cpuMathThreadCount switch
+            {
+                0 => Math.Min(4, Environment.ProcessorCount),
+                _ => cpuMathThreadCount
+            };
             CommonAction(cfg, memoryOptimized, glogEnabled);
         };
     }

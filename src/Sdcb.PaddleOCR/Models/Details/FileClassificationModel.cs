@@ -16,7 +16,8 @@ public class FileClassificationModel : ClassificationModel
     /// Initializes a new instance of the <see cref="FileClassificationModel"/> class.
     /// </summary>
     /// <param name="directoryPath">The directory path for the model.</param>
-    public FileClassificationModel(string directoryPath)
+    /// <param name="version">The version of the classification model.</param>
+    public FileClassificationModel(string directoryPath, ModelVersion version) : base(version)
     {
         DirectoryPath = directoryPath;
     }
