@@ -62,10 +62,10 @@ To describe an ONNX model, you can use the `Paddle2OnnxConverter.DescribeOnnxMod
 ```csharp
 OnnxModelInfo info = Paddle2OnnxConverter.DescribeOnnxModel(onnxModel);
 Console.WriteLine("Input shapes:");
-Console.WriteLine(string.Join("\n", info.Inputs));
+Console.WriteLine(string.Join("\n", info.Inputs.Select(x => x.ToString())));
 Console.WriteLine();
 Console.WriteLine("Output shapes:");
-Console.WriteLine(string.Join("\n", info.Outputs));
+Console.WriteLine(string.Join("\n", info.Outputs.Select(x => x.ToString())));
 ```
 
 ### Using Custom Operators
