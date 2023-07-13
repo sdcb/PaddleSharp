@@ -5,7 +5,7 @@ namespace Sdcb.Paddle2Onnx.Natives;
 
 internal static class Paddle2OnnxLib
 {
-    const string Dll = @"C:\_\3rd\paddle\inference_cpp\third_party\install\paddle2onnx\lib\paddle2onnx.dll";
+    const string Dll = @"paddle2onnx.dll";
 
     // public: __cdecl paddle2onnx::PaddleReader::PaddleReader(char const * __ptr64,int) __ptr64
     [DllImport(Dll, EntryPoint = "??0PaddleReader@paddle2onnx@@QEAA@PEBDH@Z")]
