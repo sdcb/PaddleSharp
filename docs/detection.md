@@ -1,4 +1,12 @@
-# Usage
+# Sdcb.PaddleDetection
+
+## NuGet packages 🎯
+
+| NuGet Package 💼      | Version 📌                                                                                                            | Description 📚                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Sdcb.PaddleDetection | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleDetection.svg)](https://nuget.org/packages/Sdcb.PaddleDetection) | PaddleDetection library(based on Sdcb.PaddleInference) ⚙️ |
+
+## Usage
 
 1. Get your PaddleDetection models ready, or just download a model from [my exported models](https://pan.baidu.com/s/1pYuvUIU3HyEpu4gG0qSeMg?pwd=r90c) (which is exported from official PaddlePaddle [PicoDet](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.3/configs/picodet) and [PPYolo](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.3/configs/ppyolo)).
 2. Check your models

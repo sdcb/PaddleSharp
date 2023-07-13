@@ -2,6 +2,13 @@
 
 Sdcb.RotationDetector is part of [PaddleClas](https://github.com/PaddlePaddle/PaddleClas), it's based on [PULC Classification Model of Text Image Orientation](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/PULC/PULC_text_image_orientation_en.md)
 
+## NuGet Packages:
+
+### Rotation Detection packages (part of PaddleCls) 🔄
+| NuGet Package 💼       | Version 📌                                                                                                              | Description 📚                                             |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Sdcb.RotationDetector | [![NuGet](https://img.shields.io/nuget/v/Sdcb.RotationDetector.svg)](https://nuget.org/packages/Sdcb.RotationDetector) | RotationDetector library(based on Sdcb.PaddleInference) ⚙️ |
+
 ## Usage:
 1. Install NuGet Packages:
    ```

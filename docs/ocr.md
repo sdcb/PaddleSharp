@@ -1,12 +1,22 @@
-# Language supports
+# Sdcb.PaddleOCR
+
+## PaddleOCR packages 📖
+
+| NuGet Package 💼               | Version 📌                                                                                                                              | Description 📚                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference) ⚙️        |
+| Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using 🌐 |
+| Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~130MB) 🗺️ |
+
+## Language supports
 
 Please refer to https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/doc/doc_en/models_list_en.md to check language support models.
 
 Just replace the `.ChineseV3` in demo code with your speicific language, then you can use the language.
 
-# Usage
+## Usage
 
-## Windows(Local model): Detection and Recognition(All)
+### Windows(Local model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
    Sdcb.PaddleInference
@@ -48,7 +58,7 @@ Just replace the `.ChineseV3` in demo code with your speicific language, then yo
    }
    ```
 
-## Windows(Online model): Detection and Recognition(All)
+### Windows(Online model): Detection and Recognition(All)
 1. Install NuGet Packages:
    ```
    Sdcb.PaddleInference
@@ -90,10 +100,10 @@ Just replace the `.ChineseV3` in demo code with your speicific language, then yo
    }
    ```
 
-## Linux(Ubuntu 20.04): Detection and Recognition(All)
-1. Use `sdflysha/sdflysha/dotnet6-paddle:2.3.0-ubuntu20` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
+### Linux(Ubuntu 22.04): Detection and Recognition(All)
+1. Use `sdflysha/sdflysha/dotnet6-paddle:2.5.0-ubuntu22` to replace `mcr.microsoft.com/dotnet/aspnet:6.0` in `Dockerfile` as docker base image.
 
-The build steps for `sdflysha/dotnet6-paddle:2.3.0-ubuntu20` was described [here](./build/docker/dotnet6-paddle/Dockerfile).
+The build steps for `sdflysha/dotnet6-paddle:2.5.0-ubuntu22` was described [here](./build/docker/dotnet6-paddle/Dockerfile).
 
 2. Install NuGet Packages:
 ```ps
@@ -114,7 +124,7 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 }
 ```
 
-## Detection Only
+### Detection Only
 ```csharp
 // Install following packages:
 // Sdcb.PaddleInference
@@ -143,7 +153,7 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 }
 ```
 
-## Table recognition
+### Table recognition
 ```csharp
 // Install following packages:
 // Sdcb.PaddleInference
@@ -165,41 +175,20 @@ PaddleOcrResult ocrResult = all.Run(src);
 string html = tableResult.RebuildTable(ocrResult);
 ```
 
-| Raw table                            | Table model output | Rebuilt table                            |
-| ----------------------------------- | -- | ----------------------------------- |
+| Raw table                                                                                                      | Table model output                                                                                             | Rebuilt table                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | ![table](https://user-images.githubusercontent.com/1317141/236091511-d8446cf6-dd75-4201-993a-3ec2f5999bca.jpg) | ![image](https://user-images.githubusercontent.com/1317141/236092184-78d7e035-ab28-465c-a7fe-6dc90aabc4c6.png) | ![image](https://user-images.githubusercontent.com/1317141/236091667-bbe28517-24a0-4f36-b559-f7026dd00ca4.png) |
 
-# Paddle Devices
-
-* Mkldnn - `PaddleDevice.Mkldnn()`
-  
-  Generally fast
-
-* Openblas - `PaddleDevice.Openblas()`
-
-  Much slower, but binary file smaller and consume lesser memory
-
-* Gpu - `PaddleDevice.Gpu()`
-
-  Much faster but relies on NVIDIA GPU and CUDA
-
-  If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
-
-* TensorRT - `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))`
-
-  Even faster than raw Gpu but need install TensorRT environment.
-
-  Please refer to [this page](../README.md#tensorrt) for more details
-
-# Technical details
+## Technical details
 
 There is 3 steps to do OCR:
 1. Detection - Detect text's position, angle and area (`PaddleOCRDetector`)
 2. Classification - Determin whether text should rotate 180 degreee.
 3. Recognization - Recognize the area into text
 
-# Optimize parameters and performance hints
-## PaddleConfig.MkldnnCacheCapacity
+## Optimize parameters and performance hints
+
+### PaddleConfig.MkldnnCacheCapacity
 Default value: `1`
 
 This value has a positive correlation to the peak of memory usage that used by `mkldnn` and a negative correlation to the performance when providing different images.
@@ -208,7 +197,7 @@ To figure out each value corresponding to the peak memory usage, you should run 
 
 For more details please check the [pr #46](https://github.com/sdcb/PaddleSharp/pull/46) that decreases the default value and the [Paddle](https://github.com/PaddlePaddle/docs/blob/63362b7443c77a324f58a045bcc8d03bb59637fa/docs/design/mkldnn/caching/caching.md) document for `MkldnnCacheCapacity`.
 
-## PaddleOcrAll.Enable180Classification
+### PaddleOcrAll.Enable180Classification
 Default value: `false`
 
 This directly effect the step 2, set to `false` can skip this step, which will unable to detect text from right to left(which should be acceptable because most text direction is from left to right).
@@ -216,13 +205,13 @@ This directly effect the step 2, set to `false` can skip this step, which will u
 Close this option can make the full process about  `~10%` faster.
 
 
-## PaddleOcrAll.AllowRotateDetection
+### PaddleOcrAll.AllowRotateDetection
 Default value: `true`
 
 This allows detect any rotated texts. If your subject is 0 degree text (like scaned table or screenshot), you can set this parameter to `false`, which will improve OCR accurancy and little bit performance.
 
 
-## PaddleOcrAll.Detector.MaxSize
+### PaddleOcrAll.Detector.MaxSize
 Default value: `1536`
 
 This effect the the max size of step #1, lower this value can improve performance and reduce memory usage, but will also lower the accurancy.
@@ -230,11 +219,11 @@ This effect the the max size of step #1, lower this value can improve performanc
 You can also set this value to `null`, in that case, images will not scale-down to detect, performance will drop and memory will high, but should able to get better accurancy.
 
 
-## How can I improve performance?
+### How can I improve performance?
 Please review the `Technical details` section and read the `Optimize parameters and performance hints` section, or UseGpu.
 
-# FAQ
-## How to integrate Sdcb.PaddleOCR to ASP.NET Core?
+## FAQ
+### How to integrate Sdcb.PaddleOCR to ASP.NET Core?
 
 Please refer to this demo website, it contains a tutorial: [https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo](https://github.com/sdcb/paddlesharp-ocr-aspnetcore-demo)
 
@@ -278,5 +267,14 @@ public class OcrController : Controller
 }
 ```
 
-## How to migrate previous old version to latest 2.6.0.1?
-![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
+### How to migrate previous old version to latest 2.6.0.1?
+
+* Remove `PaddleConfig.Default.*` settings because it's delted in `2.6.0.1`
+* Add one of following config in 2nd parameter in `PaddleOcrAll`:
+  * `PaddleDevice.Openblas()`
+  * `PaddleDevice.Mkldnn()`
+  * `PaddleDevice.Onnx()`
+  * `PaddleDevice.Gpu()`
+  * `PaddleDevice.Gpu().And(PaddleDevice.TensorRt(...))`
+
+  ![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
