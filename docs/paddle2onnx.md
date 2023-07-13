@@ -63,7 +63,7 @@ To describe an ONNX model, you can use the `Paddle2OnnxConverter.DescribeOnnxMod
 OnnxModelInfo info = Paddle2OnnxConverter.DescribeOnnxModel(onnxModel);
 Console.WriteLine("Input shapes:");
 Console.WriteLine(string.Join("\n", info.InputShapes));
-Console.WriteLine():
+Console.WriteLine();
 Console.WriteLine("Output shapes:");
 Console.WriteLine(string.Join("\n", info.OutputShapes));
 ```
