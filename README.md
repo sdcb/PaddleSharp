@@ -135,6 +135,8 @@ The first round of `TensorRT` running will generate a shape info `**.txt` file i
 In this case, if something strange happens (for example, you mistakenly create the same `shape-info.txt` file for different models), you can delete this folder to generate TensorRT cache again: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. 🗑️
 
 # Thanks & Sponsors 🙏
+* 崔亮  https://github.com/cuiliang
+* 梁现伟
 * 深圳-钱文松
 * iNeuOS工业互联网操作系统：http://www.ineuos.net
 
