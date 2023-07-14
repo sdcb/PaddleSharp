@@ -2,6 +2,7 @@ using OpenCvSharp;
 using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
+using Sdcb.PaddleOCR.Models.Online.Details;
 using System.Diagnostics;
 using Xunit.Abstractions;
 
@@ -26,8 +27,8 @@ public class OnlineModelsTest
 
         using (PaddleOcrAll all = new(model)
         {
-            AllowRotateDetection = true, 
-            Enable180Classification = false, 
+            AllowRotateDetection = true,
+            Enable180Classification = false,
         })
         {
             // Load local file by following code:
@@ -42,6 +43,12 @@ public class OnlineModelsTest
                 }
             }
         }
+    }
+
+    [Fact]
+    public void WritePPocrKeys()
+    {
+        _console.WriteLine(string.Join("\n", Utils.LoadDicts("ppocr_keys_v1.txt")));
     }
 
     [Fact]

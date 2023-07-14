@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Sdcb.PaddleOCR.Tests")]
 
 namespace Sdcb.PaddleOCR.Models.Online;
 
