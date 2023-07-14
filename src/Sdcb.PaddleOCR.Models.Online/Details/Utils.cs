@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -127,7 +128,7 @@ internal static class Utils
 
         static IEnumerable<string> ReadLinesFromStream(Stream stream)
         {
-            using StreamReader reader = new(stream);
+            using StreamReader reader = new(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             while (!reader.EndOfStream)
             {
                 yield return reader.ReadLine();
