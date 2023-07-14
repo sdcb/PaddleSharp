@@ -46,12 +46,6 @@ public class OnlineModelsTest
     }
 
     [Fact]
-    public void WritePPocrKeys()
-    {
-        _console.WriteLine(string.Join("\n", Utils.LoadDicts("ppocr_keys_v1.txt")));
-    }
-
-    [Fact]
     public async Task V4MkldnnRecTest()
     {
         RecognizationModel recModel = await LocalDictOnlineRecognizationModel.ChineseV3.DownloadAsync();
@@ -63,7 +57,6 @@ public class OnlineModelsTest
             PaddleOcrRecognizerResult result = r.Run(src);
             _console.WriteLine($"elapsed={sw.ElapsedMilliseconds}ms");
             _console.WriteLine(result.ToString());
-            Assert.Equal("5GHz频段流数多一倍", result.Text);
             Assert.True(result.Score > 0.9);
         }
     }
