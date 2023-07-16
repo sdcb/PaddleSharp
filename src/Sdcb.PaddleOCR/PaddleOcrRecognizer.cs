@@ -113,28 +113,40 @@ public class PaddleOcrRecognizer : IDisposable
             return 1.0 * size.Width / size.Height * modelHeight;
         }));
 
-        Mat[] normalizeds = srcs
-            .Select(src =>
-            {
-                using Mat channel3 = src.Channels() switch
-                {
-                    4 => src.CvtColor(ColorConversionCodes.RGBA2BGR),
-                    1 => src.CvtColor(ColorConversionCodes.GRAY2RGB),
-                    3 => src.Clone(),
-                    var x => throw new Exception($"Unexpect src channel: {x}, allow: (1/3/4)")
-                };
-                using Mat resized = ResizePadding(channel3, modelHeight, maxWidth);
-                return Normalize(resized);
-            })
-            .ToArray();
-
-        using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
+        Mat[] normalizeds = null!;
+        try
         {
-            int channel = normalizeds[0].Channels();
-            input.Shape = new[] { normalizeds.Length, channel, modelHeight, maxWidth };
-            float[] data = ExtractMat(normalizeds, channel, modelHeight, maxWidth);
-            input.SetData(data);
+            normalizeds = srcs
+                .Select(src =>
+                {
+                    using Mat channel3 = src.Channels() switch
+                    {
+                        4 => src.CvtColor(ColorConversionCodes.RGBA2BGR),
+                        1 => src.CvtColor(ColorConversionCodes.GRAY2RGB),
+                        3 => src.Clone(),
+                        var x => throw new Exception($"Unexpect src channel: {x}, allow: (1/3/4)")
+                    };
+                    using Mat resized = ResizePadding(channel3, modelHeight, maxWidth);
+                    return Normalize(resized);
+                })
+                .ToArray();
+
+            using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
+            {
+                int channel = normalizeds[0].Channels();
+                input.Shape = new[] { normalizeds.Length, channel, modelHeight, maxWidth };
+                float[] data = ExtractMat(normalizeds, channel, modelHeight, maxWidth);
+                input.SetData(data);
+            }
         }
+        finally
+        {
+            foreach (Mat normalized in normalizeds)
+            {
+                normalized.Dispose();
+            }
+        }
+
         if (!_p.Run())
         {
             throw new Exception($"PaddlePredictor(Recognizer) run failed.");
