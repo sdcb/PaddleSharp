@@ -25,11 +25,11 @@ static ProjectVersion[] Projects = new[]
 	new ProjectVersion("Sdcb.Mkldnn", "0.19"), // 0.19
 	new ProjectVersion("Sdcb.Paddle2Onnx", "1.0.0-rc.2"), // 1.0.0-rc.2
 	new ProjectVersion("Sdcb.PaddleInference", "2.5.0"),
-	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.6-preview.5"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0.6-preview.4"), 
-	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0.6-preview.4"), 
-	new ProjectVersion("Sdcb.PaddleDetection", "2.3.1"), 
-	new ProjectVersion("Sdcb.RotationDetector", "1.0.1"), 
+	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.6-preview.6"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0.6-preview.6"), 
+	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0.6-preview.6"), 
+	new ProjectVersion("Sdcb.PaddleDetection", "2.3.3"), 
+	new ProjectVersion("Sdcb.RotationDetector", "1.0.2"), 
 };
 
 static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
