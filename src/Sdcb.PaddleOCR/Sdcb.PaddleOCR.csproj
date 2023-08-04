@@ -31,12 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />
-    <PackageReference Include="PolySharp" Version="1.13.1">
+    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+    <PackageReference Include="PolySharp" Version="1.13.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0-preview.3" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
