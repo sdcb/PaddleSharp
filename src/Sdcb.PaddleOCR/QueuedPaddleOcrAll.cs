@@ -16,6 +16,7 @@ public class QueuedPaddleOcrAll : IDisposable
     private readonly BlockingCollection<ThreadedQueueItem> _queue;
     private readonly Task[] _workers;
     private readonly CountdownEvent _countdownEvent;
+    private readonly ConcurrentBag<Exception> _constructExceptions = new ConcurrentBag<Exception>();
     private bool _disposed;
 
     /// <summary>
@@ -35,20 +36,25 @@ public class QueuedPaddleOcrAll : IDisposable
         {
             _workers[i] = Task.Run(ProcessQueue);
         }
+
+#pragma warning disable CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
+        WaitFactoryReady();
+#pragma warning restore CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
     }
 
     /// <summary>
     /// Waits for the factory to become ready before processing OCR requests.
     /// </summary>
     /// <exception cref="ObjectDisposedException">The instance of <see cref="QueuedPaddleOcrAll"/> is disposed.</exception>
+    [Obsolete("This method been called in constructor, will change to private in a future, exposed for compatibility.")]
     public void WaitFactoryReady()
     {
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
 
         _countdownEvent.Wait();
-        if (_workers.Any(x => x.Exception != null))
+        if (_constructExceptions.Any())
         {
-            throw new AggregateException(_workers.Where(x => x.Exception != null).Select(x => x.Exception!));
+            throw new AggregateException(_constructExceptions);
         }
     }
 
@@ -79,12 +85,14 @@ public class QueuedPaddleOcrAll : IDisposable
         try
         {
             paddleOcr = _factory();
-            _countdownEvent.Signal();
         }
-        catch (Exception)
+        catch (Exception e)
+        {
+            _constructExceptions.Add(e);
+        }
+        finally
         {
             _countdownEvent.Signal();
-            throw;
         }
 
         using var _ = paddleOcr;
@@ -114,9 +122,9 @@ public class QueuedPaddleOcrAll : IDisposable
     public void Dispose()
     {
         _disposed = true;
-        _countdownEvent.Dispose();
         _queue.CompleteAdding();
         Task.WaitAll(_workers);
+        _countdownEvent.Dispose();
     }
 }
 
