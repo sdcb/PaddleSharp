@@ -37,9 +37,17 @@ public class QueuedPaddleOcrAll : IDisposable
             _workers[i] = Task.Run(ProcessQueue);
         }
 
+        try
+        {
 #pragma warning disable CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
-        WaitFactoryReady();
+            WaitFactoryReady();
 #pragma warning restore CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
+        }
+        catch (AggregateException)
+        {
+            Dispose();
+            throw;
+        }
     }
 
     /// <summary>
