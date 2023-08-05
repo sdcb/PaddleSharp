@@ -116,6 +116,18 @@ public class PaddleConfig : IDisposable
     /// <summary>Get version info.</summary>
     public static string Version => PaddleNative.PD_GetVersion().UTF8PtrToString()!;
 
+    internal static Version GetVersion()
+    {
+        string version = Version.Split('\n')[0].Split(':')[1];
+        string[] parts = version.Split('.');
+        if (parts.Length != 3)
+        {
+            return new Version(2, 5, 0);
+        }
+
+        return new Version(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
+    }
+
     /// <summary>
     /// Returns a pointer to the underlying unmanaged object handle.
     /// </summary>
@@ -382,7 +394,15 @@ public class PaddleConfig : IDisposable
     /// <summary>Turn on GPU.</summary>
     public void EnableUseGpu(int initialMemoryMB, int deviceId, PaddlePrecision precision = PaddlePrecision.Float32)
     {
-        PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId, precision);
+        if (GetVersion() >= new Version(2, 5, 0))
+        {
+            // 2.5.0+ support precision
+            PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId, precision);
+        }
+        else
+        {
+            PaddleNative.PD_ConfigEnableUseGpu(_ptr, (ulong)initialMemoryMB, deviceId);
+        }
     }
 
     /// <summary>Set the combined model with two specific pathes for program and parameters.</summary>
@@ -435,7 +455,16 @@ public class PaddleConfig : IDisposable
         }
         finally
         {
-            _ptr = IntPtr.Zero;
+            if (GetVersion() >= new Version(2, 5, 0))
+            {
+                // For compatibility with version < 2.5.0, we need to delete the config in C#.
+                Dispose();
+            }
+            else
+            {
+                // Version < 2.5.0 will delete the config in C++ when creating a predictor.
+                _ptr = IntPtr.Zero;
+            }
         }
     }
 

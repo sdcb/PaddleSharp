@@ -1,3 +1,4 @@
+using System;
 using Xunit.Abstractions;
 
 namespace Sdcb.PaddleInference.Tests;
@@ -15,5 +16,11 @@ public class UnitTest1
     public void VersionTest()
     {
         _console.WriteLine(PaddleConfig.Version);
+    }
+
+    [Fact]
+    public void GetVersionTest()
+    {
+        _console.WriteLine(PaddleConfig.GetVersion().ToString());
     }
 }

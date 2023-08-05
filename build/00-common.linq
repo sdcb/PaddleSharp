@@ -24,7 +24,7 @@ static ProjectVersion[] Projects = new[]
 	new ProjectVersion("Sdcb.Onnx", "1.11.22.423"), // 1.11.22.423
 	new ProjectVersion("Sdcb.Mkldnn", "0.19"), // 0.19
 	new ProjectVersion("Sdcb.Paddle2Onnx", "1.0.0-rc.2"), // 1.0.0-rc.2
-	new ProjectVersion("Sdcb.PaddleInference", "2.5.0"),
+	new ProjectVersion("Sdcb.PaddleInference", "2.5.0.1"),
 	new ProjectVersion("Sdcb.PaddleOCR", "2.6.0.6-preview.6"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.6.0.6-preview.6"), 
 	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.6.0.6-preview.6"), 
