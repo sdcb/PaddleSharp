@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace Sdcb.PaddleOCR.Models.Shared;
 
-internal class DictUtil
+internal class SharedUtils
 {
-    public readonly static Type RootType = typeof(DictUtil);
+    public readonly static Type RootType = typeof(SharedUtils);
     public readonly static Assembly RootAssembly = RootType.Assembly;
 
     public static List<string> LoadDicts(string dictName)
@@ -30,4 +30,13 @@ internal class DictUtil
     }
 
     internal static string EmbeddedResourceTransform(string name) => name.Replace('-', '_').Replace(".0", "._0");
+
+    internal static byte[] ReadResourceAsBytes(string key)
+    {
+        using Stream? stream = RootAssembly.GetManifestResourceStream(key)
+            ?? throw new Exception($"Unable to load model embedded resource {key} from assembly, model not exists?");
+        using MemoryStream ms = new();
+        stream.CopyTo(ms);
+        return ms.ToArray();
+    }
 }

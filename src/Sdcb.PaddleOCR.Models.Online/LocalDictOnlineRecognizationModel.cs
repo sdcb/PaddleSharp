@@ -28,7 +28,7 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
-        return new StreamDictFileRecognizationModel(RootDirectory, DictUtil.LoadDicts(DictName), Version);
+        return new StreamDictFileRecognizationModel(RootDirectory, SharedUtils.LoadDicts(DictName), Version);
     }
 
     /// <summary>

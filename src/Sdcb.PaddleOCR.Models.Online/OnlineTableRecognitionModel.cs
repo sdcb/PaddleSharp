@@ -6,7 +6,7 @@ using Sdcb.PaddleOCR.Models.Online;
 using System.IO;
 using Sdcb.PaddleOCR.Models.Shared;
 
-namespace Sdcb.PaddleOCR.Models.LocalV3;
+namespace Sdcb.PaddleOCR.Models.Online;
 
 /// <summary>
 /// This class represents an online table recognition model.
@@ -54,7 +54,7 @@ public class OnlineTableRecognitionModel
     public async Task<TableRecognitionModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, ModelDownloadUri, RootDirectory, cancellationToken);
-        return new StreamDictTableRecognizationModel(RootDirectory, DictUtil.LoadDicts(DictName));
+        return new StreamDictTableRecognizationModel(RootDirectory, SharedUtils.LoadDicts(DictName));
     }
 
     /// <summary>

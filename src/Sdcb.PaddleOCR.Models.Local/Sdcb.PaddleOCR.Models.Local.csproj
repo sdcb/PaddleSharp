@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -27,12 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="models\**\*.pdmodel" />
-    <EmbeddedResource Include="models\**\*.pdiparams" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
   </ItemGroup>
 
 </Project>

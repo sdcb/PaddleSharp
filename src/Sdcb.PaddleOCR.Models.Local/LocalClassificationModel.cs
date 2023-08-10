@@ -1,7 +1,7 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.LocalV3.Details;
+using Sdcb.PaddleOCR.Models.Local.Details;
 
-namespace Sdcb.PaddleOCR.Models.LocalV3;
+namespace Sdcb.PaddleOCR.Models.Local;
 
 /// <summary>
 /// Represents a local classification model.

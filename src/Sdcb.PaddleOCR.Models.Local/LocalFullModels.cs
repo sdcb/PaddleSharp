@@ -1,4 +1,4 @@
-﻿namespace Sdcb.PaddleOCR.Models.LocalV3;
+﻿namespace Sdcb.PaddleOCR.Models.Local;
 
 /// <summary>
 /// Provides a collection of all available OCR models for PaddleOCR in local version 3.

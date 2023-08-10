@@ -1,8 +1,8 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.LocalV3.Details;
+using Sdcb.PaddleOCR.Models.Local.Details;
 using Sdcb.PaddleOCR.Models.Shared;
 
-namespace Sdcb.PaddleOCR.Models.LocalV3;
+namespace Sdcb.PaddleOCR.Models.Local;
 
 /// <summary>
 /// Represents a local table recognition model.
@@ -19,7 +19,7 @@ public class LocalTableRecognitionModel : TableRecognitionModel
     /// </summary>
     /// <param name="name">The name of the model.</param>
     /// <param name="dictName">The name of the dictionary.</param>
-    public LocalTableRecognitionModel(string name, string dictName) : base(DictUtil.LoadDicts(dictName))
+    public LocalTableRecognitionModel(string name, string dictName) : base(SharedUtils.LoadDicts(dictName))
     {
         Name = name;
     }

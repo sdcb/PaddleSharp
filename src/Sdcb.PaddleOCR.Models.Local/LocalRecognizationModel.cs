@@ -1,9 +1,9 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR.Models.LocalV3.Details;
+using Sdcb.PaddleOCR.Models.Local.Details;
 using Sdcb.PaddleOCR.Models.Shared;
 using System.Collections.Generic;
 
-namespace Sdcb.PaddleOCR.Models.LocalV3;
+namespace Sdcb.PaddleOCR.Models.Local;
 
 /// <summary>
 /// Provides a local implementation of PaddleOCR model with the ability to recognize various languages such as Chinese, English, Korean, Japanese, Telugu and Devanagari
@@ -28,7 +28,7 @@ public class LocalRecognizationModel : RecognizationModel
     public LocalRecognizationModel(string name, string dictName, ModelVersion version) : base(version)
     {
         Name = name;
-        Labels = DictUtil.LoadDicts(dictName);
+        Labels = SharedUtils.LoadDicts(dictName);
     }
 
     /// <summary>
