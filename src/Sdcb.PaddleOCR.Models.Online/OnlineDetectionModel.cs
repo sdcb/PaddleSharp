@@ -36,6 +36,12 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     public static OnlineDetectionModel ChineseV4 => new("ch_PP-OCRv4_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar"), ModelVersion.V4);
 
     /// <summary>
+    /// [New] v4 server model, supporting Chinese, English, multilingual text detection
+    /// (Size: 4.66M)
+    /// </summary>
+    public static OnlineDetectionModel ChineseServerV4 => new("detv4_teacher_inference", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_server_infer.tar"), ModelVersion.V4);
+
+    /// <summary>
     /// slim quantization with distillation lightweight model, supporting Chinese, English, multilingual text detection
     /// (Size: 1.1M)
     /// </summary>
@@ -107,6 +113,7 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     public static OnlineDetectionModel[] All => new[]
     {
         ChineseV4,
+        ChineseServerV4,
         ChineseV3Slim,
         ChineseV3,
         ChineseV2Slim,

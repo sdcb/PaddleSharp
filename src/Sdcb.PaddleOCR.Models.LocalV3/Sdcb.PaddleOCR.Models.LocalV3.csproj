@@ -32,11 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="models\dicts\table_structure_dict.txt" />
-    <None Remove="models\dicts\table_structure_dict_ch.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
   </ItemGroup>
 

@@ -85,13 +85,13 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     public static LocalDictOnlineRecognizationModel DevanagariV4 => new("devanagari_PP-OCRv4_rec", "devanagari_dict.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/multilingual/devanagari_PP-OCRv4_rec_infer.tar"), ModelVersion.V4);
 
     /// <summary>
-    /// [New] Slim qunatization with distillation lightweight model, supporting Chinese, English text recognition
+    /// Slim qunatization with distillation lightweight model, supporting Chinese, English text recognition
     /// (Size: 4.9MB)
     /// </summary>
     public static LocalDictOnlineRecognizationModel ChineseV3Slim => new("ch_PP-OCRv3_rec_slim", "ppocr_keys_v1.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_slim_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting Chinese, English, multilingual text recognition
+    /// Original lightweight model, supporting Chinese, English, multilingual text recognition
     /// (Size: 12.4MB)
     /// </summary>
     public static LocalDictOnlineRecognizationModel ChineseV3 => new("ch_PP-OCRv3_rec", "ppocr_keys_v1.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_infer.tar"), ModelVersion.V3);
@@ -127,13 +127,13 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     public static LocalDictOnlineRecognizationModel ChineseServerV2 => new("ch_ppocr_server_v2.0_rec", "ppocr_keys_v1.txt", new Uri("https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_rec_infer.tar"), ModelVersion.V2);
 
     /// <summary>
-    /// [New] Slim qunatization with distillation lightweight model, supporting english, English text recognition
+    /// Slim qunatization with distillation lightweight model, supporting english, English text recognition
     /// (Size: 3.2MB)
     /// </summary>
     public static LocalDictOnlineRecognizationModel EnglishV3Slim => new("en_PP-OCRv3_rec_slim", "en_dict.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_rec_slim_infer.tar"), ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting english, English, multilingual text recognition
+    /// Original lightweight model, supporting english, English, multilingual text recognition
     /// (Size: 9.6MB)
     /// </summary>
     public static LocalDictOnlineRecognizationModel EnglishV3 => new("en_PP-OCRv3_rec", "en_dict.txt", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_rec_infer.tar"), ModelVersion.V3);
