@@ -1,5 +1,6 @@
 ﻿using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models.LocalV3.Details;
+using Sdcb.PaddleOCR.Models.Shared;
 using System.Collections.Generic;
 
 namespace Sdcb.PaddleOCR.Models.LocalV3;
@@ -27,7 +28,7 @@ public class LocalRecognizationModel : RecognizationModel
     public LocalRecognizationModel(string name, string dictName, ModelVersion version) : base(version)
     {
         Name = name;
-        Labels = Utils.LoadDicts(dictName);
+        Labels = DictUtil.LoadDicts(dictName);
     }
 
     /// <summary>

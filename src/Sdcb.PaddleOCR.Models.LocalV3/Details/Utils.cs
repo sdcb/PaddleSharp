@@ -29,23 +29,5 @@ internal static class Utils
         return ms.ToArray();
     }
 
-    public static List<string> LoadDicts(string dictName)
-    {
-        string ns = RootType.Namespace;
-        string resourcePath = $"{ns}.models.dicts.{EmbeddedResourceTransform(dictName)}";
-        using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath) 
-            ?? throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
-        return ReadLinesFromStream(dictStream).ToList();
-
-        static IEnumerable<string> ReadLinesFromStream(Stream stream)
-        {
-            using StreamReader reader = new(stream);
-            while (!reader.EndOfStream)
-            {
-                yield return reader.ReadLine();
-            }
-        }
-    }
-
     static string EmbeddedResourceTransform(string name) => name.Replace('-', '_').Replace(".0", "._0");
 }

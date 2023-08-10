@@ -17,13 +17,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="dicts\*.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="dicts\table_structure_dict.txt" />
-    <None Remove="dicts\table_structure_dict_ch.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\build\icon.jpg">
@@ -37,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
   </ItemGroup>
 

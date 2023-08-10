@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <LangVersion>10</LangVersion>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Sdcb;AI;Paddle;OCR;PaddleOCR;PaddleSharp</PackageTags>
+    <VersionPrefix>2.5</VersionPrefix>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <Description>Known models for PaddleOCR</Description>
+    <Authors>sdcb</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="dicts\arabic_dict.txt" />
+    <EmbeddedResource Include="dicts\chinese_cht_dict.txt" />
+    <EmbeddedResource Include="dicts\cyrillic_dict.txt" />
+    <EmbeddedResource Include="dicts\devanagari_dict.txt" />
+    <EmbeddedResource Include="dicts\en_dict.txt" />
+    <EmbeddedResource Include="dicts\japan_dict.txt" />
+    <EmbeddedResource Include="dicts\ka_dict.txt" />
+    <EmbeddedResource Include="dicts\korean_dict.txt" />
+    <EmbeddedResource Include="dicts\latin_dict.txt" />
+    <EmbeddedResource Include="dicts\ppocr_keys_v1.txt" />
+    <EmbeddedResource Include="dicts\table_structure_dict.txt" />
+    <EmbeddedResource Include="dicts\table_structure_dict_ch.txt" />
+    <EmbeddedResource Include="dicts\ta_dict.txt" />
+    <EmbeddedResource Include="dicts\te_dict.txt" />
+  </ItemGroup>
+
+</Project>

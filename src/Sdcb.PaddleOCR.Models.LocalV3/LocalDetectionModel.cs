@@ -27,17 +27,17 @@ public class LocalDetectionModel : DetectionModel
     public override PaddleConfig CreateConfig() => Utils.LoadLocalModel(Name);
 
     /// <summary>
-    /// [New] Original lightweight model, supporting Chinese, English, multilingual text detection(Size: 3.8M)
+    /// Original lightweight model, supporting Chinese, English, multilingual text detection(Size: 3.8M)
     /// </summary>
     public static LocalDetectionModel ChineseV3 => new("ch_PP-OCRv3_det", ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight detection model, supporting English(Size: 3.8M)
+    /// Original lightweight detection model, supporting English(Size: 3.8M)
     /// </summary>
     public static LocalDetectionModel EnglishV3 => new("en_PP-OCRv3_det", ModelVersion.V3);
 
     /// <summary>
-    /// [New] Original lightweight detection model, supporting multiple languages(Size: 3.8M)
+    /// Original lightweight detection model, supporting multiple languages(Size: 3.8M)
     /// </summary>
     public static LocalDetectionModel MultiLanguageV3 => new("ml_PP-OCRv3_det", ModelVersion.V3);
 

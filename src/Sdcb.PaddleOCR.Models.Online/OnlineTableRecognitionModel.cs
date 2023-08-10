@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Sdcb.PaddleOCR.Models.Online;
 using System.IO;
+using Sdcb.PaddleOCR.Models.Shared;
 
 namespace Sdcb.PaddleOCR.Models.LocalV3;
 
@@ -53,7 +54,7 @@ public class OnlineTableRecognitionModel
     public async Task<TableRecognitionModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, ModelDownloadUri, RootDirectory, cancellationToken);
-        return new StreamDictTableRecognizationModel(RootDirectory, Utils.LoadDicts(DictName));
+        return new StreamDictTableRecognizationModel(RootDirectory, DictUtil.LoadDicts(DictName));
     }
 
     /// <summary>

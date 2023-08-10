@@ -1,4 +1,5 @@
 ﻿using Sdcb.PaddleOCR.Models.Online.Details;
+using Sdcb.PaddleOCR.Models.Shared;
 using System;
 using System.IO;
 using System.Threading;
@@ -27,7 +28,7 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
-        return new StreamDictFileRecognizationModel(RootDirectory, Utils.LoadDicts(DictName), Version);
+        return new StreamDictFileRecognizationModel(RootDirectory, DictUtil.LoadDicts(DictName), Version);
     }
 
     /// <summary>

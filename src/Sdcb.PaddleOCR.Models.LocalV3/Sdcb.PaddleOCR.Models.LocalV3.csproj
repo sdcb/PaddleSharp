@@ -28,10 +28,10 @@
   <ItemGroup>
     <EmbeddedResource Include="models\**\*.pdmodel" />
     <EmbeddedResource Include="models\**\*.pdiparams" />
-    <EmbeddedResource Include="models\dicts\*.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
   </ItemGroup>
 

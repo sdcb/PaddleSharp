@@ -1,12 +1,10 @@
 ﻿using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,30 +111,6 @@ internal static class Utils
             }
         }
     }
-
-    public static List<string> LoadDicts(string dictName)
-    {
-        string ns = RootType.Namespace;
-        string resourcePath = $"{ns}.dicts.{EmbeddedResourceTransform(dictName)}";
-        using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath);
-        if (dictStream == null)
-        {
-            throw new Exception($"Unable to load rec model dicts file embedded resource {resourcePath} from assembly , model not exists?");
-        }
-
-        return ReadLinesFromStream(dictStream).ToList();
-
-        static IEnumerable<string> ReadLinesFromStream(Stream stream)
-        {
-            using StreamReader reader = new(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            while (!reader.EndOfStream)
-            {
-                yield return reader.ReadLine();
-            }
-        }
-    }
-
-    static string EmbeddedResourceTransform(string name) => name.Replace('-', '_').Replace(".0", "._0");
 
     public readonly static Type RootType = typeof(Settings);
     public readonly static Assembly RootAssembly = typeof(Settings).Assembly;

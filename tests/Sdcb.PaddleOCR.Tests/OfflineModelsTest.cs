@@ -55,7 +55,6 @@ public class OfflineModelsTest
             AllowRotateDetection = true,
             Enable180Classification = false,
         }, consumerCount: 1, boundedCapacity: 64);
-        all.WaitFactoryReady();
 
         {
             // Load local file by following code:
