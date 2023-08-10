@@ -32,7 +32,7 @@ public class LocalClassificationModel : ClassificationModel
     /// Creates a PaddleConfig instance for this model.
     /// </summary>
     /// <returns>A PaddleConfig instance.</returns>
-    public override PaddleConfig CreateConfig() => Utils.LoadLocalModel(Name);
+    public override PaddleConfig CreateConfig() => Utils.LocalModel(Name, Version);
 
     /// <summary>
     /// Gets the original model for text angle classification (Size: 1.38M).

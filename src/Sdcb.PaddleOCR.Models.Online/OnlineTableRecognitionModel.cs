@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using Sdcb.PaddleOCR.Models.Online;
 using System.IO;
 using Sdcb.PaddleOCR.Models.Shared;
 

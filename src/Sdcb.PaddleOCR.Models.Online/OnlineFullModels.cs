@@ -65,6 +65,11 @@ public record class OnlineFullModels(OnlineDetectionModel DetModel, OnlineClassi
     /// </summary>
     public readonly static OnlineFullModels ArabicV4 = new(OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ArabicV4);
 
+    /// <summary>
+    /// The Devanagari V4 version.
+    /// </summary>
+    public readonly static OnlineFullModels DevanagariV4 = new(OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.DevanagariV4);
+
 
 
     /// <summary>

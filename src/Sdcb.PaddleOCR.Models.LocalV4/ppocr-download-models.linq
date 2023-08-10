@@ -12,15 +12,11 @@ await Parallel.ForEachAsync(OnlineDetectionModel.All.Where(x => x.Version == Mod
 	await m.DownloadAsync(cts);
 });
 
-await Parallel.ForEachAsync(OnlineClassificationModel.All.Where(x => !x.Name.Contains("_slim")), QueryCancelToken, async (m, cts) =>
-{
-	await m.DownloadAsync(cts);
-});
-
 await Parallel.ForEachAsync(LocalDictOnlineRecognizationModel.All.Where(x => x.Version == ModelVersion.V4 && !x.Name.Contains("_slim")), QueryCancelToken, async (m, cts) =>
 {
 	await m.DownloadAsync(cts);
 });
+Console.ReadLine();
 
 foreach (string file in Directory.EnumerateFiles(Settings.GlobalModelDirectory, "*", SearchOption.AllDirectories)
 	.Where(x => Path.GetFileName(x) switch

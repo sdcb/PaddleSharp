@@ -18,7 +18,32 @@ public class OfflineModelsTest
     public void FastCheckOCR()
     {
         FullOcrModel model = LocalFullModels.EnglishV3;
+        FastCheck(model);
+    }
 
+    [Fact]
+    public void FastCheckOCREnglishV4()
+    {
+        FullOcrModel model = LocalFullModels.EnglishV4;
+        FastCheck(model);
+    }
+
+    [Fact]
+    public void FastCheckOCRChineseV4()
+    {
+        FullOcrModel model = LocalFullModels.ChineseV4;
+        FastCheck(model);
+    }
+
+    [Fact]
+    public void FastCheckOCRChineseServerV4()
+    {
+        FullOcrModel model = LocalFullModels.ChineseServerV4;
+        FastCheck(model);
+    }
+
+    private void FastCheck(FullOcrModel model)
+    {
         // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
         byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
