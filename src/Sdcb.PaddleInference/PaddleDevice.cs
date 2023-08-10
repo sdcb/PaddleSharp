@@ -117,13 +117,30 @@ public static class PaddleDevice
     }
 
     /// <summary>
-    /// Creates an action that sets up a Paddle configuration for using OpenBLAS on the CPU.
+    /// Creates an action that sets up a Paddle configuration for using BLAS on the CPU.
     /// </summary>
     /// <param name="cpuMathThreadCount">The number of CPU math threads to use. Default value is 0.</param>
     /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
     /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
     /// <returns>The openblas paddle device definition.</returns>
+    [Obsolete("Use Blas instead.")]
     public static Action<PaddleConfig> Openblas(int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
+    {
+        return cfg =>
+        {
+            cfg.CpuMathThreadCount = cpuMathThreadCount;
+            CommonAction(cfg, memoryOptimized, glogEnabled);
+        };
+    }
+
+    /// <summary>
+    /// Creates an action that sets up a Paddle configuration for using BLAS on the CPU.
+    /// </summary>
+    /// <param name="cpuMathThreadCount">The number of CPU math threads to use. Default value is 0.</param>
+    /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
+    /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
+    /// <returns>The openblas paddle device definition.</returns>
+    public static Action<PaddleConfig> Blas(int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
     {
         return cfg =>
         {
