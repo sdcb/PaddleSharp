@@ -12,17 +12,18 @@ internal static class Utils
 
     public static PaddleConfig LocalModel(string key, ModelVersion version)
     {
-        string assemblyName = version switch 
+        Type rootType = version switch 
         {
-            ModelVersion.V2 => "Sdcb.PaddleOCR.Models.Local",
-            ModelVersion.V3 => "Sdcb.PaddleOCR.Models.LocalV3",
-            ModelVersion.V4 => "Sdcb.PaddleOCR.Models.LocalV4",
+            ModelVersion.V2 => typeof(LocalFullModels),
+            ModelVersion.V3 => typeof(LocalV3.KnownModels),
+            ModelVersion.V4 => typeof(LocalV4.KnownModels),
             _ => throw new NotImplementedException()
         };
-        Assembly assembly = Assembly.LoadFrom(assemblyName + ".dll");
+        string prefix = rootType.Namespace;
+        Assembly assembly = rootType.Assembly;
 
-        byte[] programBuffer = SharedUtils.ReadResourceAsBytes($"{assemblyName}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdmodel", assembly);
-        byte[] paramsBuffer = SharedUtils.ReadResourceAsBytes($"{assemblyName}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdiparams", assembly);
+        byte[] programBuffer = SharedUtils.ReadResourceAsBytes($"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdmodel", assembly);
+        byte[] paramsBuffer = SharedUtils.ReadResourceAsBytes($"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdiparams", assembly);
         return PaddleConfig.FromMemoryModel(programBuffer, paramsBuffer);
     }
 
