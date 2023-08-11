@@ -34,8 +34,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.LocalV3\Sdcb.PaddleOCR.Models.LocalV3.csproj" />
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.LocalV4\Sdcb.PaddleOCR.Models.LocalV4.csproj" />
-    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
-    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0-preview.1" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleOCR" Version="2.7.0-preview.1" Condition="'$(Configuration)' != 'Debug'" />
+    
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" Condition="'$(Configuration)' == 'Debug'" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ async Task SetupAsync(CancellationToken cancellationToken = default)
 }
 
 static void NuGetRun(string args) => Run(@".\nuget.exe", args, Encoding.GetEncoding("gb2312"));
-static void DotNetRun(string args) => Run("dotnet", args, Encoding.GetEncoding("utf-8"));
+static void DotNetRun(string args) => Run("dotnet", args.Dump(), Encoding.GetEncoding("utf-8"));
 static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, args, encoding);
 static ProjectVersion[] Projects = new[]
 {
@@ -28,9 +28,9 @@ static ProjectVersion[] Projects = new[]
 	new ProjectVersion("Sdcb.PaddleOCR", "2.7.0-preview.1"),
 	new ProjectVersion("Sdcb.PaddleOCR.Models.Online", "2.7.0-preview.1"),
 	new ProjectVersion("Sdcb.PaddleOCR.Models.Shared", "2.7.0-preview.1"),
-	new ProjectVersion("Sdcb.PaddleOCR.Models.Local", "2.7.0-preview.1"),
-	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.7.0-preview.1"),
-	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV4", "2.7.0-preview.1"),
+	new ProjectVersion("Sdcb.PaddleOCR.Models.Local", "2.7.0-preview.2"),
+	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV3", "2.7.0-preview.2"),
+	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV4", "2.7.0-preview.2"),
 	new ProjectVersion("Sdcb.PaddleDetection", "2.3.3"), 
 	new ProjectVersion("Sdcb.RotationDetector", "1.0.2"), 
 };
