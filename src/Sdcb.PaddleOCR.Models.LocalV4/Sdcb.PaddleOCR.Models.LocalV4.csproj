@@ -31,8 +31,4 @@
     <EmbeddedResource Include="models\**\*.pdiparams" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj" />
-  </ItemGroup>
-
 </Project>

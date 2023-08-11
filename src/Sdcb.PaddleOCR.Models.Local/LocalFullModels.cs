@@ -10,10 +10,11 @@ public static class LocalFullModels
     /// </summary>
     public static FullOcrModel ChineseV4 => new(LocalDetectionModel.ChineseV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
 
-    /// <summary>
-    /// Chinese server v4, also support English and digits.
-    /// </summary>
-    public static FullOcrModel ChineseServerV4 => new(LocalDetectionModel.ChineseServerV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
+    // delete because too large(>100MB)
+    ///// <summary>
+    ///// Chinese server v4, also support English and digits.
+    ///// </summary>
+    //public static FullOcrModel ChineseServerV4 => new(LocalDetectionModel.ChineseServerV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
 
     /// <summary>
     /// English v4 version.

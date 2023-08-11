@@ -31,10 +31,11 @@ public class LocalDetectionModel : DetectionModel
     /// </summary>
     public static LocalDetectionModel ChineseV4 => new("ch_PP-OCRv4_det", ModelVersion.V4);
 
-    /// <summary>
-    /// Chinese detection v4 server inference model used by PaddleOCR to detect text from an image, supporting multiple languages (Size: 110M).
-    /// </summary>
-    public static LocalDetectionModel ChineseServerV4 => new("detv4_teacher_inference", ModelVersion.V4);
+    // delete because too large (>100MB)
+    ///// <summary>
+    ///// Chinese detection v4 server inference model used by PaddleOCR to detect text from an image, supporting multiple languages (Size: 110M).
+    ///// </summary>
+    //public static LocalDetectionModel ChineseServerV4 => new("detv4_teacher_inference", ModelVersion.V4);
 
     /// <summary>
     /// Original lightweight model, supporting Chinese, English, multilingual text detection(Size: 3.8M).
@@ -57,7 +58,7 @@ public class LocalDetectionModel : DetectionModel
     public static LocalDetectionModel[] All => new[]
     {
         ChineseV4,
-        ChineseServerV4,
+        //ChineseServerV4,
         ChineseV3,
         EnglishV3,
         MultiLanguageV3,

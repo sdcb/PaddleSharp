@@ -35,13 +35,6 @@ public class OfflineModelsTest
         FastCheck(model);
     }
 
-    [Fact]
-    public void FastCheckOCRChineseServerV4()
-    {
-        FullOcrModel model = LocalFullModels.ChineseServerV4;
-        FastCheck(model);
-    }
-
     private void FastCheck(FullOcrModel model)
     {
         // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
