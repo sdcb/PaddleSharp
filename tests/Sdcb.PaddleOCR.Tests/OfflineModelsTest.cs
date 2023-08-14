@@ -15,7 +15,7 @@ public class OfflineModelsTest
     }
 
     [Fact]
-    public void FastCheckOCR()
+    public void FastCheckOCREnglishV3()
     {
         FullOcrModel model = LocalFullModels.EnglishV3;
         FastCheck(model);
