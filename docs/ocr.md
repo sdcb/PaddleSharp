@@ -281,3 +281,9 @@ public class OcrController : Controller
   * `PaddleDevice.Gpu().And(PaddleDevice.TensorRt(...))`
 
   ![image](https://user-images.githubusercontent.com/1317141/206610787-4d31057f-9d7f-4235-a2c4-433322e21bb6.png)
+
+## How to migrate < 2.7.0 version to latest 2.7.0 when using LocalV3?
+* Uninstall NuGet package: Sdcb.PaddleOCR.Models.LocalV3
+* Install NuGet pakcage: Sdcb.PaddleOCR.Models.Local
+* Update namespaces from `Sdcb.PaddleOCR.Models.LocalV3` to `Sdcb.PaddleOCR.Models.Local`
+
