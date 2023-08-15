@@ -2,11 +2,14 @@
 
 ## PaddleOCR packages 📖
 
-| NuGet Package 💼               | Version 📌                                                                                                                              | Description 📚                                             |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference) ⚙️        |
-| Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using 🌐 |
-| Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~130MB) 🗺️ |
+| NuGet Package 💼               | Version 📌                                                                                                                              | Description 📚                                                |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Sdcb.PaddleOCR                | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.svg)](https://nuget.org/packages/Sdcb.PaddleOCR)                               | PaddleOCR library(based on Sdcb.PaddleInference) ⚙️           |
+| Sdcb.PaddleOCR.Models.Shared  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Shared.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Shared)   | Shared models/utils for both Online and Local versions 🔗     |
+| Sdcb.PaddleOCR.Models.Online  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Online.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Online)   | Online PaddleOCR models, will download when first using 🌐    |
+| Sdcb.PaddleOCR.Models.Local   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.Local.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.Local)     | Local models, relies on Shared, LocalV3 and LocalV4 models 🏠 |
+| Sdcb.PaddleOCR.Models.LocalV3 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV3.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV3) | Full local v3 models, include multiple language(~105MB) 🗺️    |
+| Sdcb.PaddleOCR.Models.LocalV4 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleOCR.Models.LocalV4.svg)](https://nuget.org/packages/Sdcb.PaddleOCR.Models.LocalV4) | Full local v4 models, include multiple language(~111MB) 🌐    |
 
 ## Language supports
 
@@ -21,7 +24,7 @@ Just replace the `.ChineseV3` in demo code with your speicific language, then yo
    ```
    Sdcb.PaddleInference
    Sdcb.PaddleOCR
-   Sdcb.PaddleOCR.Models.LocalV3
+   Sdcb.PaddleOCR.Models.Local
    Sdcb.PaddleInference.runtime.win64.mkl
    OpenCvSharp4.runtime.win
    ```
@@ -107,7 +110,7 @@ The build steps for `sdflysha/dotnet6-paddle:2.5.0-ubuntu22` was described [here
 
 2. Install NuGet Packages:
 ```ps
-dotnet add package Sdcb.PaddleOCR.Models.LocalV3
+dotnet add package Sdcb.PaddleOCR.Models.Local
 ```
 
 Please aware in `Linux`, the native binding library is not required, instead, you should compile your own `OpenCV`/`PaddleInference` library, or just use the `Docker` image.
@@ -129,7 +132,7 @@ using (Mat src = Cv2.ImRead(@"/app/test.jpg"))
 // Install following packages:
 // Sdcb.PaddleInference
 // Sdcb.PaddleOCR
-// Sdcb.PaddleOCR.Models.LocalV3
+// Sdcb.PaddleOCR.Models.Local
 // Sdcb.PaddleInference.runtime.win64.mkl (required in Windows, linux using docker)
 // OpenCvSharp4.runtime.win (required in Windows, linux using docker)
 byte[] sampleImageData;
@@ -158,7 +161,7 @@ using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
 // Install following packages:
 // Sdcb.PaddleInference
 // Sdcb.PaddleOCR
-// Sdcb.PaddleOCR.Models.LocalV3
+// Sdcb.PaddleOCR.Models.Local
 // Sdcb.PaddleInference.runtime.win64.mkl (required in Windows, linux using docker)
 // OpenCvSharp4.runtime.win (required in Windows, linux using docker)
 using PaddleOcrTableRecognizer tableRec = new(LocalTableRecognitionModel.ChineseMobileV2_SLANET);
