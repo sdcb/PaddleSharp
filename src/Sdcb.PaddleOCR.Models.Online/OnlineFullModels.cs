@@ -31,6 +31,11 @@ public record class OnlineFullModels(OnlineDetectionModel DetModel, OnlineClassi
     public readonly static OnlineFullModels ChineseV4 = new(OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ChineseV4);
 
     /// <summary>
+    /// The Chinese Server V4 version.
+    /// </summary>
+    public readonly static OnlineFullModels ChineseServerV4 = new(OnlineDetectionModel.ChineseServerV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ChineseV4);
+
+    /// <summary>
     /// The English V4 version.
     /// </summary>
     public readonly static OnlineFullModels EnglishV4 = new(OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.EnglishV4);

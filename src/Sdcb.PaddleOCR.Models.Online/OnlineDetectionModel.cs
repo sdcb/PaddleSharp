@@ -37,7 +37,7 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
 
     /// <summary>
     /// [New] v4 server model, supporting Chinese, English, multilingual text detection
-    /// (Size: 4.66M)
+    /// (Size: 110M)
     /// </summary>
     public static OnlineDetectionModel ChineseServerV4 => new("detv4_teacher_inference", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_server_infer.tar"), ModelVersion.V4);
 
