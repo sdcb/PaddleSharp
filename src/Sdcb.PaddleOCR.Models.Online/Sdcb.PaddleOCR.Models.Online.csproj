@@ -11,7 +11,7 @@
     <PackageTags>Sdcb;AI;Paddle;OCR;PaddleOCR;PaddleSharp</PackageTags>
     <VersionPrefix>2.5</VersionPrefix>
     <PackageIcon>icon.jpg</PackageIcon>
-    <Description>Known models for PaddleOCR</Description>
+    <Description>Provides on-demand downloading of PaddleOCR models.</Description>
     <Authors>sdcb</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
@@ -30,8 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
-    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0" Condition="'$(Configuration)' != 'Debug'" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" Condition="'$(Configuration)' == 'Debug'" />
+
+    <PackageReference Include="Sdcb.PaddleOCR" Version="2.7.0" Condition="'$(Configuration)' != 'Debug'" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" Condition="'$(Configuration)' == 'Debug'" />
+
   </ItemGroup>
 
 </Project>
