@@ -44,7 +44,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj" />
     <ProjectReference Include="..\..\src\Sdcb.PaddleOCR.Models.Online\Sdcb.PaddleOCR.Models.Online.csproj" />
-    <ProjectReference Include="..\..\src\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />
   </ItemGroup>
 
 </Project>
