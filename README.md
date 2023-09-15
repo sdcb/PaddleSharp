@@ -57,6 +57,8 @@ But You're good to build your own GPU nuget package using `01-build-native.linq`
 | sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle)       | PaddleInference 2.5.0, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 Runtime 🌐 |
 | sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.5.0, OpenCV 4.7.0, based on official Ubuntu 22.04 .NET 6 SDK 🌐     |
 
+You can also build your `docker` images using these [dockerfile](https://github.com/sdcb/PaddleSharp/tree/master/build/docker)s.
+
 ## Paddle Devices
 
 * Mkldnn - `PaddleDevice.Mkldnn()`
