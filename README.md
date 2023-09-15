@@ -1,5 +1,7 @@
 # PaddleSharp 🌟 [![main](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml/badge.svg)](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml) [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
+**English** | **[简体中文](README_CN.md)**
+
 💗 .NET Wrapper for `PaddleInference` C API, support **Windows**(x64) 💻, NVIDIA Cuda 10.2+ based GPU 🎮 and **Linux**(Ubuntu-22.04 x64) 🐧, currently contained following main components:
 
 * [PaddleOCR 📖](./docs/ocr.md) support 14 OCR languages model download on-demand, allow rotated text angle detection, 180 degree text detection, also support table recognition 📊.
