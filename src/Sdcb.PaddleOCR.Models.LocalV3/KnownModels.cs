@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Sdcb.PaddleOCR.Models.LocalV3;
 
-internal static class KnownModels
+public static class KnownModels
 {
     public static HashSet<string> All = new(new[]
     {
