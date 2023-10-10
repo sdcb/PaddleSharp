@@ -34,7 +34,9 @@ public class OnlineModelsTest
             // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
             using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 PaddleOcrResult result = all.Run(src);
+                _console.WriteLine($"lapsed={sw.ElapsedMilliseconds} ms");
                 _console.WriteLine("Detected all texts: \n" + result.Text);
                 foreach (PaddleOcrResultRegion region in result.Regions)
                 {
