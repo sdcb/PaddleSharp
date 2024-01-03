@@ -259,7 +259,7 @@ public class OcrController : Controller
         stream.CopyTo(ms);
         using Mat src = Cv2.ImDecode(ms.ToArray(), ImreadModes.Color);
         double scale = 1;
-        using Mat scaled = src.Resize(Size.Zero, scale, scale);
+        using Mat scaled = src.Resize(default, scale, scale);
 
         Stopwatch sw = Stopwatch.StartNew();
         string textResult = (await _ocr.Run(scaled)).Text;
