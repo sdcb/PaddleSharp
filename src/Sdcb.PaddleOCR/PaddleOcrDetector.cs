@@ -257,7 +257,7 @@ public class PaddleOcrDetector : IDisposable
         double scaleRate = 1.0 * maxSize.Value / longEdge;
 
         return scaleRate < 1.0 ?
-            src.Resize(Size.Zero, scaleRate, scaleRate) :
+            src.Resize(default, scaleRate, scaleRate) :
             src.Clone();
     }
 

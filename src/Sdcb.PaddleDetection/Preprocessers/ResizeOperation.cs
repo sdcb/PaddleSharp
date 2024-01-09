@@ -43,7 +43,7 @@ internal class ResizeOperation : PreprocessOperation
 			Size size = src.Size();
 			data.NetShape = new Size2f(size.Width * scale.X, size.Height * scale.Y);
 
-			Cv2.Resize(src, src, Size.Zero, scale.X, scale.Y, Interpolation);
+			Cv2.Resize(src, src, default, scale.X, scale.Y, Interpolation);
 			data.Shape = src.Size();
 			data.ScaleFactor = scale;
 		}

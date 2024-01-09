@@ -29,7 +29,7 @@ using PaddleOcrAll all = new(model.DetectionDirectory, model.ClassifierDirectory
 //var predictor = PaddleConfig.FromModelDir(model.DetectionDirectory);
 //predictor.Dump();
 
-using Mat scaled = src.Resize(Size.Zero, 1, 1);
+using Mat scaled = src.Resize(default, 1, 1);
 var sw = Stopwatch.StartNew();
 PaddleOcrResult result = all.Run(scaled);
 sw.ElapsedMilliseconds.Dump("elapsed");
