@@ -446,12 +446,13 @@ public class PaddleConfig : IDisposable
         set => PaddleNative.PD_ConfigSetCpuMathLibraryNumThreads(_ptr, value);
     }
 
-    /// <summary>Create a new Predictor</summary>
+    /// <summary>Create a new Predictor, and then dispose the config.</summary>
+    [Obsolete("Use CreatePredictor2 instead, because the config will be deleted in C++ when creating a predictor.")]
     public PaddlePredictor CreatePredictor()
     {
         try
         {
-            return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
+            return CreatePredictor2();
         }
         finally
         {
@@ -466,6 +467,12 @@ public class PaddleConfig : IDisposable
                 _ptr = IntPtr.Zero;
             }
         }
+    }
+
+    /// <summary>Create a new Predictor.</summary>
+    public PaddlePredictor CreatePredictor2()
+    {
+        return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
     }
 
     /// <summary>
