@@ -1,5 +1,6 @@
 ﻿using Sdcb.PaddleInference.Native;
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Sdcb.PaddleInference;
@@ -97,7 +98,17 @@ public class PaddlePredictor : IDisposable
     /// Runs the prediction with input data and generates model output.
     /// </summary>
     /// <returns>true if prediction runs successfully; false otherwise.</returns>
-    public bool Run() => PaddleNative.PD_PredictorRun(_ptr) != 0;
+    public bool Run()
+    {
+        try
+        {
+            return PaddleNative.PD_PredictorRun(_ptr) != 0;
+        } 
+        catch(SEHException)
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     /// Frees the unmanaged resources used by the <see cref="PaddlePredictor"/> class.
