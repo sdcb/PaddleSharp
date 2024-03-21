@@ -69,7 +69,7 @@ internal unsafe struct PD_Cstr
 
     public override readonly string ToString()
     {
-        return Data.ANSIToString((int)Size)!;
+        return Data.ANSIToString((int)Size - 1)!;
     }
 }
 

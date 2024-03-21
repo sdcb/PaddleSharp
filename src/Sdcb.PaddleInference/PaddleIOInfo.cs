@@ -19,4 +19,9 @@ public record PaddleIOInfo
     /// Gets or init the data type of the input/output tensor.
     /// </summary>
     public required PaddleDataType DataType { get; init; }
+
+    /// <summary>
+    /// Text representation of the input/output tensor.
+    /// </summary>
+    public override string ToString() => $"{Name}: {DataType} [{string.Join(",", Shape)}]";
 }
