@@ -80,11 +80,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.Paddle2Onnx", "src\Sdc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.Paddle2Onnx.Tests", "tests\Sdcb.Paddle2Onnx.Tests\Sdcb.Paddle2Onnx.Tests.csproj", "{0432D4F5-1F7E-4A6E-A6DC-4A04C0F8E497}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleOCR.Models.LocalV4", "src\Sdcb.PaddleOCR.Models.LocalV4\Sdcb.PaddleOCR.Models.LocalV4.csproj", "{604827F0-00CB-48DC-AD4E-06AE386CD96A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.LocalV4", "src\Sdcb.PaddleOCR.Models.LocalV4\Sdcb.PaddleOCR.Models.LocalV4.csproj", "{604827F0-00CB-48DC-AD4E-06AE386CD96A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Shared", "src\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj", "{EC79D45E-85D8-40E2-9F95-78AB40977770}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleOCR.Models.Local", "src\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj", "{0172BD09-B617-4FF6-8221-883029AD4877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Local", "src\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj", "{0172BD09-B617-4FF6-8221-883029AD4877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleNLP.Lac", "src\Sdcb.PaddleNLP.Lac\Sdcb.PaddleNLP.Lac.csproj", "{5756186D-613D-4656-B21D-822AB4DD9F8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleNLP.Lac.Tests", "tests\Sdcb.PaddleNLP.Lac.Tests\Sdcb.PaddleNLP.Lac.Tests.csproj", "{19222033-C5E1-4326-A597-75CF2DE4007F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +152,14 @@ Global
 		{0172BD09-B617-4FF6-8221-883029AD4877}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0172BD09-B617-4FF6-8221-883029AD4877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0172BD09-B617-4FF6-8221-883029AD4877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5756186D-613D-4656-B21D-822AB4DD9F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5756186D-613D-4656-B21D-822AB4DD9F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5756186D-613D-4656-B21D-822AB4DD9F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5756186D-613D-4656-B21D-822AB4DD9F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19222033-C5E1-4326-A597-75CF2DE4007F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19222033-C5E1-4326-A597-75CF2DE4007F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19222033-C5E1-4326-A597-75CF2DE4007F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19222033-C5E1-4326-A597-75CF2DE4007F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,6 +184,8 @@ Global
 		{604827F0-00CB-48DC-AD4E-06AE386CD96A} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{EC79D45E-85D8-40E2-9F95-78AB40977770} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{0172BD09-B617-4FF6-8221-883029AD4877} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+		{5756186D-613D-4656-B21D-822AB4DD9F8F} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
+		{19222033-C5E1-4326-A597-75CF2DE4007F} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083C9A35-8781-4D12-8146-B08E4A61DA8E}
