@@ -100,17 +100,45 @@ public class PaddlePredictor : IDisposable
         }
     }
 
-    public unsafe PaddleIOInfo[] GetInputInfo()
+    /// <summary>
+    /// Gets the input information of this predictor.
+    /// <para>This includes details about the input tensors such as their names, shapes, and data types.</para>
+    /// </summary>
+    public unsafe PaddleIOInfo[] InputInfos
     {
-        PD_IOInfos* array = null;
-        try
+        get
         {
-            array = (PD_IOInfos*)PaddleNative.PD_PredictorGetInputInfos(_ptr);
-            return array->ToArray();
+            PD_IOInfos* array = null;
+            try
+            {
+                array = (PD_IOInfos*)PaddleNative.PD_PredictorGetInputInfos(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+            }
         }
-        finally
+    }
+
+    /// <summary>
+    /// Gets the output information of this predictor.
+    /// <para>This includes details about the input tensors such as their names, shapes, and data types.</para>
+    /// </summary>
+    public unsafe PaddleIOInfo[] OutputInfos
+    {
+        get
         {
-            PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+            PD_IOInfos* array = null;
+            try
+            {
+                array = (PD_IOInfos*)PaddleNative.PD_PredictorGetOutputInfos(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+            }
         }
     }
 
@@ -138,6 +166,19 @@ public class PaddlePredictor : IDisposable
         {
             return false;
         }
+    }
+
+    /// <summary>Clear the intermediate tensors of the predictor</summary>
+    public void ClearIntermediateTensor()
+    {
+        PaddleNative.PD_PredictorClearIntermediateTensor(_ptr);
+    }
+
+    /// <summary>Release all tmp tensor to compress the size of the memory pool. The memory pool is considered to be composed of a list of chunks, if the chunk is not occupied, it can be released.</summary>
+    /// <returns>Number of bytes released. It may be smaller than the actual released memory, because part of the memory is not managed by the MemoryPool.</returns>
+    public ulong TryShrinkMemory()
+    {
+        return PaddleNative.PD_PredictorTryShrinkMemory(_ptr);
     }
 
     /// <summary>
