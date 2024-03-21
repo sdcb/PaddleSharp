@@ -36,8 +36,16 @@ public class PaddleTensor : IDisposable
     {
         get
         {
-            using PaddleNative.PdIntArrayWrapper wrapper = new() { ptr = PaddleNative.PD_TensorGetShape(_ptr) };
-            return wrapper.ToArray();
+            PD_OneDimArrayInt32* shape = null;
+            try
+            {
+                shape = (PD_OneDimArrayInt32*)PaddleNative.PD_TensorGetShape(_ptr);
+                return shape->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayInt32Destroy((IntPtr)shape);
+            }
         }
         set
         {

@@ -44,11 +44,11 @@ public class PaddleConfig : IDisposable
             throw new DirectoryNotFoundException(modelDir);
         }
 
-        string[] allowedPrefixes = new[]
-        {
+        string[] allowedPrefixes =
+        [
             "inference",
             "model",
-        };
+        ];
 
         foreach (string prefix in allowedPrefixes)
         {
@@ -330,7 +330,7 @@ public class PaddleConfig : IDisposable
     /// <summary>Set min, max, opt shape for TensorRT Dynamic shape mode.</summary>
     public unsafe void SetTrtDynamicShapeInfo(Dictionary<string, TensorRtDynamicShapeGroup> shapeInfo)
     {
-        using PtrFromStringArray shapeNames = new(shapeInfo.Keys.ToArray());
+        using PtrFromStringArray shapeNames = new([.. shapeInfo.Keys]);
 
         long[] shape = new long[shapeInfo.Count];
         for (int i = 0; i < shape.Length; ++i)
@@ -355,17 +355,17 @@ public class PaddleConfig : IDisposable
     {
         get
         {
-            IntPtr summaryPtr = default;
+            PD_Cstr* summaryPtr = null;
             try
             {
-                summaryPtr = PaddleNative.PD_ConfigSummary(_ptr);
-                return ((PaddleNative.PdCStr*)summaryPtr)->ToString();
+                summaryPtr = (PD_Cstr*)PaddleNative.PD_ConfigSummary(_ptr);
+                return summaryPtr->ToString();
             }
             finally
             {
-                if (summaryPtr != IntPtr.Zero)
+                if (summaryPtr != null)
                 {
-                    PaddleNative.PD_CstrDestroy(summaryPtr);
+                    PaddleNative.PD_CstrDestroy((IntPtr)summaryPtr);
                 }
             }
         }
@@ -447,12 +447,12 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>Create a new Predictor, and then dispose the config.</summary>
-    [Obsolete("Use CreatePredictor2 instead, because the config will be deleted in C++ when creating a predictor.")]
+    /// <remarks>Suggest use <see cref="CreatePredictorNoDelete"/> instead, because the config will be deleted in C++ when creating a predictor.</remarks>
     public PaddlePredictor CreatePredictor()
     {
         try
         {
-            return CreatePredictor2();
+            return CreatePredictorNoDelete();
         }
         finally
         {
@@ -470,7 +470,7 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>Create a new Predictor.</summary>
-    public PaddlePredictor CreatePredictor2()
+    public PaddlePredictor CreatePredictorNoDelete()
     {
         return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
     }

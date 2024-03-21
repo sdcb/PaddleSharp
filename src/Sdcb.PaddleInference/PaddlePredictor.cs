@@ -35,24 +35,40 @@ public class PaddlePredictor : IDisposable
     /// <summary>
     /// Gets the input tensor names of this predictor.
     /// </summary>
-    public string[] InputNames
+    public unsafe string[] InputNames
     {
         get
         {
-            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetInputNames(_ptr) };
-            return wrapper.ToArray();
+            PD_OneDimArrayCstr* array = null;
+            try
+            {
+                array = (PD_OneDimArrayCstr*)PaddleNative.PD_PredictorGetInputNames(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayCstrDestroy((IntPtr)array);
+            }
         }
     }
 
     /// <summary>
     /// Gets the output tensor names of this predictor.
     /// </summary>
-    public string[] OutputNames
+    public unsafe string[] OutputNames
     {
         get
         {
-            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetOutputNames(_ptr) };
-            return wrapper.ToArray();
+            PD_OneDimArrayCstr* array = null;
+            try
+            {
+                array = (PD_OneDimArrayCstr*)PaddleNative.PD_PredictorGetOutputNames(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayCstrDestroy((IntPtr)array);
+            }
         }
     }
 
@@ -84,6 +100,20 @@ public class PaddlePredictor : IDisposable
         }
     }
 
+    public unsafe PaddleIOInfo[] GetInputInfo()
+    {
+        PD_IOInfos* array = null;
+        try
+        {
+            array = (PD_IOInfos*)PaddleNative.PD_PredictorGetInputInfos(_ptr);
+            return array->ToArray();
+        }
+        finally
+        {
+            PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+        }
+    }
+
     /// <summary>
     /// Gets the number of input tensors of this predictor.
     /// </summary>
@@ -103,8 +133,8 @@ public class PaddlePredictor : IDisposable
         try
         {
             return PaddleNative.PD_PredictorRun(_ptr) != 0;
-        } 
-        catch(SEHException)
+        }
+        catch (SEHException)
         {
             return false;
         }
