@@ -12,8 +12,8 @@ namespace Sdcb.PaddleNLP.Lac.Details;
 
 internal class SharedUtils
 {
-    public readonly static Type RootType = typeof(ChineseTextProcessor);
-    public readonly static Assembly RootAssembly = typeof(ChineseTextProcessor).Assembly;
+    public readonly static Type RootType = typeof(ChineseSegmenter);
+    public readonly static Assembly RootAssembly = typeof(ChineseSegmenter).Assembly;
     public static string Prefix => RootType.Namespace;
 
     public static PaddleConfig CreateLacConfig()
@@ -42,14 +42,22 @@ internal class SharedUtils
             .ToDictionary(parts => parts[0], parts => parts[1]);
     }
 
-    public static Dictionary<int, string> LoadTagMap()
+    public static string[] LoadTagMap()
     {
         string key = $"{Prefix}.models.lac.tag.dic";
         using Stream stream = RootAssembly.GetManifestResourceStream(key)!;
-        return ReadLines(stream)
+        Dictionary<int, string> tagMap = ReadLines(stream)
             .Select(x => x.Split('\t'))
             .GroupBy(x => int.Parse(x[0]))
             .ToDictionary(k => k.Key, v => v.Last()[1]);
+
+        int maxTag = tagMap.Keys.Max();
+        string[] result = new string[maxTag + 1];
+        foreach (KeyValuePair<int, string> item in tagMap)
+        {
+            result[item.Key] = item.Value;
+        }
+        return result;
     }
 
     internal static IEnumerable<string> ReadLines(Stream stream)
