@@ -82,7 +82,11 @@ public class ChineseSegmenter(PaddleConfig config, Dictionary<string, int> token
         int maxLength = inputTexts.Max(x => x.Length);
         long[] tokens = inputTexts
             .Select(input => input
-                .Select(c => _tokenMap[_q2b.TryGetValue(c.ToString(), out string value) ? value : c.ToString()])
+                .Select(c => 
+                {
+                    string q2b = _q2b.TryGetValue(c.ToString(), out string value) ? value : c.ToString();
+                    return _tokenMap.TryGetValue(q2b, out int token) ? token : 0;
+                })
                 .ToArray())
             .Aggregate(Enumerable.Empty<long>(), (a, b) => a.Concat([.. b, .. new long[maxLength - b.Length]]))
             .ToArray();
@@ -153,7 +157,8 @@ public class ChineseSegmenter(PaddleConfig config, Dictionary<string, int> token
         {
             string word = sentOut[i];
             string label = tagMap[tagsOut[i]];
-            result[i] = new WordAndTag(word, label, (WordTag)tagsOut[i]);
+            string labelPrefix = label[..label.IndexOf('-')];
+            result[i] = new WordAndTag(word, labelPrefix, (WordTag)tagsOut[i]);
         }
         return result;
     }

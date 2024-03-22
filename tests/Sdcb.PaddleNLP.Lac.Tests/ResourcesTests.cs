@@ -22,7 +22,7 @@ public class ResourcesTests
     [Fact]
     public void TagTest()
     {
-        Dictionary<int, string> tags = SharedUtils.LoadTagMap();
+        string[] tags = SharedUtils.LoadTagMap();
         Assert.NotEmpty(tags);
     }
 
