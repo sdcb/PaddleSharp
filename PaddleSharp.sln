@@ -71,6 +71,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{026E4A25-9
 		docs\detection.md = docs\detection.md
 		docs\ocr.md = docs\ocr.md
 		docs\paddle2onnx.md = docs\paddle2onnx.md
+		docs\paddlenlp-lac.md = docs\paddlenlp-lac.md
 		docs\rotation-detection.md = docs\rotation-detection.md
 	EndProjectSection
 EndProject
@@ -86,9 +87,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Share
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Local", "src\Sdcb.PaddleOCR.Models.Local\Sdcb.PaddleOCR.Models.Local.csproj", "{0172BD09-B617-4FF6-8221-883029AD4877}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleNLP.Lac", "src\Sdcb.PaddleNLP.Lac\Sdcb.PaddleNLP.Lac.csproj", "{5756186D-613D-4656-B21D-822AB4DD9F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleNLP.Lac", "src\Sdcb.PaddleNLP.Lac\Sdcb.PaddleNLP.Lac.csproj", "{5756186D-613D-4656-B21D-822AB4DD9F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleNLP.Lac.Tests", "tests\Sdcb.PaddleNLP.Lac.Tests\Sdcb.PaddleNLP.Lac.Tests.csproj", "{19222033-C5E1-4326-A597-75CF2DE4007F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleNLP.Lac.Tests", "tests\Sdcb.PaddleNLP.Lac.Tests\Sdcb.PaddleNLP.Lac.Tests.csproj", "{19222033-C5E1-4326-A597-75CF2DE4007F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

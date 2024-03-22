@@ -15,7 +15,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>paddlenlp-lac.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +24,17 @@
     <EmbeddedResource Include="models\lac\q2b.dic" />
     <EmbeddedResource Include="models\lac\tag.dic" />
     <EmbeddedResource Include="models\lac\word.dic" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\docs\paddlenlp-lac.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
