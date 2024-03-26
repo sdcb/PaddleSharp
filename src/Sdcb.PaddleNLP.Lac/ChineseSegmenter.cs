@@ -12,13 +12,13 @@ namespace Sdcb.PaddleNLP.Lac;
 /// <remarks>
 /// 使用详细配置创建一个中文文本处理器的实例。
 /// </remarks>
-/// <param name="config">Paddle配置。</param>
+/// <param name="predictor">Paddle预测器。</param>
 /// <param name="tokenMap">token词汇表对照。</param>
 /// <param name="q2b">繁体字对照表。</param>
 /// <param name="tagMap">标签映射数组。</param>
-public class ChineseSegmenter(PaddleConfig config, Dictionary<string, int> tokenMap, Dictionary<string, string> q2b, string[] tagMap) : IDisposable
+public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int> tokenMap, Dictionary<string, string> q2b, string[] tagMap) : IDisposable
 {
-    private PaddleConfig _config = config;
+    private PaddlePredictor _config = predictor;
     private readonly Dictionary<string, int> _tokenMap = tokenMap;
     private readonly Dictionary<string, string> _q2b = q2b;
     private readonly string[] _tagMap = tagMap;
@@ -33,7 +33,7 @@ public class ChineseSegmenter(PaddleConfig config, Dictionary<string, int> token
     /// </summary>
     /// <param name="paddleDevice">用于配置Paddle设备，详见<see cref="PaddleDevice"/>，如果为<c>null</c>，则使用<see cref="PaddleDevice.Onnx"/>。</param>
     public ChineseSegmenter(Action<PaddleConfig>? paddleDevice = null) : this(
-        SharedUtils.CreateLacConfig().Apply(paddleDevice ?? PaddleDevice.Onnx()),
+        SharedUtils.CreateLacConfig().Apply(paddleDevice ?? PaddleDevice.Onnx()).CreatePredictor(),
         SharedUtils.LoadTokenMap(),
         SharedUtils.LoadQ2B(),
         SharedUtils.LoadTagMap())
@@ -90,7 +90,7 @@ public class ChineseSegmenter(PaddleConfig config, Dictionary<string, int> token
                 .ToArray())
             .Aggregate(Enumerable.Empty<long>(), (a, b) => a.Concat([.. b, .. new long[maxLength - b.Length]]))
             .ToArray();
-        using PaddlePredictor pred = _config.CreatePredictorNoDelete();
+        using PaddlePredictor pred = _config.Clone();
         using (PaddleTensor inputTensor = pred.GetInputTensor("token_ids"))
         {
             inputTensor.Shape = [inputTexts.Length, maxLength];
