@@ -387,7 +387,7 @@ public class PaddleConfig : IDisposable
             ThrowIfDisposed();
             return PaddleNative.PD_ConfigTensorRtEngineEnabled(_ptr) != 0;
         }
-    };
+    }
 
     /// <summary>A boolean state telling whether the trt dynamic_shape is used.</summary>
     public bool TensorRtDynamicShapeEnabled

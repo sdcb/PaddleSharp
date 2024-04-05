@@ -7,38 +7,19 @@ using System.Linq;
 namespace Sdcb.PaddleNLP.Lac;
 
 /// <summary>
-/// 用于处理中文文本的类，实现了分词和标签标注的功能，并支持自动资源管理。
+/// 实现对中文文本的处理，包括分词和词性标注功能。此类通过集成PaddlePaddle模型来实现高效率的文本分析，并提供自动资源管理支持。
 /// </summary>
-/// <remarks>
-/// 使用详细配置创建一个中文文本处理器的实例。
-/// </remarks>
-/// <param name="predictor">Paddle预测器。</param>
-/// <param name="tokenMap">token词汇表对照。</param>
-/// <param name="q2b">繁体字对照表。</param>
-/// <param name="tagMap">标签映射数组。</param>
-public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int> tokenMap, Dictionary<string, string> q2b, string[] tagMap) : IDisposable
+/// <param name="lacOptions">指定分词和标注过程中使用的配置选项，<see cref="LacOptions"/>定义了模型的主要配置。如果未指定，则使用默认配置<see cref="LacOptions.Default"/>。</param>
+/// <param name="paddleDevice">用于配置和初始化PaddlePaddle运算设备。接收一个<see cref="PaddleConfig"/>通过<paramref name="paddleDevice"/>动作进行配置。如果设为<c>null</c>，则默认使用<see cref="PaddleDevice.Onnx"/>作为运算设备。</param>
+public class ChineseSegmenter(LacOptions? lacOptions = null, Action<PaddleConfig>? paddleDevice = null) : IDisposable
 {
-    private PaddlePredictor _config = predictor;
-    private readonly Dictionary<string, int> _tokenMap = tokenMap;
-    private readonly Dictionary<string, string> _q2b = q2b;
-    private readonly string[] _tagMap = tagMap;
+    private PaddlePredictor _config = SharedUtils.CreateLacConfig().Apply(paddleDevice ?? PaddleDevice.Onnx()).CreatePredictor();
+    private readonly LacOptions _lacOptions = lacOptions ?? LacOptions.Default;
 
     /// <summary>
     /// 是否已释放资源。
     /// </summary>
     public bool Disposed => _config == null;
-
-    /// <summary>
-    /// 使用指定的Paddle设备配置创建一个中文文本处理器的实例。
-    /// </summary>
-    /// <param name="paddleDevice">用于配置Paddle设备，详见<see cref="PaddleDevice"/>，如果为<c>null</c>，则使用<see cref="PaddleDevice.Onnx"/>。</param>
-    public ChineseSegmenter(Action<PaddleConfig>? paddleDevice = null) : this(
-        SharedUtils.CreateLacConfig().Apply(paddleDevice ?? PaddleDevice.Onnx()).CreatePredictor(),
-        SharedUtils.LoadTokenMap(),
-        SharedUtils.LoadQ2B(),
-        SharedUtils.LoadTagMap())
-    {
-    }
 
     /// <summary>
     /// 对单个文本进行分词。
@@ -47,6 +28,7 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
     /// <returns>分词后的结果，一个包含分词的字符串数组。</returns>
     public string[] Segment(string text)
     {
+        ThrowIfDisposed();
         return SegmentAll([text])[0];
     }
 
@@ -57,6 +39,8 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
     /// <returns>每个文本分词后的结果数组。</returns>
     public string[][] SegmentAll(string[] inputTexts)
     {
+        ThrowIfDisposed();
+
         return TaggingAll(inputTexts)
             .Select(x => x.Select(y => y.Word).ToArray())
             .ToArray();
@@ -69,6 +53,7 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
     /// <returns>包含词和对应标签的数组。</returns>
     public WordAndTag[] Tagging(string inputText)
     {
+        ThrowIfDisposed();
         return TaggingAll([inputText])[0];
     }
 
@@ -79,14 +64,12 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
     /// <returns>每个文本处理的结果，是一个二维数组。</returns>
     public WordAndTag[][] TaggingAll(string[] inputTexts)
     {
+        ThrowIfDisposed();
+
         int maxLength = inputTexts.Max(x => x.Length);
         long[] tokens = inputTexts
             .Select(input => input
-                .Select(c => 
-                {
-                    string q2b = _q2b.TryGetValue(c.ToString(), out string value) ? value : c.ToString();
-                    return _tokenMap.TryGetValue(q2b, out int token) ? token : 0;
-                })
+                .Select(_lacOptions.TransformChar)
                 .ToArray())
             .Aggregate(Enumerable.Empty<long>(), (a, b) => a.Concat([.. b, .. new long[maxLength - b.Length]]))
             .ToArray();
@@ -113,7 +96,7 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
             .Chunk(maxLength)
             .ToArray();
 
-        return tags.Select((x, i) => ToSentOut(tags[i], _tagMap, inputTexts[i]))
+        return tags.Select((x, i) => ToSentOut(tags[i], _lacOptions.TagMap, inputTexts[i]))
             .ToArray();
     }
 
@@ -161,6 +144,11 @@ public class ChineseSegmenter(PaddlePredictor predictor, Dictionary<string, int>
             result[i] = new WordAndTag(word, labelPrefix, (WordTag)tagsOut[i]);
         }
         return result;
+    }
+
+    void ThrowIfDisposed()
+    {
+        if (Disposed) throw new ObjectDisposedException(nameof(ChineseSegmenter));
     }
 
     /// <summary>
