@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.6.0-preview.2" Condition="'$(Configuration)' != 'Debug'" />
   </ItemGroup>
 
 </Project>
