@@ -18,7 +18,7 @@ public class IOInfoTests
     {
         FileDetectionModel model = await OnlineDetectionModel.ChineseV4.DownloadAsync();
         using PaddleConfig c = PaddleConfig.FromModelDir(model.DirectoryPath);
-        using PaddlePredictor p = c.CreatePredictorNoDelete();
+        using PaddlePredictor p = c.CreatePredictor();
 
         _console.WriteLine("Input infos:");
         PaddleIOInfo[] inputInfos = p.InputInfos;

@@ -126,11 +126,7 @@ public static class PaddleDevice
     [Obsolete("Use Blas instead.")]
     public static Action<PaddleConfig> Openblas(int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
     {
-        return cfg =>
-        {
-            cfg.CpuMathThreadCount = cpuMathThreadCount;
-            CommonAction(cfg, memoryOptimized, glogEnabled);
-        };
+        return Blas(cpuMathThreadCount, memoryOptimized, glogEnabled);
     }
 
     /// <summary>

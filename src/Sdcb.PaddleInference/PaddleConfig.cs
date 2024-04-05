@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Sdcb.PaddleInference;
@@ -137,9 +138,16 @@ public class PaddleConfig : IDisposable
     /// <summary>A boolean state telling whether logs in Paddle inference are enabled.</summary>
     public bool GLogEnabled
     {
-        get => PaddleNative.PD_ConfigGlogInfoDisabled(_ptr) == 0;
+        get
+        {
+            ThrowIfDisposed();
+
+            return PaddleNative.PD_ConfigGlogInfoDisabled(_ptr) == 0;
+        }
         set
         {
+            ThrowIfDisposed();
+
             if (!value)
             {
                 PaddleNative.PD_ConfigDisableGlogInfo(_ptr);
@@ -154,19 +162,40 @@ public class PaddleConfig : IDisposable
     /// <summary>A boolean state telling whether the memory optimization is activated.</summary>
     public bool MemoryOptimized
     {
-        get => PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0;
-        set => PaddleNative.PD_ConfigEnableMemoryOptim(_ptr, (sbyte)(value ? 1 : 0));
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigMemoryOptimEnabled(_ptr) != 0;
+        }
+        set
+        {
+            ThrowIfDisposed();
+            PaddleNative.PD_ConfigEnableMemoryOptim(_ptr, (sbyte)(value ? 1 : 0));
+        }
     }
 
     /// <summary>A boolean state telling whether the model is set from the CPU memory.</summary>
-    public bool IsMemoryModel => PaddleNative.PD_ConfigModelFromMemory(_ptr) != 0;
+    public bool IsMemoryModel
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigModelFromMemory(_ptr) != 0;
+        }
+    }
 
     /// <summary>A boolean state telling whether to use the MKLDNN.</summary>
     public bool MkldnnEnabled
     {
-        get => PaddleNative.PD_ConfigMkldnnEnabled(_ptr) != 0;
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigMkldnnEnabled(_ptr) != 0;
+        }
         set
         {
+            ThrowIfDisposed();
+
             if (value)
             {
                 PaddleNative.PD_ConfigEnableMKLDNN(_ptr);
@@ -174,6 +203,29 @@ public class PaddleConfig : IDisposable
             else if (MkldnnEnabled)
             {
                 Console.WriteLine($"Warn: Mkldnn cannot disabled after enabled.");
+            }
+        }
+    }
+
+    /// <summary>A boolean state telling whether to use CUDNN.</summary>
+    public bool CudnnEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigCudnnEnabled(_ptr) != 0;
+        }
+        set
+        {
+            ThrowIfDisposed();
+
+            if (value)
+            {
+                PaddleNative.PD_ConfigEnableCudnn(_ptr);
+            }
+            else if (CudnnEnabled)
+            {
+                Console.WriteLine($"Warn: Cudnn cannot disabled after enabled.");
             }
         }
     }
@@ -187,6 +239,7 @@ public class PaddleConfig : IDisposable
         set
         {
             _MkldnnCacheCapacity = value;
+            ThrowIfDisposed();
             PaddleNative.PD_ConfigSetMkldnnCacheCapacity(_ptr, value);
         }
     }
@@ -199,9 +252,15 @@ public class PaddleConfig : IDisposable
     /// </remarks>
     public bool OnnxEnabled
     {
-        get => PaddleNative.PD_ConfigONNXRuntimeEnabled(_ptr) != 0;
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigONNXRuntimeEnabled(_ptr) != 0;
+        }
         set
         {
+            ThrowIfDisposed();
+
             if (value)
             {
                 PaddleNative.PD_ConfigEnableONNXRuntime(_ptr);
@@ -218,15 +277,21 @@ public class PaddleConfig : IDisposable
     /// </summary>
     public void EnableOnnxOptimization()
     {
+        ThrowIfDisposed();
         PaddleNative.PD_ConfigEnableORTOptimization(_ptr);
     }
 
     /// <summary>Turn on profiling report. If not turned on, no profiling report will be generated.</summary>
     public bool ProfileEnabled
     {
-        get => PaddleNative.PD_ConfigProfileEnabled(_ptr) != 0;
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigProfileEnabled(_ptr) != 0;
+        }
         set
         {
+            ThrowIfDisposed();
             if (value)
             {
                 PaddleNative.PD_ConfigEnableProfile(_ptr);
@@ -247,9 +312,14 @@ public class PaddleConfig : IDisposable
     /// <summary>A boolean state telling whether the GPU is turned on.</summary>
     public bool UseGpu
     {
-        get => PaddleNative.PD_ConfigUseGpu(_ptr) != 0;
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigUseGpu(_ptr) != 0;
+        }
         set
         {
+            ThrowIfDisposed();
             if (!value)
             {
                 PaddleNative.PD_ConfigDisableGpu(_ptr);
@@ -262,13 +332,34 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>Get the GPU device id.</summary>
-    public int GpuDeviceId => PaddleNative.PD_ConfigGpuDeviceId(_ptr);
+    public int GpuDeviceId
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigGpuDeviceId(_ptr);
+        }
+    }
 
     /// <summary>Get the initial size in MB of the GPU memory pool.</summary>
-    public int InitialGpuMemorySizeMB => PaddleNative.PD_ConfigMemoryPoolInitSizeMb(_ptr);
+    public int InitialGpuMemorySizeMB
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigMemoryPoolInitSizeMb(_ptr);
+        }
+    }
 
     /// <summary>Get the proportion of the initial memory pool size compared to the device.</summary>
-    public float FractionOfGpuMemoryForPool => PaddleNative.PD_ConfigFractionOfGpuMemoryForPool(_ptr);
+    public float FractionOfGpuMemoryForPool
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigFractionOfGpuMemoryForPool(_ptr);
+        }
+    }
 
     /// <param name="workspaceSize">The memory size(in byte) used for TensorRT workspace.</param>
     /// <param name="maxBatchSize">The maximum batch size of this prediction task, better set as small as possible for less performance loss.</param>
@@ -283,20 +374,45 @@ public class PaddleConfig : IDisposable
         PaddlePrecision precision = PaddlePrecision.Float32,
         bool useStatic = true,
         bool useCalibMode = false)
-        => PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
+    {
+        ThrowIfDisposed();
+        PaddleNative.PD_ConfigEnableTensorRtEngine(_ptr, workspaceSize, maxBatchSize, minSubgraphSize, precision, (sbyte)(useStatic ? 1 : 0), (sbyte)(useCalibMode ? 1 : 0));
+    }
 
     /// <summary>A boolean state telling whether the TensorRT engine is used.</summary>
-    public bool TensorRtEngineEnabled => PaddleNative.PD_ConfigTensorRtEngineEnabled(_ptr) != 0;
+    public bool TensorRtEngineEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigTensorRtEngineEnabled(_ptr) != 0;
+        }
+    };
 
     /// <summary>A boolean state telling whether the trt dynamic_shape is used.</summary>
-    public bool TensorRtDynamicShapeEnabled => PaddleNative.PD_ConfigTensorRtDynamicShapeEnabled(_ptr) != 0;
+    public bool TensorRtDynamicShapeEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigTensorRtDynamicShapeEnabled(_ptr) != 0;
+        }
+    }
 
     /// <summary>A boolean state telling whether to use the TensorRT DLA.</summary>
-    public bool TensorRtDlaEnabled => PaddleNative.PD_ConfigTensorRtDlaEnabled(_ptr) != 0;
+    public bool TensorRtDlaEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigTensorRtDlaEnabled(_ptr) != 0;
+        }
+    }
 
     /// <summary>Collect shape info of all tensors in compute graph.</summary>
     public unsafe void CollectShapeRangeInfo(string rangeShapeInfoPath)
     {
+        ThrowIfDisposed();
         fixed (byte* cacheDirPtr = PaddleEncoding.GetBytes(rangeShapeInfoPath))
         {
             PaddleNative.PD_ConfigCollectShapeRangeInfo(_ptr, (IntPtr)cacheDirPtr);
@@ -304,11 +420,19 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>A boolean state telling whether to collect shape info.</summary>
-    public bool ShapeRangeInfoCollected => PaddleNative.PD_ConfigShapeRangeInfoCollected(_ptr) != 0;
+    public bool ShapeRangeInfoCollected
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigShapeRangeInfoCollected(_ptr) != 0;
+        }
+    }
 
     /// <summary>Enable tuned tensorrt dynamic shape.</summary>
     public unsafe void EnableTunedTensorRtDynamicShape(string rangeShapeInfoPath, bool allowBuildAtRuntime = true)
     {
+        ThrowIfDisposed();
         fixed (byte* cacheDirPtr = PaddleEncoding.GetBytes(rangeShapeInfoPath))
         {
             PaddleNative.PD_ConfigEnableTunedTensorRtDynamicShape(_ptr, (IntPtr)cacheDirPtr, (sbyte)(allowBuildAtRuntime ? 1 : 0));
@@ -316,11 +440,19 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>A boolean state telling whether to use tuned tensorrt dynamic shape.</summary>
-    public bool TunedTensorRtDynamicShape => PaddleNative.PD_ConfigTunedTensorRtDynamicShape(_ptr) != 0;
+    public bool TunedTensorRtDynamicShape
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigTunedTensorRtDynamicShape(_ptr) != 0;
+        }
+    }
 
     /// <summary>Set the path of optimization cache directory.</summary>
     public unsafe void SetOptimCacheDir(string path)
     {
+        ThrowIfDisposed();
         fixed (byte* cacheDirPtr = PaddleEncoding.GetBytes(path))
         {
             PaddleNative.PD_ConfigSetOptimCacheDir(_ptr, (IntPtr)cacheDirPtr);
@@ -330,6 +462,7 @@ public class PaddleConfig : IDisposable
     /// <summary>Set min, max, opt shape for TensorRT Dynamic shape mode.</summary>
     public unsafe void SetTrtDynamicShapeInfo(Dictionary<string, TensorRtDynamicShapeGroup> shapeInfo)
     {
+        ThrowIfDisposed();
         using PtrFromStringArray shapeNames = new([.. shapeInfo.Keys]);
 
         long[] shape = new long[shapeInfo.Count];
@@ -355,6 +488,7 @@ public class PaddleConfig : IDisposable
     {
         get
         {
+            ThrowIfDisposed();
             PD_Cstr* summaryPtr = null;
             try
             {
@@ -374,9 +508,14 @@ public class PaddleConfig : IDisposable
     /// <summary>A boolean state telling whether the thread local CUDA stream is enabled.</summary>
     public bool EnableGpuMultiStream
     {
-        get => PaddleNative.PD_ConfigThreadLocalStreamEnabled(_ptr) != 0;
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigThreadLocalStreamEnabled(_ptr) != 0;
+        }
         set
         {
+            ThrowIfDisposed();
             if (value)
             {
                 PaddleNative.PD_ConfigEnableGpuMultiStream(_ptr);
@@ -389,11 +528,22 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>A boolean state telling whether the Config is valid.</summary>
-    public bool Valid => PaddleNative.PD_ConfigIsValid(_ptr) != 0;
+    public bool Valid
+    {
+        get
+        {
+            if (_ptr == IntPtr.Zero)
+            {
+                return false;
+            }
+            return PaddleNative.PD_ConfigIsValid(_ptr) != 0;
+        }
+    }
 
     /// <summary>Turn on GPU.</summary>
     public void EnableUseGpu(int initialMemoryMB, int deviceId, PaddlePrecision precision = PaddlePrecision.Float32)
     {
+        ThrowIfDisposed();
         if (GetVersion() >= new Version(2, 5, 0))
         {
             // 2.5.0+ support precision
@@ -408,6 +558,7 @@ public class PaddleConfig : IDisposable
     /// <summary>Set the combined model with two specific pathes for program and parameters.</summary>
     public unsafe void SetModel(string programPath, string paramsPath)
     {
+        ThrowIfDisposed();
         if (programPath == null) throw new ArgumentNullException(nameof(programPath));
         if (paramsPath == null) throw new ArgumentNullException(nameof(paramsPath));
         if (!File.Exists(programPath)) throw new FileNotFoundException("programPath not found", programPath);
@@ -422,14 +573,29 @@ public class PaddleConfig : IDisposable
     }
 
     /// <summary>Get the program file path.</summary>
-    public string? ProgramPath => PaddleNative.PD_ConfigGetProgFile(_ptr).ANSIToString();
+    public string? ProgramPath
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigGetProgFile(_ptr).ANSIToString();
+        }
+    }
 
     /// <summary>Get the params file path.</summary>
-    public string? ParamsPath => PaddleNative.PD_ConfigGetParamsFile(_ptr).ANSIToString();
+    public string? ParamsPat
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigGetParamsFile(_ptr).ANSIToString();
+        }
+    }
 
     /// <summary>Specify the memory buffer of program and parameter. Used when model and params are loaded directly from memory.</summary>
     public unsafe void SetMemoryModel(byte[] programBuffer, byte[] paramsBuffer)
     {
+        ThrowIfDisposed();
         fixed (byte* pprogram = programBuffer)
         fixed (byte* pparams = paramsBuffer)
         {
@@ -442,17 +608,26 @@ public class PaddleConfig : IDisposable
     /// <summary>An int state telling how many threads are used in the CPU math library.</summary>
     public int CpuMathThreadCount
     {
-        get => PaddleNative.PD_ConfigGetCpuMathLibraryNumThreads(_ptr);
-        set => PaddleNative.PD_ConfigSetCpuMathLibraryNumThreads(_ptr, value);
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigGetCpuMathLibraryNumThreads(_ptr);
+        }
+        set
+        {
+            ThrowIfDisposed();
+            PaddleNative.PD_ConfigSetCpuMathLibraryNumThreads(_ptr, value);
+        }
     }
 
     /// <summary>Create a new Predictor, and then dispose the config.</summary>
-    /// <remarks>Suggest use <see cref="CreatePredictorNoDelete"/> instead, because the config will be deleted in C++ when creating a predictor.</remarks>
     public PaddlePredictor CreatePredictor()
     {
+        ThrowIfDisposed();
+
         try
         {
-            return CreatePredictorNoDelete();
+            return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
         }
         finally
         {
@@ -469,12 +644,6 @@ public class PaddleConfig : IDisposable
         }
     }
 
-    /// <summary>Create a new Predictor.</summary>
-    public PaddlePredictor CreatePredictorNoDelete()
-    {
-        return new PaddlePredictor(PaddleNative.PD_PredictorCreate(_ptr));
-    }
-
     /// <summary>
     /// Deletes a pass with the specified name.
     /// </summary>
@@ -486,10 +655,31 @@ public class PaddleConfig : IDisposable
     /// <seealso cref="PaddleNative.PD_ConfigDeletePass(IntPtr, IntPtr)"/>
     public unsafe void DeletePass(string passName)
     {
+        ThrowIfDisposed();
+
         byte[] passNameBytes = PaddleEncoding.GetBytes(passName);
         fixed (byte* ptr = passNameBytes)
         {
             PaddleNative.PD_ConfigDeletePass(_ptr, (IntPtr)ptr);
+        }
+    }
+
+    /// <summary>Get information of passes.</summary>
+    public unsafe string[] Passes
+    {
+        get
+        {
+            ThrowIfDisposed();
+
+            PD_OneDimArrayCstr* passInfo = (PD_OneDimArrayCstr*)PaddleNative.PD_ConfigAllPasses(_ptr);
+            try
+            {
+                return passInfo->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayCstrDestroy((IntPtr)passInfo);
+            }
         }
     }
 
@@ -500,8 +690,19 @@ public class PaddleConfig : IDisposable
     /// <returns>The modified PaddleConfig.</returns>
     public PaddleConfig Apply(Action<PaddleConfig> configure)
     {
+        ThrowIfDisposed();
+
         configure(this);
         return this;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void ThrowIfDisposed()
+    {
+        if (_ptr == IntPtr.Zero)
+        {
+            throw new ObjectDisposedException(nameof(PaddleConfig));
+        }
     }
 
     /// <summary>
