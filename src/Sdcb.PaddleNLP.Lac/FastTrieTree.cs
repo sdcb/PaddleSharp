@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Sdcb.PaddleNLP.Lac;
 
-internal class TrieTree : IEnumerable<string>
+internal class FastTrieTree : IEnumerable<string>
 {
     private readonly Dictionary<string, bool> tree = [];
 
@@ -22,7 +22,7 @@ internal class TrieTree : IEnumerable<string>
         }
     }
 
-    public List<(int start, int end)> Search(string content)
+    public List<(int start, int end)> FindAll(string content)
     {
         List<(int start, int end)> result = [];
         int length = content.Length;
@@ -34,7 +34,7 @@ internal class TrieTree : IEnumerable<string>
                 string subString = content[start..end];
                 if (tree.TryGetValue(subString, out bool defined))
                 {
-                    if (defined && (result.Count == 0 || end > result[result.Count - 1].end))
+                    if (defined && (result.Count == 0 || end > result[^1].end))
                     {
                         result.Add((start, end));
                     }

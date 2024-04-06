@@ -92,12 +92,17 @@ public class ChineseSegmenter(LacOptions? lacOptions = null, Action<PaddleConfig
             resultTokens = Array.ConvertAll(outputTensor.GetData<long>(), x => (int)x);
         }
 
-        int[][] tags = resultTokens
+        int[][] allTags = resultTokens
             .Chunk(maxLength)
             .ToArray();
 
-        return tags.Select((x, i) => ToSentOut(tags[i], _lacOptions.TagMap, inputTexts[i]))
-            .ToArray();
+        return allTags.Select((tags, i) =>
+        {
+            string input = inputTexts[i];
+            int[] transformedTags = _lacOptions.TransformCustomizedWords(input, tags);
+            return ToSentOut(transformedTags, _lacOptions.TagMap, input);
+        })
+        .ToArray();
     }
 
     static WordAndTag[] ToSentOut(int[] tags, string[] tagMap, string input)

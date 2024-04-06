@@ -1,4 +1,5 @@
 ﻿using Sdcb.PaddleNLP.Lac.Details;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,8 @@ public record LacOptions(
     string[] TagMap,
     Dictionary<string, WordTag?>? CustomizedWords = null)
 {
+    private FastTrieTree _trieTree = [.. CustomizedWords != null ? CustomizedWords.Keys : Enumerable.Empty<string>()];
+
     /// <summary>
     /// 获取LAC模型的默认配置选项。
     /// </summary>
@@ -37,5 +40,31 @@ public record LacOptions(
     {
         string q2b = Q2b.TryGetValue(c.ToString(), out string value) ? value : c.ToString();
         return TokenMap.TryGetValue(q2b, out int token) ? token : 0;
+    }
+
+    /// <summary>
+    /// 根据自定义词汇和其标签对输入字符串进行转换，更新其标签数组。
+    /// </summary>
+    /// <param name="input">输入的字符串。</param>
+    /// <param name="tags">原标签数组。</param>
+    /// <returns>更新后的标签数组。</returns>
+    public int[] TransformCustomizedWords(string input, int[] tags)
+    {
+        int[] resultTags = [.. tags];
+
+        foreach ((int start, int end) in _trieTree.FindAll(input))
+        {
+            string word = input[start..end];
+            WordTag? tag = CustomizedWords![word];
+            tag ??= (WordTag)tags[start];
+
+            resultTags[start] = (int)tag;
+            for (int i = start + 1; i < end; i++)
+            {
+                resultTags[i] = (int)tag + 1;
+            }
+        }
+
+        return resultTags;
     }
 }
