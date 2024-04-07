@@ -33,7 +33,7 @@ static ProjectVersion[] Projects = new[]
 	new ProjectVersion("Sdcb.PaddleOCR.Models.LocalV4", "2.7.0.1"),
 	new ProjectVersion("Sdcb.PaddleDetection", "2.3.3"),
 	new ProjectVersion("Sdcb.RotationDetector", "1.0.3"),
-	new ProjectVersion("Sdcb.PaddleNLP.Lac", "1.0.0-preview.2"),
+	new ProjectVersion("Sdcb.PaddleNLP.Lac", "1.0.0-preview.3"),
 };
 
 static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
