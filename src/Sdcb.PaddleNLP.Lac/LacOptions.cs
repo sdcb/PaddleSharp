@@ -1,4 +1,4 @@
-﻿using Sdcb.PaddleNLP.Lac.Details;
+﻿using Sdcb.PaddleNLP.Lac.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -53,9 +53,9 @@ public record LacOptions
     /// </summary>
     /// <param name="customizedWords">自定义词汇表，允许用户定义特定词汇及其对应的标签。如果不提供，则默认为null。</param>
     public LacOptions(Dictionary<string, WordTag?>? customizedWords = null) : this(
-        SharedUtils.LoadTokenMap(), 
-        SharedUtils.LoadQ2B(), 
-        SharedUtils.LoadTagMap(), 
+        LacModelUtils.LoadTokenMap(),
+        LacModelUtils.LoadQ2B(),
+        LacModelUtils.LoadTagMap(), 
         customizedWords)
     {
     }

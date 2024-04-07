@@ -1,20 +1,31 @@
 ﻿using Sdcb.PaddleInference;
-using Sdcb.PaddleNLP.Lac.Details;
+using Sdcb.PaddleNLP.Lac.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Sdcb.PaddleNLP.Lac.Tests")]
 
 namespace Sdcb.PaddleNLP.Lac;
 
 /// <summary>
 /// 实现对中文文本的处理，包括分词和词性标注功能。此类通过集成PaddlePaddle模型来实现高效率的文本分析，并提供自动资源管理支持。
 /// </summary>
-/// <param name="lacOptions">指定分词和标注过程中使用的配置选项，<see cref="LacOptions"/>定义了模型的主要配置。如果未指定，则使用默认配置<see cref="LacOptions.Default"/>。</param>
-/// <param name="paddleDevice">用于配置和初始化PaddlePaddle运算设备。接收一个<see cref="PaddleConfig"/>通过<paramref name="paddleDevice"/>动作进行配置。如果设为<c>null</c>，则默认使用<see cref="PaddleDevice.Onnx"/>作为运算设备。</param>
-public class ChineseSegmenter(LacOptions? lacOptions = null, Action<PaddleConfig>? paddleDevice = null) : IDisposable
+public class ChineseSegmenter : IDisposable
 {
-    private PaddlePredictor _config = SharedUtils.CreateLacConfig().Apply(paddleDevice ?? PaddleDevice.Onnx()).CreatePredictor();
-    private readonly LacOptions _lacOptions = lacOptions ?? LacOptions.Default;
+    private PaddlePredictor _config;
+    private readonly LacOptions _lacOptions;
+
+    /// <param name="lacOptions">指定分词和标注过程中使用的配置选项，<see cref="LacOptions"/>定义了模型的主要配置。如果未指定，则使用默认配置<see cref="LacOptions.Default"/>。</param>
+    /// <param name="paddleDevice">用于配置和初始化PaddlePaddle运算设备。接收一个<see cref="PaddleConfig"/>通过<paramref name="paddleDevice"/>动作进行配置。如果设为<c>null</c>，则默认使用<see cref="PaddleDevice.Onnx"/>作为运算设备。</param>
+    public ChineseSegmenter(LacOptions? lacOptions = null, Action<PaddleConfig>? paddleDevice = null)
+    {
+        _lacOptions = lacOptions ?? LacOptions.Default;
+        using PaddleConfig config = new();
+        config.SetMemoryModel(LacModelUtils.ReadModelProgram(), LacModelUtils.ReadModelParams());
+        _config = config.CreatePredictor();
+    }
 
     /// <summary>
     /// 是否已释放资源。

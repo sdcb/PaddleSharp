@@ -19,14 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="models\lac\inference.pdiparams" />
-    <EmbeddedResource Include="models\lac\inference.pdmodel" />
-    <EmbeddedResource Include="models\lac\q2b.dic" />
-    <EmbeddedResource Include="models\lac\tag.dic" />
-    <EmbeddedResource Include="models\lac\word.dic" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\build\icon.jpg">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -44,9 +36,14 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\Sdcb.PaddleNLP.Lac.Model\Sdcb.PaddleNLP.Lac.Model.csproj"/>
     <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />
-    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0.1" Condition="'$(Configuration)' != 'Debug'" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <PackageReference Include="Sdcb.PaddleNLP.Lac.Model" Version="1.0.0-preview.1" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0.1" />
   </ItemGroup>
 
 </Project>
