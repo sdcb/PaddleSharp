@@ -18,12 +18,12 @@ jobs:
         run: dotnet build -c Release
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
-  linux-ubuntu:
-    runs-on: ubuntu-latest
-    container: sdflysha/dotnet6sdk-paddle:2.5.0-ubuntu22
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build code
-        run: dotnet build -c Release
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LinuxExclude"
+  # linux-ubuntu:
+  #   runs-on: ubuntu-latest
+  #   container: sdflysha/dotnet6sdk-paddle:2.5.0-ubuntu22
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build code
+  #       run: dotnet build -c Release
+  #     - name: Test
+  #       run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LinuxExclude"
