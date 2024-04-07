@@ -1,5 +1,7 @@
 ﻿using Sdcb.PaddleInference.Native;
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Sdcb.PaddleInference;
@@ -34,24 +36,44 @@ public class PaddlePredictor : IDisposable
     /// <summary>
     /// Gets the input tensor names of this predictor.
     /// </summary>
-    public string[] InputNames
+    public unsafe string[] InputNames
     {
         get
         {
-            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetInputNames(_ptr) };
-            return wrapper.ToArray();
+            ThrowIfDisposed();
+
+            PD_OneDimArrayCstr* array = null;
+            try
+            {
+                array = (PD_OneDimArrayCstr*)PaddleNative.PD_PredictorGetInputNames(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayCstrDestroy((IntPtr)array);
+            }
         }
     }
 
     /// <summary>
     /// Gets the output tensor names of this predictor.
     /// </summary>
-    public string[] OutputNames
+    public unsafe string[] OutputNames
     {
         get
         {
-            using PaddleNative.PdStringArrayWrapper wrapper = new() { ptr = PaddleNative.PD_PredictorGetOutputNames(_ptr) };
-            return wrapper.ToArray();
+            ThrowIfDisposed();
+
+            PD_OneDimArrayCstr* array = null;
+            try
+            {
+                array = (PD_OneDimArrayCstr*)PaddleNative.PD_PredictorGetOutputNames(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayCstrDestroy((IntPtr)array);
+            }
         }
     }
 
@@ -62,6 +84,8 @@ public class PaddlePredictor : IDisposable
     /// <returns>An instance of <see cref="PaddleTensor"/> representing the input tensor.</returns>
     public unsafe PaddleTensor GetInputTensor(string name)
     {
+        ThrowIfDisposed();
+
         byte[] nameBytes = Encoding.UTF8.GetBytes(name);
         fixed (byte* ptr = nameBytes)
         {
@@ -76,6 +100,8 @@ public class PaddlePredictor : IDisposable
     /// <returns>An instance of <see cref="PaddleTensor"/> representing the output tensor.</returns>
     public unsafe PaddleTensor GetOutputTensor(string name)
     {
+        ThrowIfDisposed();
+
         byte[] nameBytes = Encoding.UTF8.GetBytes(name);
         fixed (byte* ptr = nameBytes)
         {
@@ -84,20 +110,115 @@ public class PaddlePredictor : IDisposable
     }
 
     /// <summary>
+    /// Gets the input information of this predictor.
+    /// <para>This includes details about the input tensors such as their names, shapes, and data types.</para>
+    /// </summary>
+    public unsafe PaddleIOInfo[] InputInfos
+    {
+        get
+        {
+            ThrowIfDisposed();
+
+            PD_IOInfos* array = null;
+            try
+            {
+                array = (PD_IOInfos*)PaddleNative.PD_PredictorGetInputInfos(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the output information of this predictor.
+    /// <para>This includes details about the input tensors such as their names, shapes, and data types.</para>
+    /// </summary>
+    public unsafe PaddleIOInfo[] OutputInfos
+    {
+        get
+        {
+            ThrowIfDisposed();
+
+            PD_IOInfos* array = null;
+            try
+            {
+                array = (PD_IOInfos*)PaddleNative.PD_PredictorGetOutputInfos(_ptr);
+                return array->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_IOInfosDestroy((IntPtr)array);
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets the number of input tensors of this predictor.
     /// </summary>
-    public long InputSize => PaddleNative.PD_PredictorGetInputNum(_ptr);
+    public long InputSize
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_PredictorGetInputNum(_ptr);
+        }
+    }
 
     /// <summary>
     /// Gets the number of output tensors of this predictor.
     /// </summary>
-    public long OutputSize => PaddleNative.PD_PredictorGetOutputNum(_ptr);
+    public long OutputSize
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_PredictorGetOutputNum(_ptr);
+        }
+    }
 
     /// <summary>
     /// Runs the prediction with input data and generates model output.
     /// </summary>
     /// <returns>true if prediction runs successfully; false otherwise.</returns>
-    public bool Run() => PaddleNative.PD_PredictorRun(_ptr) != 0;
+    public bool Run()
+    {
+        try
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_PredictorRun(_ptr) != 0;
+        }
+        catch (SEHException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Clear the intermediate tensors of the predictor</summary>
+    public void ClearIntermediateTensor()
+    {
+        ThrowIfDisposed();
+        PaddleNative.PD_PredictorClearIntermediateTensor(_ptr);
+    }
+
+    /// <summary>Release all tmp tensor to compress the size of the memory pool. The memory pool is considered to be composed of a list of chunks, if the chunk is not occupied, it can be released.</summary>
+    /// <returns>Number of bytes released. It may be smaller than the actual released memory, because part of the memory is not managed by the MemoryPool.</returns>
+    public ulong TryShrinkMemory()
+    {
+        ThrowIfDisposed();
+        return PaddleNative.PD_PredictorTryShrinkMemory(_ptr);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void ThrowIfDisposed()
+    {
+        if (_ptr == IntPtr.Zero)
+        {
+            throw new ObjectDisposedException(nameof(PaddlePredictor));
+        }
+    }
 
     /// <summary>
     /// Frees the unmanaged resources used by the <see cref="PaddlePredictor"/> class.

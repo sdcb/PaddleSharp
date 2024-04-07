@@ -27,7 +27,14 @@ public class PaddleTensor : IDisposable
     /// <summary>
     /// Gets the name of this tensor.
     /// </summary>
-    public string Name => PaddleNative.PD_TensorGetName(_ptr).UTF8PtrToString()!;
+    public string Name
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_TensorGetName(_ptr).UTF8PtrToString()!;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the shape of this tensor.
@@ -36,11 +43,23 @@ public class PaddleTensor : IDisposable
     {
         get
         {
-            using PaddleNative.PdIntArrayWrapper wrapper = new() { ptr = PaddleNative.PD_TensorGetShape(_ptr) };
-            return wrapper.ToArray();
+            ThrowIfDisposed();
+
+            PD_OneDimArrayInt32* shape = null;
+            try
+            {
+                shape = (PD_OneDimArrayInt32*)PaddleNative.PD_TensorGetShape(_ptr);
+                return shape->ToArray();
+            }
+            finally
+            {
+                PaddleNative.PD_OneDimArrayInt32Destroy((IntPtr)shape);
+            }
         }
         set
         {
+            ThrowIfDisposed();
+
             fixed (int* ptr = value)
             {
                 PaddleNative.PD_TensorReshape(_ptr, value.Length, (IntPtr)ptr);
@@ -55,6 +74,8 @@ public class PaddleTensor : IDisposable
     /// <returns>The data of this tensor.</returns>
     public unsafe T[] GetData<T>()
     {
+        ThrowIfDisposed();
+
         TypeCode code = Type.GetTypeCode(typeof(T));
         Action<IntPtr, IntPtr> copyAction = code switch
         {
@@ -87,6 +108,8 @@ public class PaddleTensor : IDisposable
     /// <param name="data">The data to be set.</param>
     public unsafe void SetData(float[] data)
     {
+        ThrowIfDisposed();
+
         fixed (void* ptr = data)
         {
             PaddleNative.PD_TensorCopyFromCpuFloat(_ptr, (IntPtr)ptr);
@@ -99,6 +122,8 @@ public class PaddleTensor : IDisposable
     /// <param name="data">The data to be set.</param>
     public unsafe void SetData(int[] data)
     {
+        ThrowIfDisposed();
+
         fixed (void* ptr = data)
         {
             PaddleNative.PD_TensorCopyFromCpuInt32(_ptr, (IntPtr)ptr);
@@ -111,6 +136,8 @@ public class PaddleTensor : IDisposable
     /// <param name="data">The data to be set.</param>
     public unsafe void SetData(long[] data)
     {
+        ThrowIfDisposed();
+
         fixed (void* ptr = data)
         {
             PaddleNative.PD_TensorCopyFromCpuInt64(_ptr, (IntPtr)ptr);
@@ -123,6 +150,8 @@ public class PaddleTensor : IDisposable
     /// <param name="data">The data to be set.</param>
     public unsafe void SetData(byte[] data)
     {
+        ThrowIfDisposed();
+
         fixed (void* ptr = data)
         {
             PaddleNative.PD_TensorCopyFromCpuUint8(_ptr, (IntPtr)ptr);
@@ -135,6 +164,8 @@ public class PaddleTensor : IDisposable
     /// <param name="data">The data to be set.</param>
     public unsafe void SetData(sbyte[] data)
     {
+        ThrowIfDisposed();
+
         fixed (void* ptr = data)
         {
             PaddleNative.PD_TensorCopyFromCpuInt8(_ptr, (IntPtr)ptr);
@@ -144,7 +175,22 @@ public class PaddleTensor : IDisposable
     /// <summary>
     /// Gets the data type of this tensor.
     /// </summary>
-    public PaddleDataType DataType => PaddleNative.PD_TensorGetDataType(_ptr);
+    public PaddleDataType DataType
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_TensorGetDataType(_ptr);
+        }
+    }
+
+    void ThrowIfDisposed()
+    {
+        if (_ptr == IntPtr.Zero)
+        {
+            throw new ObjectDisposedException(nameof(PaddleTensor));
+        }
+    }
 
     /// <summary>
     /// Frees the unmanaged resources used by the <see cref="PaddleTensor"/> class.

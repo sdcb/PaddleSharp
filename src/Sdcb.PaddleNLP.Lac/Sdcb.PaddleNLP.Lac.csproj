@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sdcb/PaddleSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sdcb/PaddleSharp.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Sdcb;AI;Paddle;OCR;PaddleNLP;lac;baidu;分词;中文分词</PackageTags>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <Description>基于PaddleNLP lac模型的中文分词的非官方.NET封装</Description>
+    <Authors>sdcb</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>paddlenlp-lac.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\docs\paddlenlp-lac.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PolySharp" Version="1.14.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Sdcb.PaddleNLP.Lac.Model\Sdcb.PaddleNLP.Lac.Model.csproj" />
+    <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0.1" />
+    <PackageReference Include="Sdcb.PaddleNLP.Lac.Model" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

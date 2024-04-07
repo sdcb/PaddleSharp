@@ -16,17 +16,17 @@ async Task Main()
 	await SetupAsync(QueryCancelToken);
 	//await new LinuxNuGetSource().Process(QueryCancelToken);
 
-	string mklDnnUrl = "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/mkldnn.zip";
+	string mklDnnUrl = "https://paddle-inference-lib.bj.bcebos.com/2.6.0/cxx_c/Windows/CPU/x86-64_avx-mkl-vs2019/paddle_inference_c.zip";
 
 	await MakeWin64Onnx(mklDnnUrl, QueryCancelToken);
 	await MakeWin64Mkldnn(mklDnnUrl, QueryCancelToken);
 	await MakeWin64Paddle2Onnx(mklDnnUrl, QueryCancelToken);
 
 	await MakeWin64PaddleMkl("mkl", mklDnnUrl, QueryCancelToken);
-	await MakeWin64PaddleOpenblas("openblas", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/openblas.zip", QueryCancelToken);
-	await MakeWin64PaddleOpenblas("openblas-noavx", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/openblas-noavx.zip", QueryCancelToken);
-	await MakeWin64PaddleMkl("cuda102_cudnn76_tr72_sm61_75", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/cu102.zip", QueryCancelToken);
-	await MakeWin64PaddleMkl("cuda118_cudnn86_tr85_sm86_89", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/cu118.zip", QueryCancelToken);
+	//await MakeWin64PaddleOpenblas("openblas", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/openblas.zip", QueryCancelToken);
+	//await MakeWin64PaddleOpenblas("openblas-noavx", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/openblas-noavx.zip", QueryCancelToken);
+	//await MakeWin64PaddleMkl("cuda102_cudnn76_tr72_sm61_75", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/cu102.zip", QueryCancelToken);
+	//await MakeWin64PaddleMkl("cuda118_cudnn86_tr85_sm86_89", "https://io.starworks.cc:88/paddlesharp/native-libs/2.5.1/cu118.zip", QueryCancelToken);
 }
 
 static Task MakeWin64PaddleOpenblas(string ridSuffix, string url, CancellationToken cancellationToken = default)
