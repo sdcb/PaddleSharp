@@ -7,6 +7,7 @@
 * [PaddleOCR 📖](./docs/ocr.md) 支持14种OCR语言模型的按需下载，允许旋转文本角度检测，180度文本检测，同时也支持表格识别📊。
 * [PaddleDetection 🎯](./docs/detection.md) 支持PPYolo检测模型和PicoDet模型🏹。
 * [RotationDetection 🔄](./docs/rotation-detection.md) 使用百度官方的 `text_image_orientation_infer` 模型来检测文本图片的旋转角度(`0, 90, 180, 270`)。
+* [PaddleNLP中文分词 📚](./docs/paddlenlp-lac.md) 支持`PaddleNLP`LAC中文分词模型，支持词性标注、自定义词典等功能。
 * [Paddle2Onnx 🔄](./docs/paddle2onnx.md) 允许用户使用 `C#` 导出 `ONNX` 模型。
 
 ## NuGet 包/Docker 镜像 📦

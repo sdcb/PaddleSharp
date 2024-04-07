@@ -1,10 +1,12 @@
 # Sdcb.PaddleNLP.Lac分词模型
+Lac是百度开源的一款中文词法分析工具，可以完成中文分词、词性标注等任务。本库还支持自定义词库。
 
 ## PaddleNLP Lac模型NuGet包
 
-| 包名 💼            | 版本号 📌                                                                                                        | 描述 📚   |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- | --------- |
-| Sdcb.PaddleNLP.Lac | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleNLP.Lac.svg)](https://nuget.org/packages/Sdcb.PaddleNLP.Lac) | 模型自包含 |
+| 包名 💼                   | 版本号 📌                                                                                                                     | 描述 📚     |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Sdcb.PaddleNLP.Lac       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleNLP.Lac.svg)](https://nuget.org/packages/Sdcb.PaddleNLP.Lac)             | 分词主库   |
+| Sdcb.PaddleNLP.Lac.Model | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleNLP.Lac.Model.svg)](https://nuget.org/packages/Sdcb.PaddleNLP.Lac.Model) | 模型与资源 |
 
 # 使用方法及示例
 
