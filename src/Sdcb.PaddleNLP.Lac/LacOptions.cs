@@ -19,15 +19,24 @@ public record LacOptions(
     string[] TagMap,
     Dictionary<string, WordTag?>? CustomizedWords = null)
 {
-    private FastTrieTree _trieTree = [.. CustomizedWords != null ? CustomizedWords.Keys : Enumerable.Empty<string>()];
+    private readonly FastTrieTree _trieTree = [.. CustomizedWords != null ? CustomizedWords.Keys : Enumerable.Empty<string>()];
+
+    /// <summary>
+    /// 以默认配置选项初始化LAC模型。
+    /// </summary>
+    /// <param name="customizedWords">自定义词汇表，允许用户定义特定词汇及其对应的标签。如果不提供，则默认为null。</param>
+    public LacOptions(Dictionary<string, WordTag?>? customizedWords = null) : this(
+        SharedUtils.LoadTokenMap(), 
+        SharedUtils.LoadQ2B(), 
+        SharedUtils.LoadTagMap(), 
+        customizedWords)
+    {
+    }
 
     /// <summary>
     /// 获取LAC模型的默认配置选项。
     /// </summary>
-    public static LacOptions Default { get; } = new(
-        SharedUtils.LoadTokenMap(),
-        SharedUtils.LoadQ2B(),
-        SharedUtils.LoadTagMap());
+    public static LacOptions Default { get; } = new();
 
     /// <summary>
     /// 将单个字符转换为对应的token。如果字符存在于繁体到简体的映射表中，则转换为简体后查找；
