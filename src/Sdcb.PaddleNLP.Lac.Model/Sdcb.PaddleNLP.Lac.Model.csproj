@@ -18,6 +18,18 @@
     <PackageReadmeFile>paddlenlp-lac.md</PackageReadmeFile>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <None Include="..\..\build\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\docs\paddlenlp-lac.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="models\lac\*" />
   </ItemGroup>
