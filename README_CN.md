@@ -30,7 +30,28 @@
 | Sdcb.PaddleInference.runtime.win64.openblas-noavx               | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx)                             | win64+openblas(不含 AVX，适用于旧的 CPU)         |
 | Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
 | Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
-| Sdcb.PaddleInference.runtime.linux-loongarch64                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64)                                   | Loongnix GCC 8.2 Loongarch64（适用于龙芯3A5000/6000） |
+
+Linux操作系统NuGet包(预览):
+
+| Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Sdcb.PaddleInference.runtime.linux-loongarch64                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64)                                   | Loongnix GCC 8.2(龙芯3A5000以上)                     |
+| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82)                                   | Linux-x64 GCC 8.2(tested in Ubuntu 22.04)        |
+
+注意，因为Linux操作系统无法在运行时修改`LD_LIBRARY_PATH`的值，如果按先加载被依赖动态库（如libcommon.so）再加载主要动态库（如libpaddle_inference_c.so）的话，而且也由于会报protobuf错误：https://github.com/PaddlePaddle/Paddle/issues/62670
+
+所以所有Linux操作系统的NuGet包都是处于preview的状态，我无法解决这个问题，目前如果您使用Linux的NuGet包的话，程序运行前需要手动使用下列命令指定LD_LIBRARY_PATH环境变量：
+
+* 在x64 CPU中：
+```
+export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-x64/native:$LD_LIBRARY_PATH
+```
+
+* 龙芯5000或以上的CPU（linux-loongarch64）：
+```
+export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-loongarch64/native:$LD_LIBRARY_PATH
+```
+
 
 一些旧的包已经被废弃了(版本 <= 2.5.0):
 | 包名称                                                       | 版本 📌                                                                                                                                                                                               | 描述                                        |
