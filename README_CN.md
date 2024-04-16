@@ -73,22 +73,15 @@ export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-loongarch
 
 但是，你可以使用 `01-build-native.linq` 🛠️构建你自己的 GPU nuget 包。
 
-**注意**：Linux 不需要像 windows(`Sdcb.PaddleInference.runtime.win64.mkl`) 那样的原生绑定 `NuGet` 包，而应该基于 Dockerfile🐳 进行开发：
-
-| Docker 镜像 🐳              | 版本 📌                                                                                                                       | 描述 📚                                                                         |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| sdflysha/dotnet6-paddle    | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6-paddle)](https://hub.docker.com/r/sdflysha/dotnet6-paddle)       | PaddleInference 2.5.0, OpenCV 4.7.0, 基于官方 Ubuntu 22.04 .NET 6 运行时环境 🌐 |
-| sdflysha/dotnet6sdk-paddle | [![Docker](https://img.shields.io/docker/v/sdflysha/dotnet6sdk-paddle)](https://hub.docker.com/r/sdflysha/dotnet6sdk-paddle) | PaddleInference 2.5.0, OpenCV 4.7.0, 基于官方 Ubuntu 22.04 .NET 6 SDK 🌐        |
-
 ## Paddle 设备
 
 * Mkldnn - `PaddleDevice.Mkldnn()`
   
   基于 [Mkldnn](https://github.com/oneapi-src/oneDNN)，一般来说很快
 
-* Openblas - `PaddleDevice.Openblas()`
+* Blas - `PaddleDevice.Blas()`
 
-  基于 [openblas](https://www.openblas.net/)，较慢，但依赖文件更小，内存消耗更少
+  基于 [openblas](https://www.openblas.net/)，或者mkldnn blas，较慢，但依赖文件更小，内存消耗更少
 
 * Onnx - `PaddleDevice.Onnx()`
 
