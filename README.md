@@ -30,7 +30,23 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 | Sdcb.PaddleInference.runtime.win64.openblas-noavx               | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx)                             | win64+openblas(no AVX, for old CPUs)             |
 | Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
 | Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
+
+Linux OS packages(preview):
+
+| Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | Sdcb.PaddleInference.runtime.linux-loongarch64                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64)                                   | Loongnix GCC 8.2 Loongarch64                     |
+| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82)                                   | Linux-x64 GCC 8.2(tested in Ubuntu 22.04)        |
+
+Be aware, as the Linux operating system cannot modify the value of `LD_LIBRARY_PATH` at runtime. If dependent dynamic libraries (such as libcommon.so) are loaded before the main dynamic library (such as libpaddle_inference_c.so), and also due to protobuf errors reported: https://github.com/PaddlePaddle/Paddle/issues/62670
+
+Therefore, all NuGet packages for Linux operating systems are in a preview state, and I'm unable to resolve this issue. Currently, if you are using the NuGet package on Linux, you need to manually specify the `LD_LIBRARY_PATH` environment variable before running the program, using the following commands:
+
+* For x64 CPUs:
+`export LD_LIBRARY_PATH=/<program directory>/bin/Debug/net8.0/runtimes/linux-x64/native:$LD_LIBRARY_PATH`
+
+* For Loongson 5000 or above CPUs (linux-loongarch64):
+`export LD_LIBRARY_PATH=/<program directory>/bin/Debug/net8.0/runtimes/linux-loongarch64/native:$LD_LIBRARY_PATH`
 
 Some of packages already deprecated(Version <= 2.5.0):
 | Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
@@ -43,7 +59,7 @@ Any other packages that starts with `Sdcb.PaddleInference.runtime` might depreca
 
 Baidu packages were downloaded from here: https://www.paddlepaddle.org.cn/inference/master/guides/install/download_lib.html#windows
 
-My Sdcb packages were self compiled.
+All Windows packages were compiled manually by me.
 
 Baidu official GPU packages are too large(>1.5GB) to publish to nuget.org, there is a limitation of 250MB when upload to Github, there is some related issues to this:
 
