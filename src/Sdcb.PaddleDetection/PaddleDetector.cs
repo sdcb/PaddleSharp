@@ -172,6 +172,10 @@ public class PaddleDetector : IDisposable
                 if (isRbox)
                 {
                     int classId = (int)MathUtil.Round(outputData[0 + j * 10]);
+                    if (classId > Config.LabelList.Length - 1)
+                    {
+                       continue;
+                    }
                     float score = outputData[1 + j * 10];
                     int x1 = (int)(outputData[2 + j * 10] * r.Width);
                     int y1 = (int)(outputData[3 + j * 10] * r.Height);
@@ -186,6 +190,10 @@ public class PaddleDetector : IDisposable
                 else
                 {
                     int classId = (int)MathUtil.Round(outputData[0 + j * 6]);
+                    if (classId > Config.LabelList.Length - 1)
+                    {
+                       continue;
+                    }
                     float score = outputData[1 + j * 6];
                     int xmin = (int)(outputData[2 + j * 6] * r.Width);
                     int ymin = (int)(outputData[3 + j * 6] * r.Height);
@@ -194,6 +202,7 @@ public class PaddleDetector : IDisposable
                     result[j] = new DetectionResult(new[] { xmin, ymin, xmax, ymax }, classId, Config.LabelList[classId], score);
                 }
             }
+            result = result.Where(r => r != null).ToArray();
             return result;
         }
     }
