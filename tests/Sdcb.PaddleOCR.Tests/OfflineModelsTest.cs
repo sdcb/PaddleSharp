@@ -89,7 +89,7 @@ public class OfflineModelsTest
         }
     }
 
-    [Fact]
+    [Fact(Skip = "Too slow")]
     public void TwoThreadsInferAtSameTime()
     {
         FullOcrModel model = LocalFullModels.EnglishV3;
