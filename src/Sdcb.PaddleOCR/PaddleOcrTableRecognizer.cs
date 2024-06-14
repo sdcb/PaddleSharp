@@ -84,19 +84,20 @@ public class PaddleOcrTableRecognizer : IDisposable
         Size rawSize = src.Size();
         float[] inputData = TablePreprocess(src);
 
-        using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
+        using PaddlePredictor predictor = _p.Clone();
+        using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
         {
             input.Shape = new[] { 1, 3, MaxEdgeSize, MaxEdgeSize };
             input.SetData(inputData);
         }
-        if (!_p.Run())
+        if (!predictor.Run())
         {
             throw new Exception("PaddlePredictor(Table) run failed.");
         }
 
-        string[] outputNames = _p.OutputNames;
-        using (PaddleTensor output0 = _p.GetOutputTensor(outputNames[0]))
-        using (PaddleTensor output1 = _p.GetOutputTensor(outputNames[1]))
+        string[] outputNames = predictor.OutputNames;
+        using (PaddleTensor output0 = predictor.GetOutputTensor(outputNames[0]))
+        using (PaddleTensor output1 = predictor.GetOutputTensor(outputNames[1]))
         {
             float[] locations = output0.GetData<float>();
             int[] locationShape = output0.Shape;

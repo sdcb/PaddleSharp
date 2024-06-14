@@ -98,18 +98,19 @@ public class PaddleOcrClassifier : IDisposable
         using Mat resized = ResizePadding(src, Shape);
         using Mat normalized = Normalize(resized);
 
-        using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
+        using PaddlePredictor predictor = _p.Clone();
+        using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
         {
             input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
             float[] data = PaddleOcrDetector.ExtractMat(normalized);
             input.SetData(data);
         }
-        if (!_p.Run())
+        if (!predictor.Run())
         {
             throw new Exception("PaddlePredictor(Classifier) run failed.");
         }
 
-        using (PaddleTensor output = _p.GetOutputTensor(_p.OutputNames[0]))
+        using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
         {
             float[] softmax = output.GetData<float>();
             float score = 0;

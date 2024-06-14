@@ -113,6 +113,7 @@ public class PaddleOcrRecognizer : IDisposable
             return 1.0 * size.Width / size.Height * modelHeight;
         }));
 
+        using PaddlePredictor predictor = _p.Clone();
         Mat[] normalizeds = null!;
         try
         {
@@ -131,7 +132,7 @@ public class PaddleOcrRecognizer : IDisposable
                 })
                 .ToArray();
 
-            using (PaddleTensor input = _p.GetInputTensor(_p.InputNames[0]))
+            using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
             {
                 int channel = normalizeds[0].Channels();
                 input.Shape = new[] { normalizeds.Length, channel, modelHeight, maxWidth };
@@ -147,12 +148,12 @@ public class PaddleOcrRecognizer : IDisposable
             }
         }
 
-        if (!_p.Run())
+        if (!predictor.Run())
         {
             throw new Exception($"PaddlePredictor(Recognizer) run failed.");
         }
 
-        using (PaddleTensor output = _p.GetOutputTensor(_p.OutputNames[0]))
+        using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
         {
             float[] data = output.GetData<float>();
             int[] shape = output.Shape;
