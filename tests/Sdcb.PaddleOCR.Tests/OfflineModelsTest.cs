@@ -88,4 +88,46 @@ public class OfflineModelsTest
             }
         }
     }
+
+    [Fact]
+    public void TwoThreadsInferAtSameTime()
+    {
+        FullOcrModel model = LocalFullModels.EnglishV3;
+
+        // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
+        byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
+
+        using PaddleOcrAll all = new(model)
+        {
+            AllowRotateDetection = true,
+            Enable180Classification = false,
+        };
+
+        // Load local file by following code:
+        // using (Mat src2 = Cv2.ImRead(@"C:\test.jpg"))
+        using (Mat src = Cv2.ImDecode(sampleImageData, ImreadModes.Color))
+        {
+            int threadCount = 2;
+            Thread[] threads = new Thread[threadCount];
+            PaddleOcrResult[] results = new PaddleOcrResult[threadCount];
+            for (int i = 0; i < threadCount; i++)
+            {
+                int index = i;
+                threads[i] = new(() =>
+                {
+                    results[index] = all.Run(src);
+                });
+                threads[i].Start();
+            }
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
+            }
+
+            for (int i = 0; i < threadCount; ++i)
+            {
+                _console.WriteLine($"Detected all texts in thread {i}: \n" + results[i].Text);
+            }
+        }
+    }
 }
