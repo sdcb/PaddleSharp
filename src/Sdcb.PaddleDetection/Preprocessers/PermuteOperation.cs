@@ -20,10 +20,7 @@ internal class PermuteOperation : PreprocessOperation
 				IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
 				for (int i = 0; i < channels; ++i)
 				{
-					using Mat cmat = new(
-						src.Height, src.Width,
-						MatType.CV_32FC1,
-						resultPtr + i * size.Width * size.Height * sizeof(float));
+					using Mat cmat = Mat.FromPixelData(src.Height, src.Width, MatType.CV_32FC1, resultPtr + i * size.Width * size.Height * sizeof(float));
 					Cv2.ExtractChannel(src, cmat, i);
 				}
 

@@ -174,7 +174,7 @@ public class PaddleOcrRecognizer : IDisposable
                         float score = 0;
                         for (int n = 0; n < charCount; ++n)
                         {
-                            using Mat mat = new(1, labelCount, MatType.CV_32FC1, dataPtr + (n + i * charCount) * labelCount * sizeof(float));
+                            using Mat mat = Mat.FromPixelData(1, labelCount, MatType.CV_32FC1, dataPtr + (n + i * charCount) * labelCount * sizeof(float));
                             int[] maxIdx = new int[2];
                             mat.MinMaxIdx(out double _, out double maxVal, new int[0], maxIdx);
 
@@ -253,7 +253,7 @@ public class PaddleOcrRecognizer : IDisposable
                 }
                 for (int c = 0; c < channel; ++c)
                 {
-                    using Mat dest = new(height, width, MatType.CV_32FC1, resultPtr + (c + i * channel) * height * width * sizeof(float));
+                    using Mat dest = Mat.FromPixelData(height, width, MatType.CV_32FC1, resultPtr + (c + i * channel) * height * width * sizeof(float));
                     Cv2.ExtractChannel(src, dest, c);
                 }
             }

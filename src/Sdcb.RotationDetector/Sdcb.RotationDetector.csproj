@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20240616" />
     <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>

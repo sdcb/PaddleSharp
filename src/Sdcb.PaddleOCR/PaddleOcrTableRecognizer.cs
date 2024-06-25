@@ -138,7 +138,7 @@ public class PaddleOcrTableRecognizer : IDisposable
                 IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
                 for (int i = 0; i < src.Channels(); ++i)
                 {
-                    using Mat dest = new(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
+                    using Mat dest = Mat.FromPixelData(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
                     Cv2.ExtractChannel(src, dest, i);
                 }
             }

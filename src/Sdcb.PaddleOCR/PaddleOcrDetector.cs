@@ -214,7 +214,7 @@ public class PaddleOcrDetector : IDisposable
             float[] data = output.GetData<float>();
             int[] shape = output.Shape;
 
-            return new Mat(shape[2], shape[3], MatType.CV_32FC1, data);
+            return Mat.FromPixelData(shape[2], shape[3], MatType.CV_32FC1, data);
         }
     }
 
@@ -274,7 +274,7 @@ public class PaddleOcrDetector : IDisposable
             IntPtr resultPtr = resultHandle.AddrOfPinnedObject();
             for (int i = 0; i < src.Channels(); ++i)
             {
-                using Mat dest = new(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
+                using Mat dest = Mat.FromPixelData(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
                 Cv2.ExtractChannel(src, dest, i);
             }
         }
