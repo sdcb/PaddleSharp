@@ -23,20 +23,22 @@
 
 ### 本地动态库包 🏗️
 
-| 包名称                                                          | 版本 📌                                                                                                                                                                                                     | 描述                                             |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Sdcb.PaddleInference.runtime.win64.mkl                          | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                                                   | win64+mkldnn                                     |
-| Sdcb.PaddleInference.runtime.win64.openblas                     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)                                         | win64+openblas                                   |
-| Sdcb.PaddleInference.runtime.win64.openblas-noavx               | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx)                             | win64+openblas(不含 AVX，适用于旧的 CPU)         |
-| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
-| Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
+| 包名称                                            | 版本 📌                                                                                                                                                                         | 描述                  |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
+| Sdcb.PaddleInference.runtime.win64.mkl            | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                       | win64+mkldnn          |
+| Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | win64+openblas        |
+| Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | 不含AVX，适用于老CPU  |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm86-89  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89)   | 适用于英伟达30/40系列 |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm61-75  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75)   | 适用于英伟达10/20系列 |
+
+注意：`cu120`指CUDA 12.0，它编译于CUDA 12.0.1/cuDNN 8.9.7.29/Tensor RT 8.6.1.6的环境。
 
 Linux操作系统NuGet包(预览):
 
-| Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Sdcb.PaddleInference.runtime.linux-loongarch64                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64)                                   | Loongnix GCC 8.2(龙芯3A5000以上)                     |
-| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82)                                   | Linux-x64 GCC 8.2(tested in Ubuntu 22.04)        |
+| Package                                        | Version 📌                                                                                                                                                                | Description                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Sdcb.PaddleInference.runtime.linux-loongarch64 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64) | Loongnix GCC 8.2(龙芯3A5000以上)          |
+| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82) | Linux-x64 GCC 8.2(tested in Ubuntu 22.04) |
 
 注意，因为Linux操作系统无法在运行时修改`LD_LIBRARY_PATH`的值，如果按先加载被依赖动态库（如libcommon.so）再加载主要动态库（如libpaddle_inference_c.so）的话，而且也由于会报protobuf错误：https://github.com/PaddlePaddle/Paddle/issues/62670
 
@@ -54,11 +56,13 @@ export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-loongarch
 
 
 一些旧的包已经被废弃了(版本 <= 2.5.0):
-| 包名称                                                       | 版本 📌                                                                                                                                                                                               | 描述                                        |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86) | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86 |
-| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75   | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)     | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75         |
-| Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx) | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx         |
+| 包名称                                                          | 版本 📌                                                                                                                                                                                                     | 描述                                             |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
+| Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
+| Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86)       | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86      |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75      | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)           | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75              |
+| Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx)       | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx              |
 
 以 `Sdcb.PaddleInference.runtime` 开头的其他包也可能已经被废弃。
 
@@ -122,7 +126,7 @@ export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-loongarch
 启用 GPU 支持可以显著提高吞吐量并降低 CPU 使用率。🚀
 
 在 Windows 中使用 GPU 的步骤：
-1. （对于 Windows）安装包：`Sdcb.PaddleInference.runtime.win64.cuda*` 代替 `Sdcb.PaddleInference.runtime.win64.mkl`，**不要** 同时安装。📦
+1. （对于 Windows）安装包：`Sdcb.PaddleInference.runtime.win64.cu120*` 代替 `Sdcb.PaddleInference.runtime.win64.mkl`，**不要** 同时安装。📦
 2. 从 NVIDIA 安装 CUDA，并将环境变量配置到 `PATH` 或 `LD_LIBRARY_PATH` (Linux) 🔧
 3. 从 NVIDIA 安装 cuDNN，并将环境变量配置到 `PATH` 或 `LD_LIBRARY_PATH` (Linux) 🛠️
 4. 从 NVIDIA 安装 TensorRT，并将环境变量配置到 `PATH` 或 `LD_LIBRARY_PATH` (Linux) ⚙️
@@ -132,33 +136,6 @@ export LD_LIBRARY_PATH=/<程序目录>/bin/Debug/net8.0/runtimes/linux-loongarch
 如果你正在使用 Linux，你需要根据 [docker 构建脚本](./build/docker/dotnet6sdk-paddle/Dockerfile) 编译自己的 OpenCvSharp4 环境，并完成 CUDA/cuDNN/TensorRT 的配置任务。🐧
 
 完成这些步骤后，你可以尝试在 paddle device 配置参数中指定 `PaddleDevice.Gpu()`，然后享受性能提升！🎉
-
-### TensorRT 🚄
-
-要使用 TensorRT，只需指定 `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))` 而不是 `PaddleDevice.Gpu()` 即可。💡
-
-请注意，这个 shape 信息文本文件 `**.txt` 是与你的模型绑定的。**不同的模型有不同的 shape 信息**，因此，如果你正在使用一个复杂的模型，比如 `Sdcb.PaddleOCR`，你应该为不同的模型使用不同的 shapes，如下所示：
-```csharp
-using PaddleOcrAll all = new(model,
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("det.txt")),
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("cls.txt")),
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("rec.txt")))
-{
-   Enable180Classification = true,
-   AllowRotateDetection = true,
-};
-```
-
-在这个情况下：
-* `DetectionModel` 将使用 `det.txt` 🔍
-* `180DegreeClassificationModel` 将使用 `cls.txt` 🔃
-* `RecognitionModel` 将使用 `rec.txt` 🔡
-
-**注意 📝:**
-
-首次运行 `TensorRT` 会在此目录：`%AppData%\Sdcb.PaddleInference\TensorRtCache` 生成 shape info `**.txt` 文件，完成 TensorRT 缓存生成大约需要100秒。之后，它应该比一般的 `GPU` 快。🚀
-
-在这种情况下，如果发生了奇怪的问题（例如，你错误地为不同的模型创建了相同的 `shape-info.txt` 文件），你可以删除这个文件夹以重新生成 TensorRT 缓存：`%AppData%\Sdcb.PaddleInference\TensorRtCache`。🗑️
 
 ## 感谢 & 赞助商 🙏
 * 崔亮  https://github.com/cuiliang

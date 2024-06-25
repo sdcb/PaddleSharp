@@ -23,20 +23,23 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 
 ### Native packages 🏗️
 
-| Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Sdcb.PaddleInference.runtime.win64.mkl                          | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                                                   | win64+mkldnn                                     |
-| Sdcb.PaddleInference.runtime.win64.openblas                     | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)                                         | win64+openblas                                   |
-| Sdcb.PaddleInference.runtime.win64.openblas-noavx               | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx)                             | win64+openblas(no AVX, for old CPUs)             |
-| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
-| Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
+| Package                                           | Version 📌                                                                                                                                                                      | Description             |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| Sdcb.PaddleInference.runtime.win64.mkl            | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                       | win64+mkldnn            |
+| Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | win64+openblas          |
+| Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | no AVX, for old CPUs    |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm86-89  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89)   | for NVIDIA 30/40 series |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm61-75  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75)   | for NVIDIA 10/20 series |
+
+Note: `cu120` means CUDA 12.0, it's compiled in CUDA 12.0.1/cuDNN 8.9.7.29/Tensor RT 8.6.1.6 version.
+
 
 Linux OS packages(preview):
 
-| Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Sdcb.PaddleInference.runtime.linux-loongarch64                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64)                                   | Loongnix GCC 8.2 Loongarch64                     |
-| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82                  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82)                                   | Linux-x64 GCC 8.2(tested in Ubuntu 22.04)        |
+| Package                                        | Version 📌                                                                                                                                                                | Description                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Sdcb.PaddleInference.runtime.linux-loongarch64 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux-loongarch64.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux-loongarch64) | Loongnix GCC 8.2 Loongarch64              |
+| Sdcb.PaddleInference.runtime.linux64.mkl.gcc82 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.linux64.mkl.gcc82) | Linux-x64 GCC 8.2(tested in Ubuntu 22.04) |
 
 Be aware, as the Linux operating system cannot modify the value of `LD_LIBRARY_PATH` at runtime. If dependent dynamic libraries (such as libcommon.so) are loaded before the main dynamic library (such as libpaddle_inference_c.so), and also due to protobuf errors reported: https://github.com/PaddlePaddle/Paddle/issues/62670
 
@@ -51,6 +54,8 @@ Therefore, all NuGet packages for Linux operating systems are in a preview state
 Some of packages already deprecated(Version <= 2.5.0):
 | Package                                                         | Version 📌                                                                                                                                                                                                  | Description                                      |
 | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_tr72_sm61_75) | win64/CUDA 10.2/cuDNN 7.6/TensorRT 7.2/sm61+sm75 |
+| Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda118_cudnn86_tr85_sm86_89) | win64/CUDA 11.8/cuDNN 8.6/TensorRT 8.5/sm86+sm89 |
 | Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda117_cudnn84_tr84_sm86)       | win64/CUDA 11.7/cuDNN 8.4/TensorRT 8.4/sm86      |
 | Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75      | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda102_cudnn76_sm61_75)           | win64/CUDA 10.2/cuDNN 7.6/sm61+sm75              |
 | Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx    | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cuda116_cudnn84_sm86_onnx)       | win64/CUDA 11.6/cuDNN 8.4/sm86/onnx              |
@@ -89,12 +94,6 @@ But You're good to build your own GPU nuget package using `01-build-native.linq`
 
   If you wants to use GPU, you should refer to FAQ `How to enable GPU?` section, CUDA/cuDNN/TensorRT need to be installed manually.
 
-* TensorRT - `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))`
-
-  Even faster than raw Gpu but need install TensorRT environment.
-
-  Please refer to [tensorrt](#tensorrt) section for more details
-
 ## FAQ ❓
 ### Why my code runs good in my windows machine, but DllNotFoundException in other machine: 💻
 1. Please ensure the [latest Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) was installed in `Windows` (typically it should automatically installed if you have `Visual Studio` installed) 🛠️
@@ -118,7 +117,7 @@ Otherwise, it will fail with the following error (Windows only):
 Enable GPU support can significantly improve the throughput and lower the CPU usage. 🚀
 
 Steps to use GPU in Windows:
-1. (for Windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cuda*` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both. 📦
+1. (for Windows) Install the package: `Sdcb.PaddleInference.runtime.win64.cu120*` instead of `Sdcb.PaddleInference.runtime.win64.mkl`, **do not** install both. 📦
 2. Install CUDA from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH` (Linux) 🔧
 3. Install cuDNN from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH` (Linux) 🛠️
 4. Install TensorRT from NVIDIA, and configure environment variables to `PATH` or `LD_LIBRARY_PATH` (Linux) ⚙️
@@ -128,33 +127,6 @@ You can refer to this blog page for GPU in Windows: [关于PaddleSharp GPU使用
 If you're using Linux, you need to compile your own OpenCvSharp4 environment following the [docker build scripts](./build/docker/dotnet6sdk-paddle/Dockerfile) and the CUDA/cuDNN/TensorRT configuration tasks. 🐧
 
 After these steps are completed, you can try specifying `PaddleDevice.Gpu()` in the paddle device configuration parameter, then enjoy the performance boost! 🎉
-
-### TensorRT 🚄
-
-To use TensorRT, just specify `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))` instead of `PaddleDevice.Gpu()` to make it work. 💡
-
-Please be aware, this shape info text file `**.txt` is bound to your model. **Different models have different shape info**, so if you're using a complex model like `Sdcb.PaddleOCR`, you should use different shapes for different models like this:
-```csharp
-using PaddleOcrAll all = new(model,
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("det.txt")),
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("cls.txt")),
-   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("rec.txt")))
-{
-   Enable180Classification = true,
-   AllowRotateDetection = true,
-};
-```
-
-In this case:
-* `DetectionModel` will use `det.txt` 🔍
-* `180DegreeClassificationModel` will use `cls.txt` 🔃
-* `RecognitionModel` will use `rec.txt` 🔡
-
-**NOTE 📝:**
-
-The first round of `TensorRT` running will generate a shape info `**.txt` file in this folder: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. It will take around 100 seconds to finish TensorRT cache generation. After that, it should be faster than the general `GPU`. 🚀
-
-In this case, if something strange happens (for example, you mistakenly create the same `shape-info.txt` file for different models), you can delete this folder to generate TensorRT cache again: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. 🗑️
 
 ## Thanks & Sponsors 🙏
 * 崔亮  https://github.com/cuiliang

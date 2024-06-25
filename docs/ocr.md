@@ -287,3 +287,29 @@ public class OcrController : Controller
 * Install NuGet pakcage: Sdcb.PaddleOCR.Models.Local
 * Update namespaces from `Sdcb.PaddleOCR.Models.LocalV3` to `Sdcb.PaddleOCR.Models.Local`
 
+### TensorRT 🚄
+
+To use TensorRT, just specify `PaddleDevice.Gpu().And(PaddleDevice.TensorRt("shape-info.txt"))` instead of `PaddleDevice.Gpu()` to make it work. 💡
+
+Please be aware, this shape info text file `**.txt` is bound to your model. **Different models have different shape info**, so if you're using a complex model like `Sdcb.PaddleOCR`, you should use different shapes for different models like this:
+```csharp
+using PaddleOcrAll all = new(model,
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("det.txt")),
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("cls.txt")),
+   PaddleDevice.Gpu().And(PaddleDevice.TensorRt("rec.txt")))
+{
+   Enable180Classification = true,
+   AllowRotateDetection = true,
+};
+```
+
+In this case:
+* `DetectionModel` will use `det.txt` 🔍
+* `180DegreeClassificationModel` will use `cls.txt` 🔃
+* `RecognitionModel` will use `rec.txt` 🔡
+
+**NOTE 📝:**
+
+The first round of `TensorRT` running will generate a shape info `**.txt` file in this folder: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. It will take around 100 seconds to finish TensorRT cache generation. After that, it should be faster than the general `GPU`. 🚀
+
+In this case, if something strange happens (for example, you mistakenly create the same `shape-info.txt` file for different models), you can delete this folder to generate TensorRT cache again: `%AppData%\Sdcb.PaddleInference\TensorRtCache`. 🗑️
