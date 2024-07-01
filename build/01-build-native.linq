@@ -25,8 +25,9 @@ async Task Main()
 	//await MakeWin64PaddleMkl("mkl", mklDnnUrl, QueryCancelToken);
 	//await MakeWin64PaddleOpenblas("openblas", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/openblas/c.zip", QueryCancelToken);
 	//await MakeWin64PaddleOpenblas("openblas-noavx", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/openblas-noavx/c.zip", QueryCancelToken);
-	await MakeWin64PaddleGpu("cu120-sm86-89", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/cu120-sm86-89/c-rebuild.zip", QueryCancelToken);
-	await MakeWin64PaddleGpu("cu120-sm61-75", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/cu120-sm61-75/c-rebuild.zip", QueryCancelToken);
+	//await MakeWin64PaddleGpu("cu120-sm86-89", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/cu120-sm86-89/c-rebuild.zip", QueryCancelToken);
+	await MakeWin64PaddleGpu("cu120-sm80", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/cu120-sm80/c.zip", QueryCancelToken);
+	//await MakeWin64PaddleGpu("cu120-sm61-75", "https://io.starworks.cc:88/paddlesharp/native-libs/2.6.1/cu120-sm61-75/c-rebuild.zip", QueryCancelToken);
 }
 
 static Task MakeWin64PaddleOpenblas(string ridSuffix, string url, CancellationToken cancellationToken = default)
