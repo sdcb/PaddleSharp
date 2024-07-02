@@ -29,6 +29,7 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 | Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | win64+openblas          |
 | Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | no AVX, for old CPUs    |
 | Sdcb.PaddleInference.runtime.win64.cu120-sm86-89  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89)   | for NVIDIA 30/40 series |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm80  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm80.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm80)   | for NVIDIA A100/A10 |
 | Sdcb.PaddleInference.runtime.win64.cu120-sm61-75  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75)   | for NVIDIA 10/20 series |
 
 Note: `cu120` means CUDA 12.0, it's compiled in CUDA 12.0.1/cuDNN 8.9.7.29/Tensor RT 8.6.1.6 version.
