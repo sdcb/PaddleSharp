@@ -29,6 +29,7 @@
 | Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | win64+openblas        |
 | Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | 不含AVX，适用于老CPU  |
 | Sdcb.PaddleInference.runtime.win64.cu120-sm86-89  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89)   | 适用于英伟达30/40系列 |
+| Sdcb.PaddleInference.runtime.win64.cu120-sm80  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm80.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm80)   | 适用于NVIDIA A100/A10 |
 | Sdcb.PaddleInference.runtime.win64.cu120-sm61-75  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75)   | 适用于英伟达10/20系列 |
 
 注意：`cu120`指CUDA 12.0，它编译于CUDA 12.0.1/cuDNN 8.9.7.29/Tensor RT 8.6.1.6的环境。
