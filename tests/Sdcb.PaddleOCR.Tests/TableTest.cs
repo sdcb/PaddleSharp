@@ -26,7 +26,7 @@ public class TableTest
     [Theory]
     [InlineData("en_ppstructure_mobile_v2.0_SLANet", "<table><thead><tr><td>Methods</td>")]
     [InlineData("ch_ppstructure_mobile_v2.0_SLANet", "<table><tbody><tr><td>Methods</td>")]
-    public async void LocalV3TableRebuild(string modelName, string expectedHtmlStart)
+    public async Task LocalV3TableRebuild(string modelName, string expectedHtmlStart)
     {
         using Mat src = Cv2.ImRead("samples/table.jpg");
         Task<TableDetectionResult> tableResultTask = Task.Run(() =>
