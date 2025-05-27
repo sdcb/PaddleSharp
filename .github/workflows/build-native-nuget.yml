@@ -28,7 +28,7 @@ jobs:
           wget -q -O paddle_inference_c.zip ${{ matrix.url }}
 
           if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
-              unzip paddle_inference_c.zip
+              unzip -q paddle_inference_c.zip
           else
               tar -xzf paddle_inference_c.zip
           fi
