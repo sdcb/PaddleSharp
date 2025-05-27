@@ -41,7 +41,20 @@ jobs:
               mkdir paddle_inference_c && tar -xzf archive_file.tmp -C paddle_inference_c
           fi
           rm archive_file.tmp
-          
-          echo "::group::Extracted Paddle Inference C API Archive (contents of ./paddle_inference_c)"
+
+      - name: Show Extracted Paddle Inference Library Contents
+        run: |
           ls -lR paddle_inference_c
-          echo "::endgroup::"
+
+      - name: Copy Native Dynamic Libs(.so/.dll/.dylib) to nuget
+        run: |
+          mkdir -p nuget
+          if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
+            find paddle_inference_c -type f \( -iname "*.dll" \) -exec cp {} nuget/ \;
+          elif [[ "${{ matrix.rid }}" == "linux-x64" ]]; then
+            find paddle_inference_c -type f \( -iname "*.so" \) -exec cp {} nuget/ \;
+          elif [[ "${{ matrix.rid }}" == "osx-x64" || "${{ matrix.rid }}" == "osx-arm64" ]]; then
+            find paddle_inference_c -type f \( -iname "*.dylib" \) -exec cp {} nuget/ \;
+          fi
+
+          ls -l nuget
