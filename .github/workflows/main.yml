@@ -3,9 +3,9 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - '**.md'
-      - '**.linq'
+    paths:
+      - 'src/**'
+      - .github/workflows/main.yml
   workflow_dispatch:
   
 
@@ -13,7 +13,7 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build code
         run: dotnet build -c Release
       - name: Test
