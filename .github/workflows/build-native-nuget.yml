@@ -76,7 +76,7 @@ jobs:
         # ---------- 找到所有动态库 ----------
         NUGET_LIB_DIR="${{ github.workspace }}/nuget"
         # find 出来的是全路径
-        mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f $ -iname "*.dll" -o -iname "*.so*" -o -iname "*.dylib" $)
+        mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f)
         if [ ${#LIB_PATHS[@]} -eq 0 ]; then
           echo "Error: no native libs found in $NUGET_LIB_DIR"
           exit 1
