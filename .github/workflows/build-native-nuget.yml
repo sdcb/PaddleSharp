@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: paddle_inference_c
-          key: paddle-inference-${{ matrix.url }}
+          key: ${{ matrix.url }}
 
       - name: Download/Extract Paddle Inference C API Archive
         if: steps.cache-inference-lib.outputs.cache-hit != 'true'
