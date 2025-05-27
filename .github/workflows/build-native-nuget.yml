@@ -38,7 +38,7 @@ jobs:
           if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
               unzip -q archive_file.tmp -d paddle_inference_c
           else
-              tar -xzf archive_file.tmp -C paddle_inference_c
+              mkdir paddle_inference_c && tar -xzf archive_file.tmp -C paddle_inference_c
           fi
           rm archive_file.tmp
           
