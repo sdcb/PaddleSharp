@@ -23,17 +23,25 @@ jobs:
           # - { title: osx-arm64,       rid: osx-arm64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/MacOS/m1_clang_noavx_accelerate_blas/paddle_inference_c.tgz }
   
     steps:
+      - name: Cache Paddle Inference C API Archive
+        id: cache-inference-lib
+        uses: actions/cache@v4
+        with:
+          path: paddle_inference_c
+          key: paddle-inference-${{ matrix.url }}
+
       - name: Download/Extract Paddle Inference C API Archive
+        if: steps.cache-inference-lib.outputs.cache-hit != 'true'
         run: |
-          wget -q -O paddle_inference_c.zip ${{ matrix.url }}
+          wget -q -O archive_file.tmp ${{ matrix.url }}
 
           if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
-              unzip -q paddle_inference_c.zip
+              unzip -q archive_file.tmp -d paddle_inference_c
           else
-              tar -xzf paddle_inference_c.zip
+              tar -xzf archive_file.tmp -C paddle_inference_c
           fi
-          rm paddle_inference_c.zip
+          rm archive_file.tmp
           
-          echo "::group::Extracted Paddle Inference C API Archive"
-          ls -lR
+          echo "::group::Extracted Paddle Inference C API Archive (contents of ./paddle_inference_c)"
+          ls -lR paddle_inference_c
           echo "::endgroup::"
