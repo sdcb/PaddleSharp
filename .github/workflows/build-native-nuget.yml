@@ -25,13 +25,15 @@ jobs:
     steps:
       - name: Download/Extract Paddle Inference C API Archive
         run: |
-          wget -O paddle_inference_c.zip ${{ matrix.url }}
+          wget -q -O paddle_inference_c.zip ${{ matrix.url }}
+
           if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
               unzip paddle_inference_c.zip
           else
               tar -xzf paddle_inference_c.zip
           fi
-          cd paddle_inference_c
+          rm paddle_inference_c.zip
+          
           echo "::group::Extracted Paddle Inference C API Archive"
           ls -lR
           echo "::endgroup::"
