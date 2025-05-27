@@ -184,3 +184,11 @@ jobs:
         name: nuget-${{ matrix.rid }}
         path: nupkgs/*.nupkg
         if-no-files-found: error
+
+    - name: Push nupkg to Github Packages
+      run: |
+        echo "Pushing to GitHub Packages: ${{ matrix.title }}"
+        for f in ${{ github.workspace }}/nupkgs/*.nupkg
+        do
+          dotnet nuget push "$f" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ env.GITHUB_TOKEN }}" --skip-duplicate
+        done
