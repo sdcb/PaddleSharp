@@ -45,16 +45,18 @@ public class PaddleConfig : IDisposable
             throw new DirectoryNotFoundException(modelDir);
         }
 
-        string[] allowedPrefixes =
-        [
-            "inference",
-            "model",
-        ];
-
-        foreach (string prefix in allowedPrefixes)
+        Dictionary<string, string> allowedCombination = new()
         {
-            string pdmodel = Path.Combine(modelDir, prefix + ".pdmodel");
-            string pdiparams = Path.Combine(modelDir, prefix + ".pdiparams");
+            ["inference.json"]    = "inference.pdiparams",
+            ["model.json"]        = "model.pdiparams",
+            ["inference.pdmodel"] = "inference.pdiparams",
+            ["model.pdmodel"]     = "model.pdiparams",
+        };
+
+        foreach (KeyValuePair<string, string> kv in allowedCombination)
+        {
+            string pdmodel = Path.Combine(modelDir, kv.Key);
+            string pdiparams = Path.Combine(modelDir, kv.Value);
 
             if (File.Exists(pdmodel) && File.Exists(pdiparams))
             {
@@ -368,7 +370,7 @@ public class PaddleConfig : IDisposable
     /// <param name="useStatic">Serialize optimization information to disk for reusing.</param>
     /// <param name="useCalibMode">Use TRT int8 calibration(post training quantization)</param>
     public void EnableTensorRtEngine(
-        long workspaceSize = 1 << 20,
+        int workspaceSize = 1 << 20,
         int maxBatchSize = 1,
         int minSubgraphSize = 20,
         PaddlePrecision precision = PaddlePrecision.Float32,

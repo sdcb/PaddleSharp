@@ -61,7 +61,7 @@ public static class PaddleDevice
     /// <param name="useCalibMode">Whether to use TensorRT optimization with calibration mode. Default value is false.</param>
     /// <returns>The TensorRT paddle device definition.</returns>
     public static Action<PaddleConfig> TensorRt(string rangeShapeInfoKey, string? cacheDir = null,
-        long workspaceSize = 1 << 20,
+        int workspaceSize = 1 << 20,
         int maxBatchSize = 1,
         int minSubgraphSize = 20,
         PaddlePrecision precision = PaddlePrecision.Float32,
@@ -99,7 +99,7 @@ public static class PaddleDevice
     /// <param name="useCalibMode">Whether to use TensorRT optimization with calibration mode. Default value is false.</param>
     /// <returns>The TensorRT paddle device definition.</returns>
     public static Action<PaddleConfig> TensorRt(Dictionary<string, TensorRtDynamicShapeGroup> shapeInfo, string? cacheDir = null,
-        long workspaceSize = 1 << 20,
+        int workspaceSize = 1 << 20,
         int maxBatchSize = 1,
         int minSubgraphSize = 20,
         PaddlePrecision precision = PaddlePrecision.Float32,
