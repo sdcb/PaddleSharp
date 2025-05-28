@@ -6,6 +6,9 @@ on:
     paths:
       - .github/workflows/build-native-nuget.yml
   workflow_dispatch:
+
+permissions:
+  packages: write
   
 jobs:
   build-all:
@@ -187,8 +190,7 @@ jobs:
 
     - name: Push nupkg to Github Packages
       run: |
-        echo "Pushing to GitHub Packages: ${{ matrix.title }}"
         for f in ${{ github.workspace }}/nupkgs/*.nupkg
         do
-          dotnet nuget push "$f" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ env.GITHUB_TOKEN }}" --skip-duplicate
+          dotnet nuget push "$f" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
         done
