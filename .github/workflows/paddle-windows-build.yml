@@ -39,9 +39,10 @@ jobs:
           toolset: '14.29'
 
       - name: Apply patches
+        shell: pwsh
         run: |
           cd ./paddle-src
-          wget -q https://gist.githubusercontent.com/sdcb/19dde1c9554e6066aade2a859070149b/raw/capi.patch -O capi.patch
+          Invoke-WebRequest -Uri https://gist.githubusercontent.com/sdcb/19dde1c9554e6066aade2a859070149b/raw/capi.patch -OutFile capi.patch
           git apply --ignore-whitespace capi.patch
           rm capi.patch
 
