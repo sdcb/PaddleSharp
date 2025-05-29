@@ -1,4 +1,4 @@
-name: paddle-windows-build
+﻿name: paddle-windows-build
 on:
   push:
     branches:
@@ -68,14 +68,9 @@ jobs:
           ninja all
 
       - name: Show build files
+        shell: bash
         run: |
-          tree /f ./paddle-src/build
-
-      - name: Upload paddle_inference_c_install_dir
-        uses: actions/upload-artifact@v4
-        with:
-          name: c_${{ matrix.name }}
-          path: ./paddle-src/build/paddle_inference_c_install_dir/*
+          ls -lR ./paddle-src/build
 
       - name: Upload paddle_inference_install_dir
         uses: actions/upload-artifact@v4
@@ -83,3 +78,12 @@ jobs:
           name: cpp_${{ matrix.name }}
           path: ./paddle-src/build/paddle_inference_install_dir/*
     
+      - name: Copy common.dll/.so
+        run: |
+          cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/common.* ./paddle-src/build/paddle_inference_c_install_dir/
+
+      - name: Upload paddle_inference_c_install_dir
+        uses: actions/upload-artifact@v4
+        with:
+          name: c_${{ matrix.name }}
+          path: ./paddle-src/build/paddle_inference_c_install_dir/*
