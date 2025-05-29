@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 		.github\workflows\build-linux-container.yml = .github\workflows\build-linux-container.yml
 		.github\workflows\build-native-nuget.yml = .github\workflows\build-native-nuget.yml
 		.github\workflows\main.yml = .github\workflows\main.yml
+		.github\workflows\paddle-windows-build.yml = .github\workflows\paddle-windows-build.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{3C8D6738-0E9A-4BDD-AB62-26B854B055F9}"

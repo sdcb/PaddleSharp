@@ -1,0 +1,84 @@
+name: paddle-windows-build
+on:
+  push:
+    branches:
+      - feature/3.0
+      - main
+    paths:
+      - '.github/workflows/paddle-windows-build.yml'
+  workflow_dispatch:
+
+env:
+  PADDLE_VERSION: "3.0.0"
+  PADDLE_BRANCH: "v3.0.0"
+
+jobs:
+  build-all:
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        include:
+          - { name: openblas_noavx, cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF" }
+          - { name: openblas,       cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=OFF" }
+          - { name: mkldnn,         cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON"  }
+    steps:
+      - name: Setup dependencies
+        run: |
+          pip3 install numpy protobuf wheel ninja
+
+      - name: Checkout Paddle repo
+        uses: actions/checkout@v4
+        with:
+          repository: PaddlePaddle/Paddle
+          ref: ${{ env.PADDLE_BRANCH }}
+          path: paddle-src
+          fetch-depth: 1
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: '14.29'
+
+      - name: Apply patches
+        run: |
+          cd ./paddle-src
+          wget -q https://gist.githubusercontent.com/sdcb/19dde1c9554e6066aade2a859070149b/raw/capi.patch -O capi.patch
+          git apply --ignore-whitespace capi.patch
+          rm capi.patch
+
+      - name: Configure with CMake
+        run: |
+          mkdir ./paddle-src/build
+          mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
+          mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
+
+          cd ./paddle-src/build
+
+          cmake .. -GNinja `
+            ${{ matrix.cmake_flags }} `
+            -DWITH_GPU=OFF `
+            -DON_INFER=ON `
+            -DWITH_PYTHON=OFF `
+            -DWITH_ONNXRUNTIME=ON `
+            -DWITH_UNITY_BUILD=ON
+
+      - name: Build with Ninja
+        run: |
+          cd ./paddle-src/build
+          ninja all
+
+      - name: Show build files
+        run: |
+          tree /f ./paddle-src/build
+
+      - name: Upload paddle_inference_c_install_dir
+        uses: actions/upload-artifact@v4
+        with:
+          name: c_${{ matrix.name }}
+          path: ./paddle-src/build/paddle_inference_c_install_dir/*
+
+      - name: Upload paddle_inference_install_dir
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpp_${{ matrix.name }}
+          path: ./paddle-src/build/paddle_inference_install_dir/*
+    
