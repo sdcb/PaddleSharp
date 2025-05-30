@@ -1,4 +1,4 @@
-name: build-native-nuget
+ï»¿name: build-native-nuget
 on:
   push:
     branches:
@@ -16,10 +16,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - { title: win64,             rid: win-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Windows/CPU/x86-64_avx-mkl-vs2019/paddle_inference_c.zip }
+          - { title: win64.mkl,            rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222470493 }
+          - { title: win64.openblas,       rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222365146 }
+          - { title: win64.openblas-noavx, rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222401095 }
           # - { title: win64-cu118,   rid: win-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Windows/GPU/x86-64_cuda11.8_cudnn8.6.0_trt8.5.1.7_mkl_avx_vs2019/paddle_inference_c.zip }
           # - { title: win64-cu126,   rid: win-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Windows/GPU/x86-64_cuda12.6_cudnn9.5.1_trt10.5.0.18_mkl_avx_vs2019/paddle_inference_c.zip }
-          - { title: linux64,           rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz }
+          - { title: linux64,              rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz }
           # - { title: linux64-cu118, rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/GPU/x86-64_gcc11.2_avx_mkl_cuda11.8_cudnn8.9.7-trt8.6.1.6/paddle_inference_c.tgz }
           # - { title: linux64-cu126, rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/GPU/x86-64_gcc11.2_avx_mkl_cuda12.6_cudnn9.5.1-trt10.5.0.18/paddle_inference_c.tgz }
           # - { title: osx-x64,         rid: osx-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/MacOS/x86-64_clang_avx_accelerate_blas/paddle_inference_c.tgz }
@@ -68,7 +70,7 @@ jobs:
       run: |
         set -euo pipefail
 
-        # ---------- »ù±¾ÔªÊı¾İ ----------
+        # ---------- åŸºæœ¬å…ƒæ•°æ® ----------
         PKG_ID="Sdcb.PaddleInference.runtime.${{ matrix.title }}"
         AUTHOR="sdcb"
         LICENSE="Apache-2.0"
@@ -76,16 +78,16 @@ jobs:
         TAGS="Sdcb PaddleSharp AI Paddle OCR PaddleOCR linqpad-samples"
         YEAR=$(date +%Y)
 
-        # ---------- ÕÒµ½ËùÓĞ¶¯Ì¬¿â ----------
+        # ---------- æ‰¾åˆ°æ‰€æœ‰åŠ¨æ€åº“ ----------
         NUGET_LIB_DIR="${{ github.workspace }}/nuget"
-        # find ³öÀ´µÄÊÇÈ«Â·¾¶
+        # find å‡ºæ¥çš„æ˜¯å…¨è·¯å¾„
         mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f)
         if [ ${#LIB_PATHS[@]} -eq 0 ]; then
           echo "Error: no native libs found in $NUGET_LIB_DIR"
           exit 1
         fi
 
-        # ---------- ×¼±¸ÁÙÊ±¹¤×÷Ä¿Â¼ ----------
+        # ---------- å‡†å¤‡ä¸´æ—¶å·¥ä½œç›®å½• ----------
         WORK="$RUNNER_TEMP/pkg"
         rm -rf "$WORK"
         mkdir -p \
@@ -94,16 +96,16 @@ jobs:
           "$WORK/lib/net45" \
           "$WORK/build/net45"
 
-        # ---------- ¸´ÖÆËùÓĞ¶¯Ì¬¿â ----------
+        # ---------- å¤åˆ¶æ‰€æœ‰åŠ¨æ€åº“ ----------
         for libpath in "${LIB_PATHS[@]}"; do
           cp "$libpath" "$WORK/runtimes/${{ matrix.rid }}/native/"
         done
 
-        # ·ÅÁ½¸öÕ¼Î»ÎÄ¼ş
+        # æ”¾ä¸¤ä¸ªå ä½æ–‡ä»¶
         touch "$WORK/lib/netstandard2.0/_._"
         cp "$WORK/lib/netstandard2.0/_._" "$WORK/lib/net45/_._"
 
-        # ---------- Éú³É .props ----------
+        # ---------- ç”Ÿæˆ .props ----------
         NORMALIZED_NAME="$(echo "${PKG_ID}" | tr '.-' '_' )_Dlls"
         PROPS_FILE="$WORK/build/net45/${PKG_ID}.props"
         {
@@ -113,7 +115,7 @@ jobs:
             <${NORMALIZED_NAME}>\$(MSBuildThisFileDirectory)..\\..\\runtimes</${NORMALIZED_NAME}>
           </PropertyGroup>
         EOF
-          # Ã¿¸ö¿â¶¼²åÒ»¶Î ItemGroup
+          # æ¯ä¸ªåº“éƒ½æ’ä¸€æ®µ ItemGroup
           for libpath in "${LIB_PATHS[@]}"; do
             libname="$(basename "$libpath")"
             cat <<EOF
@@ -129,7 +131,7 @@ jobs:
           echo "</Project>"
         } > "$PROPS_FILE"
 
-        # ---------- Éú³É .nuspec ----------
+        # ---------- ç”Ÿæˆ .nuspec ----------
         NUSPEC_FILE="$WORK/${PKG_ID}.nuspec"
         {
           cat <<EOF
@@ -156,7 +158,7 @@ jobs:
             <file src="lib\\net45\\_._"          target="lib\\net45" />
         EOF
 
-          # Ã¿¸ö¿â¶¼¼ÓÒ»ĞĞ file
+          # æ¯ä¸ªåº“éƒ½åŠ ä¸€è¡Œ file
           for libpath in "${LIB_PATHS[@]}"; do
             libname="$(basename "$libpath")"
             cat <<EOF
@@ -164,7 +166,7 @@ jobs:
         EOF
           done
 
-          # ×îºóÔÙ°Ñ props ÎÄ¼şÒ²¼Ó½øÀ´
+          # æœ€åå†æŠŠ props æ–‡ä»¶ä¹ŸåŠ è¿›æ¥
           cat <<EOF
             <file src="build\\net45\\${PKG_ID}.props" target="build\\net45" />
           </files>
@@ -172,12 +174,12 @@ jobs:
         EOF
         } > "$NUSPEC_FILE"
 
-        # ---------- ´ò°ü ----------
+        # ---------- æ‰“åŒ… ----------
         pushd "$WORK" >/dev/null
         nuget pack "${NUSPEC_FILE}" -OutputDirectory "${{ github.workspace }}/nupkgs"
         popd >/dev/null
 
-        echo "::group::Éú³ÉµÄ nupkg"
+        echo "::group::ç”Ÿæˆçš„ nupkg"
         ls -l "${{ github.workspace }}/nupkgs"
         echo "::endgroup::"
         
