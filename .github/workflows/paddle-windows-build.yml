@@ -53,13 +53,13 @@ jobs:
         run: |
           $cudaMajor = '${{ matrix.cuda }}'.Split('.')[0]
           echo "Downloading cuDNN for CUDA $cudaMajor and cuDNN ${{ matrix.cudnn }}..."
-          if ("${{ matrix.os }}" -eq "ubuntu-22.04") {
+          if ("${{ runner.os }}" -eq "Linux") {
             Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.tar.xz -OutFile cudnn.tar.xz
             mkdir cudnn && tar -xf cudnn.tar.xz --strip-components=1 -C cudnn
 
             sudo cp cudnn/include/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/include/
             sudo cp cudnn/lib/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/lib64/
-          } elseif ("${{ matrix.os }}" -eq "windows-2022") {
+          } elseif ("${{ runner.os }}" -eq "Windows") {
             Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.zip -OutFile cudnn.zip
             mkdir cudnn && tar -xf cudnn.zip --strip-components=1 -C cudnn
 
