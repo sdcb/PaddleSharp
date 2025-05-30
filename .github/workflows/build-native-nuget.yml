@@ -182,7 +182,7 @@ jobs:
     - name: Upload nupkg artifact
       uses: actions/upload-artifact@v4
       with:
-        name: nuget-${{ matrix.rid }}
+        name: nuget-${{ matrix.title }}
         path: ${{ env.NUPKG_PATH }}
         if-no-files-found: error
 
