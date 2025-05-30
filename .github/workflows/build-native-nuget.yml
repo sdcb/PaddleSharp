@@ -10,6 +10,9 @@ on:
 
 permissions:
   packages: write
+
+env:
+  PADDLE_VERSION: "3.0.0"
   
 jobs:
   build-all:
@@ -17,36 +20,29 @@ jobs:
     strategy:
       matrix:
         include:
-          - { title: win64.mkl,            rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222470493 }
-          - { title: win64.openblas,       rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222365146 }
-          - { title: win64.openblas-noavx, rid: win-x64,   url: https://github.com/sdcb/PaddleSharp/actions/runs/15327077635/artifacts/3222401095 }
-          # - { title: win64-cu118,   rid: win-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Windows/GPU/x86-64_cuda11.8_cudnn8.6.0_trt8.5.1.7_mkl_avx_vs2019/paddle_inference_c.zip }
-          # - { title: win64-cu126,   rid: win-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Windows/GPU/x86-64_cuda12.6_cudnn9.5.1_trt10.5.0.18_mkl_avx_vs2019/paddle_inference_c.zip }
-          - { title: linux64,              rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/CPU/gcc8.2_avx_mkl/paddle_inference_c.tgz }
-          # - { title: linux64-cu118, rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/GPU/x86-64_gcc11.2_avx_mkl_cuda11.8_cudnn8.9.7-trt8.6.1.6/paddle_inference_c.tgz }
-          # - { title: linux64-cu126, rid: linux-x64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/Linux/GPU/x86-64_gcc11.2_avx_mkl_cuda12.6_cudnn9.5.1-trt10.5.0.18/paddle_inference_c.tgz }
-          # - { title: osx-x64,         rid: osx-x64,   url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/MacOS/x86-64_clang_avx_accelerate_blas/paddle_inference_c.tgz }
-          # - { title: osx-arm64,       rid: osx-arm64, url: https://paddle-inference-lib.bj.bcebos.com/3.0.0/cxx_c/MacOS/m1_clang_noavx_accelerate_blas/paddle_inference_c.tgz }
+          - { title: win64.mkl,            rid: win-x64, action: paddle-windows-build.yml, artifact: c_mkldnn }
+          - { title: win64.openblas,       rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas }
+          - { title: win64.openblas-noavx, rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas_noavx }
   
     steps:
-    - name: Cache
-      id: cache-inference-lib
-      uses: actions/cache@v4
-      with:
-        path: paddle_inference_c
-        key: ${{ matrix.url }}
-
-    - name: Download
-      if: steps.cache-inference-lib.outputs.cache-hit != 'true'
+    - name: Download Artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
-        wget -q -O archive_file.tmp ${{ matrix.url }}
+        echo "Fetching latest successful ${{ matrix.action }} run of branch ${{ github.ref_name }}"
+        RUN_ID=$(gh run list -R ${{ github.repository }} \
+                  --workflow=${{ matrix.action }} \
+                  --branch=${{ github.ref_name }} \
+                  --status=success --limit=1 \
+                  --json databaseId | jq -r '.[0].databaseId')
+        echo "Run id = $RUN_ID"
+        
+        echo "Download artifact ${{ matrix.artifact }}"
+        gh run download -R ${{ github.repository }} "$RUN_ID" --name "$ART_NAME" --dir paddle_inference_c
 
-        if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
-            unzip -q archive_file.tmp -d paddle_inference_c
-        else
-            mkdir paddle_inference_c && tar -xzf archive_file.tmp -C paddle_inference_c
-        fi
-        rm archive_file.tmp
+        echo "::group::Artifact tree"
+        ls -lR paddle_inference_c
+        echo "::endgroup::"
 
     - name: Show Downloaded
       run: |
@@ -66,8 +62,6 @@ jobs:
         ls -l nuget
 
     - name: Build NuGet package
-      env:
-        VERSION: 3.0.0.${{ github.run_number }}
       run: |
         set -euo pipefail
 
@@ -140,7 +134,7 @@ jobs:
         <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
           <metadata>
             <id>${PKG_ID}</id>
-            <version>${VERSION}</version>
+            <version>${{ env.PADDLE_VERSION }}.${{ github.run_number }}</version>
             <title>${PKG_ID} native bindings</title>
             <authors>${AUTHOR}</authors>
             <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -183,17 +177,15 @@ jobs:
         echo "::group::生成的 nupkg"
         ls -l "${{ github.workspace }}/nupkgs"
         echo "::endgroup::"
+        echo NUPKG_PATH="${{ github.workspace }}/nupkgs/${PKG_ID}.${{ env.PADDLE_VERSION }}.${{ github.run_number }}.nupkg" >> $GITHUB_ENV
         
     - name: Upload nupkg artifact
       uses: actions/upload-artifact@v4
       with:
         name: nuget-${{ matrix.rid }}
-        path: nupkgs/*.nupkg
+        path: ${{ env.NUPKG_PATH }}
         if-no-files-found: error
 
     - name: Push nupkg to Github Packages
       run: |
-        for f in ${{ github.workspace }}/nupkgs/*.nupkg
-        do
-          dotnet nuget push "$f" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
-        done
+        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
