@@ -2,6 +2,7 @@
 on:
   push:
     branches:
+      - feature/3.0-gpu
       - feature/3.0
       - main
     paths:
@@ -18,13 +19,52 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: openblas_noavx, cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF" }
-          - { name: openblas,       cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=OFF" }
-          - { name: mkldnn,         cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON"  }
+          # - { name: openblas_noavx, cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_GPU=OFF" }
+          # - { name: openblas,       cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=OFF -DWITH_GPU=OFF" }
+          # - { name: mkldnn,         cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=OFF" }
+          - name: cu126_cudnn95_sm86_sm89
+            cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86;89 -DCMAKE_CUDA_ARCHITECTURES=86-real;89-real"
+            cuda: 12.6.3
+            cudnn: 9.5.1.17
     steps:
       - name: Setup dependencies
         run: |
           pip3 install numpy protobuf wheel ninja
+
+      - uses: Jimver/cuda-toolkit@master
+        if: ${{ matrix.cuda != '' }}
+        id: cuda-toolkit
+        with:
+          method: network
+          cuda: ${{ matrix.cuda }}
+          # Windows sub-packages are kind of different, so we need to handle them separately
+          # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
+          sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["nvcc"]' || '["nvcc", "cublas", "cublas_dev", "cudart"]' }}
+          non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["libcublas", "libcublas-dev"]' || '[]' }}
+          log-file-suffix: '${{matrix.os}}.txt'
+      
+      - name: Download cuDNN
+        if: ${{ matrix.cudnn != '' }}
+        shell: pwsh
+        run: |
+          $cudaMajor = '${{ matrix.cuda }}'.Split('.')[0]
+          echo "Downloading cuDNN for CUDA $cudaMajor and cuDNN ${{ matrix.cudnn }}..."
+          if ("${{ matrix.os }}" -eq "ubuntu-22.04") {
+            Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.tar.xz -OutFile cudnn.tar.xz
+            mkdir cudnn && tar -xf cudnn.tar.xz --strip-components=1 -C cudnn
+
+            sudo cp cudnn/include/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/include/
+            sudo cp cudnn/lib/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/lib64/
+          } elseif ("${{ matrix.os }}" -eq "windows-2022") {
+            Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.zip -OutFile cudnn.zip
+            mkdir cudnn && tar -xf cudnn.zip --strip-components=1 -C cudnn
+
+            cp -Recurse -Force cudnn\* "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}"
+          }
+      
+          echo "::group:: cuDNN files"
+          Get-ChildItem -Recurse cudnn
+          echo "::endgroup::"
 
       - name: Checkout Paddle repo
         uses: actions/checkout@v4
@@ -56,7 +96,6 @@ jobs:
 
           cmake .. -GNinja `
             ${{ matrix.cmake_flags }} `
-            -DWITH_GPU=OFF `
             -DON_INFER=ON `
             -DWITH_PYTHON=OFF `
             -DWITH_ONNXRUNTIME=ON `
