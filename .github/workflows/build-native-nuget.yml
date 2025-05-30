@@ -38,7 +38,7 @@ jobs:
         echo "Run id = $RUN_ID"
         
         echo "Download artifact ${{ matrix.artifact }}"
-        gh run download -R ${{ github.repository }} "$RUN_ID" --name "$ART_NAME" --dir paddle_inference_c
+        gh run download -R ${{ github.repository }} $RUN_ID --name ${{ matrix.artifact }} --dir paddle_inference_c
 
         echo "::group::Artifact tree"
         ls -lR paddle_inference_c
