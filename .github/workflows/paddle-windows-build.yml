@@ -22,8 +22,12 @@ jobs:
           # - { name: openblas_noavx, cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_GPU=OFF" }
           # - { name: openblas,       cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=OFF -DWITH_GPU=OFF" }
           # - { name: mkldnn,         cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=OFF" }
-          - name: cu126_cudnn95_sm86_sm89
-            cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86;89 -DCMAKE_CUDA_ARCHITECTURES=86-real;89-real"
+          - name: cu126_cudnn95_sm86
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
+            cuda: 12.6.3
+            cudnn: 9.5.1.17
+          - name: cu126_cudnn95_sm89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=89 -DCMAKE_CUDA_ARCHITECTURES=89-real"
             cuda: 12.6.3
             cudnn: 9.5.1.17
     steps:
