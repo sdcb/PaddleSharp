@@ -43,8 +43,8 @@ jobs:
           cuda: ${{ matrix.cuda }}
           # Windows sub-packages are kind of different, so we need to handle them separately
           # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
-          sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["nvcc"]' || '["nvcc", "cublas", "cublas_dev", "cudart"]' }}
-          non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["libcublas", "libcublas-dev"]' || '[]' }}
+          sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["nvcc"]' || '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev"]' }}
+          non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev"]' || '[]' }}
           log-file-suffix: '${{matrix.os}}.txt'
       
       - name: Download cuDNN
