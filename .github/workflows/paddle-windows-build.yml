@@ -45,10 +45,10 @@ jobs:
           # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
           sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
             '["nvcc"]' || 
-            '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev", "curand", "curand_dev", "cusparse", "cusparse_dev", "cusolver", "cusolver_dev", "nvrtc", "nvrtc_dev"]' 
+            '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev", "curand", "curand_dev", "cusparse", "cusparse_dev", "cusolver", "cusolver_dev", "nvrtc", "nvrtc_dev", "profiler_api"]' 
             }}
           non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
-            '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev", "libcurand", "libcurand-dev", "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", "libnvrtc-dev"]' || 
+            '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev", "libcurand", "libcurand-dev", "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", "libnvrtc-dev", "profiler_api"]' || 
             '[]' }}
           log-file-suffix: '${{matrix.os}}.txt'
       
