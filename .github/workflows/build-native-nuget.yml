@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - feature/3.0
+      - feature/3.0-gpu
     paths:
       - .github/workflows/build-native-nuget.yml
   workflow_dispatch:
