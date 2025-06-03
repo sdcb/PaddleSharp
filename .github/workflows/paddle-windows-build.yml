@@ -63,12 +63,12 @@ jobs:
             '["nvcc"]' || 
             '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev", "curand", "curand_dev", 
               "cusparse", "cusparse_dev", "cusolver", "cusolver_dev", "nvrtc", "nvrtc_dev", 
-              "cuda_profiler_api", "nvjpeg", "nvjpeg_dev"]' 
+              "cuda_profiler_api", "nvjpeg", "nvjpeg_dev", "thrust"]' 
             }}
           non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
             '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev", "libcurand", "libcurand-dev", 
               "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", 
-              "libnvrtc-dev", "profiler_api"]' || 
+              "libnvrtc-dev", "profiler_api", "libthrust"]' || 
             '[]' }}
           log-file-suffix: ${{ runner.os }}.txt
       
