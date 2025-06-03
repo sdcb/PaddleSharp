@@ -16,6 +16,9 @@ env:
 jobs:
   build-all:
     runs-on: windows-2022
+    env:
+      ACTIONS_STEP_DEBUG: true
+
     strategy:
       matrix:
         include:
