@@ -622,6 +622,52 @@ public class PaddleConfig : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the new executor is enabled.
+    /// </summary>
+    public bool NewExecutorEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigNewExecutorEnabled(_ptr) != 0;
+        }
+        set
+        {
+            ThrowIfDisposed();
+            PaddleNative.PD_ConfigEnableNewExecutor(_ptr, (sbyte)(value ? 1 : 0));
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the new IR (Intermediate Representation) feature is enabled.
+    /// </summary>
+    public bool NewIREnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return PaddleNative.PD_ConfigNewIREnabled(_ptr) != 0;
+        }
+        set
+        {
+            ThrowIfDisposed();
+            PaddleNative.PD_ConfigEnableNewIR(_ptr, (sbyte)(value ? 1 : 0));
+        }
+    }
+
+    /// <summary>
+    /// Sets a value indicating whether the optimized model should be used.
+    /// </summary>
+    public bool UseOptimizedModel
+    {
+        set
+        {
+            ThrowIfDisposed();
+            PaddleNative.PD_ConfigUseOptimizedModel(_ptr, (sbyte)(value ? 1 : 0));
+        }
+    }
+
     /// <summary>Create a new Predictor, and then dispose the config.</summary>
     public PaddlePredictor CreatePredictor()
     {

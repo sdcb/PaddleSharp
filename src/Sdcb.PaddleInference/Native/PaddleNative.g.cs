@@ -491,6 +491,36 @@ public partial class PaddleNative
     [DllImport(PaddleInferenceCLib)]
     public static extern IntPtr PD_ConfigSummary(IntPtr pd_config);
 
+    /// <summary>A boolean state telling whether to use new executor.</summary>
+    /// <param name="pd_config">(C API type: PD_Config*) config</param>
+    /// <param name="x">(C API type: PD_Bool) enable new executor or not</param>
+    [DllImport(PaddleInferenceCLib)]
+    public static extern void PD_ConfigEnableNewExecutor(IntPtr pd_config, PD_Bool x);
+
+    /// <summary>A boolean state telling whether the new executor is enabled.</summary>
+    /// <param name="pd_config">(C API type: PD_Config*) config</param>
+    /// <returns>Whether new executor is enabled</returns>
+    [DllImport(PaddleInferenceCLib)]
+    public static extern PD_Bool PD_ConfigNewExecutorEnabled(IntPtr pd_config);
+
+    /// <summary>A boolean state telling whether to use new IR.</summary>
+    /// <param name="pd_config">(C API type: PD_Config*) config</param>
+    /// <param name="x">(C API type: PD_Bool) enable new IR or not</param>
+    [DllImport(PaddleInferenceCLib)]
+    public static extern void PD_ConfigEnableNewIR(IntPtr pd_config, PD_Bool x);
+
+    /// <summary>A boolean state telling whether the new IR is enabled.</summary>
+    /// <param name="pd_config">(C API type: PD_Config*) config</param>
+    /// <returns>Whether new IR is enabled</returns>
+    [DllImport(PaddleInferenceCLib)]
+    public static extern PD_Bool PD_ConfigNewIREnabled(IntPtr pd_config);
+
+    /// <summary>Control whether to use optimized model to inference.</summary>
+    /// <param name="pd_config">(C API type: PD_Config*) config</param>
+    /// <param name="x">(C API type: PD_Bool) whether to use optimized model</param>
+    [DllImport(PaddleInferenceCLib)]
+    public static extern void PD_ConfigUseOptimizedModel(IntPtr pd_config, PD_Bool x);
+
     /// <summary>Create a new Predictor</summary>
     /// <param name="pd_config">(C API type: PD_Config*) </param>
     /// <returns>new predictor.(C API type: PD_Predictor*)</returns>
