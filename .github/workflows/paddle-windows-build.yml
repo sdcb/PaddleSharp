@@ -71,7 +71,7 @@ jobs:
               "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", 
               "libnvrtc-dev", "profiler_api"]' || 
             '[]' }}
-          log-file-suffix: '${{matrix.os}}.txt'
+          log-file-suffix: ${{ runner.os }}.txt
       
       - name: Download cuDNN
         if: ${{ matrix.cudnn != '' }}
