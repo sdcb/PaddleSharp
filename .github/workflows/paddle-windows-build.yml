@@ -28,8 +28,6 @@ jobs:
             cmake_flags: "-DWITH_MKL=OFF"
           - name: mkldnn
             cmake_flags: "-DWITH_MKL=ON"
-          - name: onemkl
-            cmake_flags: "-DWITH_ONEMKL=ON"
           - name: cu126_cudnn95_sm61
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
             cuda: 12.6.3
