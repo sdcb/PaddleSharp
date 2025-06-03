@@ -19,14 +19,14 @@ jobs:
     strategy:
       matrix:
         include:
-          # - name: openblas_noavx
-          #   cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_GPU=OFF"
-          # - name: openblas
-          #   cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=OFF -DWITH_GPU=OFF"
-          # - name: mkldnn
-          #   cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=OFF"
-          # - name: onednn
-          #   cmake_flags: "-DWITH_AVX=ON  -DWITH_MKL=ON  -DWITH_GPU=OFF"
+          - name: openblas_noavx
+            cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF"
+          - name: openblas
+            cmake_flags: "-DWITH_MKL=OFF"
+          - name: mkldnn
+            cmake_flags: "-DWITH_MKL=ON"
+          - name: onemkl
+            cmake_flags: "-DWITH_ONEMKL=ON"
           - name: cu126_cudnn95_sm86
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
             cuda: 12.6.3
@@ -52,7 +52,7 @@ jobs:
         run: |
           pip3 install numpy protobuf wheel ninja
 
-      - uses: Jimver/cuda-toolkit@master
+      - uses: Jimver/cuda-toolkit@v0.2.25
         if: ${{ matrix.cuda != '' }}
         id: cuda-toolkit
         with:
