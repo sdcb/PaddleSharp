@@ -30,18 +30,6 @@ jobs:
             cmake_flags: "-DWITH_MKL=ON"
           - name: onemkl
             cmake_flags: "-DWITH_ONEMKL=ON"
-          - name: cu126_cudnn95_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=89 -DCMAKE_CUDA_ARCHITECTURES=89-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=75 -DCMAKE_CUDA_ARCHITECTURES=75-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
           - name: cu126_cudnn95_sm61
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
             cuda: 12.6.3
@@ -50,12 +38,20 @@ jobs:
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Auto"
             cuda: 12.6.3
             cudnn: 9.5.1.17
+          - name: cu118_cudnn89_sm61
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
+            cuda: 11.8.0
+            cudnn: 8.9.7.29
+          - name: cu118_cudnn89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Auto"
+            cuda: 11.8.0
+            cudnn: 8.9.7.29
     steps:
       - name: Setup dependencies
         run: |
           pip3 install numpy protobuf wheel ninja
 
-      - uses: Jimver/cuda-toolkit@v0.2.25
+      - uses: Jimver/cuda-toolkit@v0.2.24
         if: ${{ matrix.cuda != '' }}
         id: cuda-toolkit
         with:
