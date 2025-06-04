@@ -21,11 +21,17 @@ jobs:
     strategy:
       matrix:
         include:
-          # - { title: win64.mkl,            rid: win-x64, action: paddle-windows-build.yml, artifact: c_mkldnn }
-          # - { title: win64.openblas,       rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas }
-          # - { title: win64.openblas-noavx, rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas_noavx }
+          - { title: win64.mkl,            rid: win-x64, action: paddle-windows-build.yml, artifact: c_mkldnn }
+          - { title: win64.openblas,       rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas }
+          - { title: win64.openblas-noavx, rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas_noavx }
+          - { title: win64.cu126_cudnn95_sm61, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm61 }
+          - { title: win64.cu126_cudnn95_sm75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm75 }
           - { title: win64.cu126_cudnn95_sm86, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm86 }
           - { title: win64.cu126_cudnn95_sm89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm89 }
+          - { title: win64.cu118_cudnn89_sm61, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn89_sm61 }
+          - { title: win64.cu118_cudnn89_sm75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn95_sm75 }
+          - { title: win64.cu118_cudnn89_sm86, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn95_sm86 }
+          - { title: win64.cu118_cudnn89_sm89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn95_sm89 }
   
     steps:
     - name: Download Artifacts
