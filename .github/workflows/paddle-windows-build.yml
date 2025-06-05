@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - feature/3.0-gpu
+      - feature/3.0-speed
       - feature/3.0
       - main
     paths:
