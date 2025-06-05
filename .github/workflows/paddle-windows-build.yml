@@ -119,12 +119,8 @@ jobs:
           echo "::endgroup::"
 
       - name: Checkout Paddle repo
-        uses: actions/checkout@v4
-        with:
-          repository: PaddlePaddle/Paddle
-          ref: ${{ env.PADDLE_BRANCH }}
-          path: ${{ env.DEV_DRIVE }}/paddle-src
-          fetch-depth: 1
+        run: |
+          git clone --branch v3.0.0 --depth 1 --single-branch https://github.com/PaddlePaddle/Paddle.git ${{ env.DEV_DRIVE }}/paddle-src
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
