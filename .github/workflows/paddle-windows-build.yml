@@ -59,14 +59,14 @@ jobs:
             cuda: 11.8.0
             cudnn: 8.9.7.29
     steps:
-      - name: Create Dev Drive using ReFS
+      - name: Create Dev Drive
         if: ${{ runner.os == 'Windows' }}
         run: |
           $Volume = New-VHD -Path D:/dev-drive.vhdx -SizeBytes 100GB |
                 Mount-VHD -Passthru |
                 Initialize-Disk -Passthru |
                 New-Partition -AssignDriveLetter -UseMaximumSize |
-                Format-Volume -FileSystem ReFS -Confirm:$false -Force
+                Format-Volume -FileSystem NTFS -Confirm:$false -Force
           Write-Output $Volume
           Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
 
