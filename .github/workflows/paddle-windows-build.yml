@@ -16,51 +16,60 @@ env:
 jobs:
   build-all:
     runs-on: windows-2022
-    env:
-      ACTIONS_STEP_DEBUG: true
 
     strategy:
       matrix:
         include:
           - name: openblas_noavx
             cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF"
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-          - name: mkldnn
-            cmake_flags: "-DWITH_MKL=ON"
-          - name: cu126_cudnn95_sm61
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=75 -DCMAKE_CUDA_ARCHITECTURES=75-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=89 -DCMAKE_CUDA_ARCHITECTURES=89-real"
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu118_cudnn89_sm61
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-          - name: cu118_cudnn89_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=75 -DCMAKE_CUDA_ARCHITECTURES=75-real"
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-          - name: cu118_cudnn89_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
+          # - name: openblas
+          #   cmake_flags: "-DWITH_MKL=OFF"
+          # - name: mkldnn
+          #   cmake_flags: "-DWITH_MKL=ON"
+          # - name: cu126_cudnn95_sm61
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
+          #   cuda: 12.6.3
+          #   cudnn: 9.5.1.17
+          # - name: cu126_cudnn95_sm75
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=75 -DCMAKE_CUDA_ARCHITECTURES=75-real"
+          #   cuda: 12.6.3
+          #   cudnn: 9.5.1.17
+          # - name: cu126_cudnn95_sm86
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
+          #   cuda: 12.6.3
+          #   cudnn: 9.5.1.17
+          # - name: cu126_cudnn95_sm89
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=89 -DCMAKE_CUDA_ARCHITECTURES=89-real"
+          #   cuda: 12.6.3
+          #   cudnn: 9.5.1.17
+          # - name: cu118_cudnn89_sm61
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=61 -DCMAKE_CUDA_ARCHITECTURES=61-real"
+          #   cuda: 11.8.0
+          #   cudnn: 8.9.7.29
+          # - name: cu118_cudnn89_sm75
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=75 -DCMAKE_CUDA_ARCHITECTURES=75-real"
+          #   cuda: 11.8.0
+          #   cudnn: 8.9.7.29
+          # - name: cu118_cudnn89_sm86
+          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=86 -DCMAKE_CUDA_ARCHITECTURES=86-real"
+          #   cuda: 11.8.0
+          #   cudnn: 8.9.7.29
           - name: cu118_cudnn89_sm89
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=89 -DCMAKE_CUDA_ARCHITECTURES=89-real"
             cuda: 11.8.0
             cudnn: 8.9.7.29
     steps:
+      - name: Create Dev Drive using ReFS
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          $Volume = New-VHD -Path D:/dev-drive.vhdx -SizeBytes 100GB |
+                Mount-VHD -Passthru |
+                Initialize-Disk -Passthru |
+                New-Partition -AssignDriveLetter -UseMaximumSize |
+                Format-Volume -FileSystem ReFS -Confirm:$false -Force
+          Write-Output $Volume
+          Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
+
       - name: Setup dependencies
         run: |
           pip3 install numpy protobuf wheel ninja
@@ -114,7 +123,7 @@ jobs:
         with:
           repository: PaddlePaddle/Paddle
           ref: ${{ env.PADDLE_BRANCH }}
-          path: paddle-src
+          path: ${{ env.DEV_DRIVE }}/paddle-src
           fetch-depth: 1
 
       - uses: ilammy/msvc-dev-cmd@v1
@@ -124,19 +133,18 @@ jobs:
       - name: Apply patches
         shell: pwsh
         run: |
-          cd ./paddle-src
+          cd ${{ env.DEV_DRIVE }}/paddle-src
           Invoke-WebRequest -Uri https://gist.githubusercontent.com/sdcb/19dde1c9554e6066aade2a859070149b/raw/capi.patch -OutFile capi.patch
           git apply --ignore-whitespace capi.patch
           rm capi.patch
 
       - name: Configure with CMake
         run: |
-          mkdir ./paddle-src/build
-          mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
-          mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
+          mkdir ${{ env.DEV_DRIVE }}/paddle-src/build
+          mkdir ${{ env.DEV_DRIVE }}/paddle-src/build/paddle/phi/ops/yaml/inconsistent
+          mkdir ${{ env.DEV_DRIVE }}/paddle-src/build/paddle/phi/ops/yaml/legacy
 
-          cd ./paddle-src/build
-
+          cd ${{ env.DEV_DRIVE }}/paddle-src/build
           cmake .. -GNinja `
             ${{ matrix.cmake_flags }} `
             -DON_INFER=ON `
@@ -146,26 +154,26 @@ jobs:
 
       - name: Build with Ninja
         run: |
-          cd ./paddle-src/build
+          cd ${{ env.DEV_DRIVE }}/paddle-src/build
           ninja all
 
       - name: Show build files
         shell: bash
         run: |
-          ls -lR ./paddle-src/build
+          ls -lR ${{ env.DEV_DRIVE }}/paddle-src/build
 
       - name: Upload paddle_inference_install_dir
         uses: actions/upload-artifact@v4
         with:
           name: cpp_${{ matrix.name }}
-          path: ./paddle-src/build/paddle_inference_install_dir/*
-    
+          path: ${{ env.DEV_DRIVE }}/paddle-src/build/paddle_inference_install_dir/*
+
       - name: Copy common.dll/.so
         run: |
-          cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
+          cp ${{ env.DEV_DRIVE }}/paddle-src/build/paddle_inference_install_dir/paddle/lib/common.* ${{ env.DEV_DRIVE }}/paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
 
       - name: Upload paddle_inference_c_install_dir
         uses: actions/upload-artifact@v4
         with:
           name: c_${{ matrix.name }}
-          path: ./paddle-src/build/paddle_inference_c_install_dir/*
+          path: ${{ env.DEV_DRIVE }}/paddle-src/paddle-src/build/paddle_inference_c_install_dir/*
