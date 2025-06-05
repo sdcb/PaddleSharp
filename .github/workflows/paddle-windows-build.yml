@@ -120,7 +120,7 @@ jobs:
 
       - name: Checkout Paddle repo
         run: |
-          git clone --branch v3.0.0 --depth 1 --single-branch https://github.com/PaddlePaddle/Paddle.git ${{ env.DEV_DRIVE }}/paddle-src
+          git clone --branch ${{ env.PADDLE_BRANCH }} --depth 1 --single-branch https://github.com/PaddlePaddle/Paddle.git ${{ env.DEV_DRIVE }}/paddle-src
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
