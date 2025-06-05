@@ -26,16 +26,35 @@ jobs:
             cmake_flags: "-DWITH_MKL=OFF"
           - name: mkldnn
             cmake_flags: "-DWITH_MKL=ON"
-          - name: cu126_cudnn95
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75;86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real;86-real;89-real\""
+
+          - name: cu126_cudnn95_sm61_75
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
             cuda: 12.6.3
             cudnn: 9.5.1.17
-          - name: cu118_cudnn89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75;86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real;86-real;89-real\""
+          - name: cu118_cudnn89_sm61_75
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
             cuda: 11.8.0
             cudnn: 8.9.7.29
-          - name: cu129_cudnn910
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75;86;89;120\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real;86-real;89-real;120-real\""
+          - name: cu129_cudnn910_sm61_75
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
+            cuda: 12.9.0
+            cudnn: 9.10.1.4
+
+          - name: cu126_cudnn95_sm86_89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real;89-real\""
+            cuda: 12.6.3
+            cudnn: 9.5.1.17
+          - name: cu118_cudnn89_sm86_89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real;89-real\""
+            cuda: 11.8.0
+            cudnn: 8.9.7.29
+          - name: cu129_cudnn910_sm86_89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real;89-real\""
+            cuda: 12.9.0
+            cudnn: 9.10.1.4
+
+          - name: cu129_cudnn910_sm120
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DCMAKE_CUDA_ARCHITECTURES=\"120-real\""
             cuda: 12.9.0
             cudnn: 9.10.1.4
     steps:
