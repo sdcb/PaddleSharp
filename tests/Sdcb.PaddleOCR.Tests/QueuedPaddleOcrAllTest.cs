@@ -1,4 +1,6 @@
-﻿namespace Sdcb.PaddleOCR.Tests;
+﻿using Xunit;
+
+namespace Sdcb.PaddleOCR.Tests;
 
 public class QueuedPaddleOcrAllTest
 {

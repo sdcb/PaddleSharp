@@ -26,7 +26,7 @@ public class SharedUtils
         string ns = RootType.Namespace;
         string resourcePath = $"{ns}.dicts.{EmbeddedResourceTransform(dictName)}";
         using Stream? dictStream = RootAssembly.GetManifestResourceStream(resourcePath)
-            ?? throw new Exception($"Unable to load model dicts file embedded resource {resourcePath} from assembly , model not exists?");
+            ?? throw new Exception($"Unable to load model dicts file embedded resource {resourcePath} from assembly, model not exists?");
         return ReadLinesFromStream(dictStream).ToList();
 
         static IEnumerable<string> ReadLinesFromStream(Stream stream)

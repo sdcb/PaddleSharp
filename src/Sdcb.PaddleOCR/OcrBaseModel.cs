@@ -41,6 +41,13 @@ public abstract class OcrBaseModel
     /// <param name="config">The PaddleConfig to modify.</param>
     public virtual void ConfigureDevice(PaddleConfig config, Action<PaddleConfig>? configure = null)
     {
-        config.Apply(configure ?? DefaultDevice);
+        config.Apply((configure ?? DefaultDevice).And(c =>
+        {
+            if (Version == ModelVersion.V5)
+            {
+                c.NewIREnabled = true;
+                c.NewExecutorEnabled = true;
+            }
+        }));
     }
 }

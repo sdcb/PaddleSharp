@@ -2,6 +2,7 @@
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Local;
 using Sdcb.PaddleOCR.Models.Online;
+using Xunit;
 
 namespace Sdcb.PaddleOCR.Tests;
 

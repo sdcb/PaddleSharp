@@ -32,8 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.LocalV3\Sdcb.PaddleOCR.Models.LocalV3.csproj" />
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.LocalV4\Sdcb.PaddleOCR.Models.LocalV4.csproj" />
+    <ProjectReference Include="..\Sdcb.PaddleOCR.Models.LocalV5\Sdcb.PaddleOCR.Models.LocalV5.csproj" />
     
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" />
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" />

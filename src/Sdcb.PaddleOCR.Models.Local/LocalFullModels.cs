@@ -17,6 +17,11 @@ public static class LocalFullModels
     //public static FullOcrModel ChineseServerV4 => new(LocalDetectionModel.ChineseServerV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
 
     /// <summary>
+    /// Chinise v5 version
+    /// </summary>
+    public static FullOcrModel ChineseV5 => new(LocalDetectionModel.ChineseV5, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV5);
+
+    /// <summary>
     /// English v4 version.
     /// </summary>
     public static FullOcrModel EnglishV4 => new(LocalDetectionModel.ChineseV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.EnglishV4);

@@ -1,4 +1,5 @@
 using Sdcb.PaddleOCR.Models.Online;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests;

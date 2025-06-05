@@ -27,6 +27,11 @@ public class LocalDetectionModel : DetectionModel
     public override PaddleConfig CreateConfig() => Utils.LocalModel(Name, Version);
 
     /// <summary>
+    /// Gets the Chinese language detection model for version 5.
+    /// </summary>
+    public static LocalDetectionModel ChineseV5 => new("mobile-zh-det", ModelVersion.V5);
+
+    /// <summary>
     /// Chinese detection v4 model used by PaddleOCR to detect text from an image, supporting multiple languages(Size: 4.6M).
     /// </summary>
     public static LocalDetectionModel ChineseV4 => new("ch_PP-OCRv4_det", ModelVersion.V4);

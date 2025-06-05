@@ -1,6 +1,7 @@
 using OpenCvSharp;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Local;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests;
@@ -32,6 +33,13 @@ public class OfflineModelsTest
     public void FastCheckOCRChineseV4()
     {
         FullOcrModel model = LocalFullModels.ChineseV4;
+        FastCheck(model);
+    }
+
+    [Fact]
+    public void FastCheckOCRChineseV5()
+    {
+        FullOcrModel model = LocalFullModels.ChineseV5;
         FastCheck(model);
     }
 

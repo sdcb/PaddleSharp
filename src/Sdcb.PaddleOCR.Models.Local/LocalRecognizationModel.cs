@@ -28,7 +28,14 @@ public class LocalRecognizationModel : RecognizationModel
     public LocalRecognizationModel(string name, string dictName, ModelVersion version) : base(version)
     {
         Name = name;
-        Labels = SharedUtils.LoadDicts(dictName);
+        if (version == ModelVersion.V5)
+        {
+            Labels = Utils.LoadV5Dicts(name);
+        }
+        else
+        {
+            Labels = SharedUtils.LoadDicts(dictName);
+        }
     }
 
     /// <summary>
@@ -46,6 +53,11 @@ public class LocalRecognizationModel : RecognizationModel
     {
         return Utils.LocalModel(Name, Version);
     }
+
+    /// <summary>
+    /// Gets the Chinese V5 local recognition model.
+    /// </summary>
+    public static LocalRecognizationModel ChineseV5 => new("mobile-zh-rec", "", ModelVersion.V5);
 
     /// <summary>
     /// v4 model for Chinese recognition

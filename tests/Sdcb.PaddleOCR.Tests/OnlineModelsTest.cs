@@ -3,6 +3,7 @@ using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
 using System.Diagnostics;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Sdcb.PaddleOCR.Tests;
