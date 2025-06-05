@@ -18,7 +18,7 @@ internal class Program
         // from: https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Home-page-extension-visual-updated.png
         byte[] sampleImageData = File.ReadAllBytes(@"./samples/vsext.png");
 
-        using (PaddleOcrAll all = new(model, PaddleDevice.Blas())
+        using (PaddleOcrAll all = new(model)
         {
             AllowRotateDetection = true,
             Enable180Classification = false,
