@@ -29,9 +29,18 @@ internal static class Utils
 
         string programBufferKey = $"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference" + (version == ModelVersion.V5 ? ".json" : ".pdmodel");
 
-        byte[] programBuffer = SharedUtils.ReadResourceAsBytes(programBufferKey, assembly);
-        byte[] paramsBuffer = SharedUtils.ReadResourceAsBytes($"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdiparams", assembly);
-        return PaddleConfig.FromMemoryModel(programBuffer, paramsBuffer);
+        if (version == ModelVersion.V5)
+        {
+            string dir = Path.Combine(@"C:\Users\ZhouJie\source\repos\PaddleSharp\src\Sdcb.PaddleOCR.Models.LocalV5\models", key);
+            return PaddleConfig.FromModelDir(dir);
+        }
+        else
+        {
+            // original code
+            byte[] programBuffer = SharedUtils.ReadResourceAsBytes(programBufferKey, assembly);
+            byte[] paramsBuffer = SharedUtils.ReadResourceAsBytes($"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference.pdiparams", assembly);
+            return PaddleConfig.FromMemoryModel(programBuffer, paramsBuffer);
+        }
     }
 
     public static IReadOnlyList<string> LoadV5Dicts(string key)
