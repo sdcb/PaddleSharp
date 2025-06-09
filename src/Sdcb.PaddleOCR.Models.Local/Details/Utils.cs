@@ -16,7 +16,7 @@ internal static class Utils
 
     public static PaddleConfig LocalModel(string key, ModelVersion version)
     {
-        Type rootType = version switch 
+        Type rootType = version switch
         {
             ModelVersion.V2 => typeof(LocalFullModels),
             ModelVersion.V3 => typeof(LocalV3.KnownModels),
@@ -29,7 +29,8 @@ internal static class Utils
 
         string programBufferKey = $"{prefix}.models.{SharedUtils.EmbeddedResourceTransform(key)}.inference" + (version == ModelVersion.V5 ? ".json" : ".pdmodel");
 
-        if (version == ModelVersion.V5)
+        //if (version == ModelVersion.V5)
+        if (false)
         {
             string dir = Path.Combine(@"C:\Users\ZhouJie\source\repos\PaddleSharp\src\Sdcb.PaddleOCR.Models.LocalV5\models", key);
             return PaddleConfig.FromModelDir(dir);

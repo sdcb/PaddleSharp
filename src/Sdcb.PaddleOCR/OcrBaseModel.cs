@@ -45,7 +45,7 @@ public abstract class OcrBaseModel
         {
             if (Version == ModelVersion.V5)
             {
-                c.NewIREnabled = true;
+                //c.NewIREnabled = true;
                 c.NewExecutorEnabled = true;
             }
         }));

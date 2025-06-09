@@ -1,5 +1,4 @@
 ﻿using OpenCvSharp;
-using Sdcb.PaddleInference;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Local;
 
@@ -9,6 +8,7 @@ internal class Program
 {
     public static void Main()
     {
+        //Environment.SetEnvironmentVariable("GLOG_v", "2");
         FullOcrModel model = LocalFullModels.ChineseV5;
         FastCheck(model);
     }

@@ -223,7 +223,7 @@ public partial class PaddleNative
     /// <param name="use_static">(C API type: PD_Bool) Serialize optimization information to disk for reusing.</param>
     /// <param name="use_calib_mode">(C API type: PD_Bool) Use TRT int8 calibration(post training quantization).</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigEnableTensorRtEngine(IntPtr pd_config, int workspace_size, int max_batch_size, int min_subgraph_size, PD_PrecisionType precision, PD_Bool use_static, PD_Bool use_calib_mode);
+    public static extern void PD_ConfigEnableTensorRtEngine(IntPtr pd_config, long workspace_size, int max_batch_size, int min_subgraph_size, PD_PrecisionType precision, PD_Bool use_static, PD_Bool use_calib_mode);
 
     /// <summary>A boolean state telling whether the TensorRT engine is used.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -235,13 +235,13 @@ public partial class PaddleNative
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
     /// <param name="tensor_num">The number of the subgraph input.</param>
     /// <param name="tensor_name">(C API type: IntPtr*) The name of every subgraph input.</param>
-    /// <param name="shapes_num">(C API type: long*) The shape size of every subgraph input.</param>
+    /// <param name="shapes_num">(C API type: nint*) The shape size of every subgraph input.</param>
     /// <param name="min_shape">(C API type: IntPtr*) The min input shape of every subgraph input.</param>
     /// <param name="max_shape">(C API type: IntPtr*) The max input shape of every subgraph input.</param>
     /// <param name="optim_shape">(C API type: IntPtr*) The opt input shape of every subgraph input.</param>
     /// <param name="disable_trt_plugin_fp16">(C API type: PD_Bool) Setting this parameter to true means that TRT plugin will not run fp16.</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigSetTrtDynamicShapeInfo(IntPtr pd_config, long tensor_num, IntPtr tensor_name, IntPtr shapes_num, IntPtr min_shape, IntPtr max_shape, IntPtr optim_shape, PD_Bool disable_trt_plugin_fp16);
+    public static extern void PD_ConfigSetTrtDynamicShapeInfo(IntPtr pd_config, nint tensor_num, IntPtr tensor_name, IntPtr shapes_num, IntPtr min_shape, IntPtr max_shape, IntPtr optim_shape, PD_Bool disable_trt_plugin_fp16);
 
     /// <summary>A boolean state telling whether the trt dynamic_shape is used.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -287,7 +287,7 @@ public partial class PaddleNative
     /// <param name="ops_num">ops number</param>
     /// <param name="ops_name">(C API type: IntPtr*) ops name</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigDisableTensorRtOPs(IntPtr pd_config, long ops_num, IntPtr ops_name);
+    public static extern void PD_ConfigDisableTensorRtOPs(IntPtr pd_config, nint ops_num, IntPtr ops_name);
 
     /// <summary>Replace some TensorRT plugins to TensorRT OSS( https://github.com/NVIDIA/TensorRT), with which some models's inference may be more high-performance. Libnvinfer_plugin.so greater than V7.2.1 is needed.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -352,7 +352,7 @@ public partial class PaddleNative
     /// <param name="ops_num">The number of operator type list.</param>
     /// <param name="op_list">(C API type: IntPtr*) The name of operator type list.</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigSetMkldnnOp(IntPtr pd_config, long ops_num, IntPtr op_list);
+    public static extern void PD_ConfigSetMkldnnOp(IntPtr pd_config, nint ops_num, IntPtr op_list);
 
     /// <summary>Turn on OneDNN bfloat16.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -370,7 +370,7 @@ public partial class PaddleNative
     /// <param name="ops_num">The number of operator type list.</param>
     /// <param name="op_list">(C API type: IntPtr*) The name of operator type list.</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigSetBfloat16Op(IntPtr pd_config, long ops_num, IntPtr op_list);
+    public static extern void PD_ConfigSetBfloat16Op(IntPtr pd_config, nint ops_num, IntPtr op_list);
 
     /// <summary>Turn on OneDNN int8.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -400,14 +400,14 @@ public partial class PaddleNative
     [DllImport(PaddleInferenceCLib)]
     public static extern void PD_ConfigSetExecStream(IntPtr pd_config, IntPtr stream);
 
-    /// <summary>Specify the memory buffer of program and parameter. Used when model and params are loaded directly from memory.</summary>
-    /// <param name="pd_config">(C API type: PD_Config*) config</param>
-    /// <param name="prog_buffer">(C API type: byte*) The memory buffer of program.</param>
-    /// <param name="prog_buffer_size">The size of the model data.</param>
-    /// <param name="params_buffer">(C API type: byte*) The memory buffer of the combined parameters file.</param>
-    /// <param name="params_buffer_size">The size of the combined parameters data.</param>
-    [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigSetModelBuffer(IntPtr pd_config, IntPtr prog_buffer, long prog_buffer_size, IntPtr params_buffer, long params_buffer_size);
+/// <summary>Specify the memory buffer of program and parameter. Used when model and params are loaded directly from memory.</summary>
+/// <param name="pd_config">(C API type: PD_Config*) config</param>
+/// <param name="prog_buffer">(C API type: byte*) The memory buffer of program.</param>
+/// <param name="prog_buffer_size">The size of the model data.</param>
+/// <param name="params_buffer">(C API type: byte*) The memory buffer of the combined parameters file.</param>
+/// <param name="params_buffer_size">The size of the combined parameters data.</param>
+[DllImport(PaddleInferenceCLib)]
+public static extern void PD_ConfigSetModelBuffer(IntPtr pd_config, IntPtr prog_buffer, nint prog_buffer_size, IntPtr params_buffer, nint params_buffer_size);
 
     /// <summary>A boolean state telling whether the model is set from the CPU memory.</summary>
     /// <param name="pd_config">(C API type: PD_Config*) config</param>
@@ -471,7 +471,7 @@ public partial class PaddleNative
     /// <param name="idx">the position to insert.</param>
     /// <param name="pass">(C API type: byte*) the new pass.</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_ConfigInsertPass(IntPtr pd_config, long idx, IntPtr pass);
+    public static extern void PD_ConfigInsertPass(IntPtr pd_config, nint idx, IntPtr pass);
 
     /// <summary>Append a pass to the end of the passes</summary>
     /// <param name="pd_config">(C API type: PD_Config*) </param>
@@ -561,13 +561,13 @@ public partial class PaddleNative
     /// <param name="pd_predictor">(C API type: PD_Predictor*) predictor</param>
     /// <returns>input number</returns>
     [DllImport(PaddleInferenceCLib)]
-    public static extern long PD_PredictorGetInputNum(IntPtr pd_predictor);
+    public static extern nint PD_PredictorGetInputNum(IntPtr pd_predictor);
 
     /// <summary>Get the output number</summary>
     /// <param name="pd_predictor">(C API type: PD_Predictor*) predictor</param>
     /// <returns>output number</returns>
     [DllImport(PaddleInferenceCLib)]
-    public static extern long PD_PredictorGetOutputNum(IntPtr pd_predictor);
+    public static extern nint PD_PredictorGetOutputNum(IntPtr pd_predictor);
 
     /// <summary>Get the Input Tensor object</summary>
     /// <param name="pd_predictor">(C API type: PD_Predictor*) predictor</param>
@@ -620,7 +620,7 @@ public partial class PaddleNative
     /// <param name="shape_size">The size of shape.</param>
     /// <param name="shape">(C API type: int*) The shape to set.</param>
     [DllImport(PaddleInferenceCLib)]
-    public static extern void PD_TensorReshape(IntPtr pd_tensor, long shape_size, IntPtr shape);
+    public static extern void PD_TensorReshape(IntPtr pd_tensor, nint shape_size, IntPtr shape);
 
     /// <summary>Get the memory pointer in CPU or GPU with 'float' data type. Please Reshape the tensor first before call this. It's usually used to get input data pointer.</summary>
     /// <param name="pd_tensor">(C API type: PD_Tensor*) tensor.</param>
@@ -632,7 +632,7 @@ public partial class PaddleNative
     /// <summary>Get the memory pointer in CPU or GPU with 'int64_t' data type. Please Reshape the tensor first before call this. It's usually used to get input data pointer.</summary>
     /// <param name="pd_tensor">(C API type: PD_Tensor*) tensor.</param>
     /// <param name="place">(C API type: PD_PlaceType) The place of the tensor.</param>
-    /// <returns>Memory pointer of pd_tensor(C API type: int*)</returns>
+    /// <returns>Memory pointer of pd_tensor(C API type: long*)</returns>
     [DllImport(PaddleInferenceCLib)]
     public static extern IntPtr PD_TensorMutableDataInt64(IntPtr pd_tensor, PD_PlaceType place);
 
@@ -669,7 +669,7 @@ public partial class PaddleNative
     /// <param name="pd_tensor">(C API type: PD_Tensor*) tensor.</param>
     /// <param name="place">(C API type: PD_PlaceType*) To get the device type of the tensor.</param>
     /// <param name="size">(C API type: int*) To get the data size of the tensor.</param>
-    /// <returns>The tensor data buffer pointer.(C API type: int*)</returns>
+    /// <returns>The tensor data buffer pointer.(C API type: long*)</returns>
     [DllImport(PaddleInferenceCLib)]
     public static extern IntPtr PD_TensorDataInt64(IntPtr pd_tensor, IntPtr place, IntPtr size);
 
@@ -705,7 +705,7 @@ public partial class PaddleNative
 
     /// <summary>Copy the host memory to tensor data. It's usually used to set the input tensor data.</summary>
     /// <param name="pd_tensor">(C API type: PD_Tensor*) tensor.</param>
-    /// <param name="data">(C API type: int*) The pointer of the data, from which the tensor will copy.</param>
+    /// <param name="data">(C API type: long*) The pointer of the data, from which the tensor will copy.</param>
     [DllImport(PaddleInferenceCLib)]
     public static extern void PD_TensorCopyFromCpuInt64(IntPtr pd_tensor, IntPtr data);
 
@@ -735,7 +735,7 @@ public partial class PaddleNative
 
     /// <summary>Copy the tensor data to the host memory. It's usually used to get the output tensor data.</summary>
     /// <param name="pd_tensor">(C API type: PD_Tensor*) tensor.</param>
-    /// <param name="data">(C API type: int*) The tensor will copy the data to the address.</param>
+    /// <param name="data">(C API type: long*) The tensor will copy the data to the address.</param>
     [DllImport(PaddleInferenceCLib)]
     public static extern void PD_TensorCopyToCpuInt64(IntPtr pd_tensor, IntPtr data);
 
