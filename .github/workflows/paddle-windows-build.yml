@@ -35,14 +35,14 @@ jobs:
             cuda: 11.8.0
             cudnn: 8.9.7.29
 
-          # - name: cu126_cudnn95_sm61_75
-          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
-          #   cuda: 12.6.3
-          #   cudnn: 9.5.1.17
-          # - name: cu126_cudnn95_sm86_89
-          #   cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real;89-real\""
-          #   cuda: 12.6.3
-          #   cudnn: 9.5.1.17
+          - name: cu126_cudnn95_sm61_75
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
+            cuda: 12.6.3
+            cudnn: 9.5.1.17
+          - name: cu126_cudnn95_sm86_89
+            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86;89\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real;89-real\""
+            cuda: 12.6.3
+            cudnn: 9.5.1.17
 
           - name: cu129_cudnn910_sm61_75
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61;75\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real;75-real\""
