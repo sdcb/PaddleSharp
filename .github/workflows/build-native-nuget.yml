@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - feature/3.0
-      - feature/3.0-combine
     paths:
       - .github/workflows/build-native-nuget.yml
   workflow_dispatch:
@@ -25,15 +24,15 @@ jobs:
           - { title: win64.openblas,       rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas }
           - { title: win64.openblas-noavx, rid: win-x64, action: paddle-windows-build.yml, artifact: c_openblas_noavx }
   
-          - { title: win64.cu126_cudnn95_sm61_75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm61_75 }
-          - { title: win64.cu118_cudnn89_sm61_75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn89_sm61_75 }
-          - { title: win64.cu129_cudnn910_sm61_75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm61_75 }
+          - { title: win64.cu118_cudnn89_sm61_75,  rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn89_sm61_75 }
+          - { title: win64.cu118_cudnn89_sm86_89,  rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn89_sm86_89 }
   
-          - { title: win64.cu126_cudnn95_sm86_89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm86_89 }
-          - { title: win64.cu118_cudnn89_sm86_89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu118_cudnn89_sm86_89 }
-          - { title: win64.cu129_cudnn910_sm86_89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm86_89 }
+          - { title: win64.cu126_cudnn95_sm61_75,  rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm61_75 }
+          - { title: win64.cu126_cudnn95_sm86_89,  rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu126_cudnn95_sm86_89 }
   
-          - { title: win64.cu129_cudnn910_sm120, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm120 }
+          - { title: win64.cu129_cudnn910_sm61_75, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm61_75 }  
+          - { title: win64.cu129_cudnn910_sm86_89, rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm86_89 }  
+          - { title: win64.cu129_cudnn910_sm120,   rid: win-x64, action: paddle-windows-build.yml, artifact: c_cu129_cudnn910_sm120 }
   
     steps:
     - name: Download Artifacts
