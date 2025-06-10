@@ -1,15 +1,15 @@
 ﻿using OpenCvSharp;
 using Sdcb.PaddleOCR.Models;
-using Sdcb.PaddleOCR.Models.Local;
+using Sdcb.PaddleOCR.Models.Online;
 
 namespace Sdcb.PaddleOCR.Tests;
 
 internal class Program
 {
-    public static void Main2()
+    public static async Task Main()
     {
         Environment.SetEnvironmentVariable("GLOG_v", "0");
-        FullOcrModel model = LocalFullModels.ChineseV5;
+        FullOcrModel model = await OnlineFullModels.ChineseV5.DownloadAsync();
         FastCheck(model);
     }
 

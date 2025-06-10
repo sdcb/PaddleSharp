@@ -28,8 +28,26 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     public async Task<RecognizationModel> DownloadAsync(CancellationToken cancellationToken = default)
     {
         await Utils.DownloadAndExtractAsync(Name, Uri, RootDirectory, cancellationToken);
-        return new StreamDictFileRecognizationModel(RootDirectory, SharedUtils.LoadDicts(DictName), Version);
+
+        if (Version == ModelVersion.V5)
+        {
+            return RecognizationModel.FromDirectory(RootDirectory, "", Version);
+        }
+        else
+        {
+            return new StreamDictFileRecognizationModel(RootDirectory, SharedUtils.LoadDicts(DictName), Version);
+        }
     }
+
+    /// <summary>
+    /// v5 model for Chinese recognition
+    /// </summary>
+    public static LocalDictOnlineRecognizationModel ChineseV5 => new("PP-OCRv5_mobile_rec_infer", "", new Uri("https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar"), ModelVersion.V5);
+
+    /// <summary>
+    /// v5 server model for Chinese recognition
+    /// </summary>
+    public static LocalDictOnlineRecognizationModel ChineseServerV5 => new("PP-OCRv5_server_rec_infer.tar", "", new Uri("https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar"), ModelVersion.V5);
 
     /// <summary>
     /// v4 model for Chinese recognition
@@ -216,6 +234,8 @@ public record LocalDictOnlineRecognizationModel(string Name, string DictName, Ur
     /// </summary>
     public static LocalDictOnlineRecognizationModel[] All => new[]
     {
+        ChineseV5,
+        ChineseServerV5,
         ChineseV4,
         EnglishV4,
         KoreanV4,

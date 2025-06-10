@@ -1,6 +1,9 @@
 ﻿using Sdcb.PaddleInference;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using YamlDotNet.RepresentationModel;
 
 namespace Sdcb.PaddleOCR.Models.Details;
 
@@ -28,7 +31,23 @@ public class FileRecognizationModel : RecognizationModel
     public FileRecognizationModel(string directoryPath, string labelFilePath, ModelVersion version) : base(version)
     {
         DirectoryPath = directoryPath;
-        _labels = File.ReadAllLines(labelFilePath);
+        if (version == ModelVersion.V5)
+        {
+            string ymlConfig = Path.Combine(directoryPath, "inference.yml");
+            if (!File.Exists(ymlConfig))
+                throw new FileNotFoundException("inference.yml not found in the model directory.", ymlConfig);
+
+            using Stream stream = File.OpenRead(ymlConfig);
+            YamlStream yaml = new();
+            yaml.Load(new StreamReader(stream));
+            _labels = ((YamlSequenceNode)yaml.Documents[0].RootNode["PostProcess"]["character_dict"])
+                .Select(x => ((YamlScalarNode)x).Value!)
+                .ToList();
+        }
+        else
+        {
+            _labels = File.ReadAllLines(labelFilePath);
+        }
     }
 
     /// <summary>

@@ -30,13 +30,23 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     }
 
     /// <summary>
-    /// [New] v4 model, supporting Chinese, English, multilingual text detection
+    /// v5 server model, supporting Chinese, English, multilingual text detection
+    /// </summary>
+    public static OnlineDetectionModel ChineseServerV5 => new("PP-OCRv5_server_det_infer", new Uri("https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar"), ModelVersion.V5);
+
+    /// <summary>
+    /// v5 model, supporting Chinese, English, multilingual text detection
+    /// </summary>
+    public static OnlineDetectionModel ChineseV5 => new("PP-OCRv5_mobile_det_infer", new Uri("https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar"), ModelVersion.V5);
+
+    /// <summary>
+    /// v4 model, supporting Chinese, English, multilingual text detection
     /// (Size: 4.66M)
     /// </summary>
     public static OnlineDetectionModel ChineseV4 => new("ch_PP-OCRv4_det", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar"), ModelVersion.V4);
 
     /// <summary>
-    /// [New] v4 server model, supporting Chinese, English, multilingual text detection
+    /// v4 server model, supporting Chinese, English, multilingual text detection
     /// (Size: 110M)
     /// </summary>
     public static OnlineDetectionModel ChineseServerV4 => new("detv4_teacher_inference", new Uri("https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_server_infer.tar"), ModelVersion.V4);
@@ -112,6 +122,8 @@ public record OnlineDetectionModel(string Name, Uri Uri, ModelVersion Version)
     /// </summary>
     public static OnlineDetectionModel[] All => new[]
     {
+        ChineseV5,
+        ChineseServerV5,
         ChineseV4,
         ChineseServerV4,
         ChineseV3Slim,

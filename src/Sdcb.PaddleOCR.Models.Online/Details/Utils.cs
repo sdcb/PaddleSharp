@@ -93,7 +93,6 @@ internal static class Utils
         string[] filesToCheck = new[]
         {
             Path.Combine(rootDir, "inference.pdiparams"),
-            Path.Combine(rootDir, "inference.pdmodel"), 
         };
 
         foreach (string path in filesToCheck)

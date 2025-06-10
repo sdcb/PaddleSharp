@@ -62,6 +62,12 @@ public class PaddleConfig : IDisposable
             {
                 PaddleConfig c = new();
                 c.SetModel(pdmodel, pdiparams);
+
+                if (pdmodel.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                {
+                    c.NewExecutorEnabled = true;
+                }
+
                 return c;
             }
         }

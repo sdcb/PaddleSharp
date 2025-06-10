@@ -26,6 +26,16 @@ public record class OnlineFullModels(OnlineDetectionModel DetModel, OnlineClassi
     }
 
     /// <summary>
+    /// The Chinese Server V5 version.
+    /// </summary>
+    public readonly static OnlineFullModels ChineseV5 = new(OnlineDetectionModel.ChineseV5, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ChineseV5);
+
+    /// <summary>
+    /// The Chinese Server V5 version.
+    /// </summary>
+    public readonly static OnlineFullModels ChineseServerV5 = new(OnlineDetectionModel.ChineseServerV5, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ChineseV5);
+
+    /// <summary>
     /// The Chinese V4 version.
     /// </summary>
     public readonly static OnlineFullModels ChineseV4 = new(OnlineDetectionModel.ChineseV4, OnlineClassificationModel.ChineseMobileV2, LocalDictOnlineRecognizationModel.ChineseV4);
