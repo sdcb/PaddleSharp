@@ -37,7 +37,7 @@
     <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" Condition="'$(Configuration)' == 'Debug'" />
 
-    <PackageReference Include="Sdcb.PaddleOCR" Version="2.7.0" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.0-preview.1" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" Condition="'$(Configuration)' == 'Debug'" />
 
   </ItemGroup>

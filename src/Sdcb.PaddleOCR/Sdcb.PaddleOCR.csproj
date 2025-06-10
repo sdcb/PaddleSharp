@@ -35,7 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sdcb.PaddleInference" Version="2.5.0.1" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="3.0.0-preview.1" Condition="'$(Configuration)' != 'Debug'" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
     <ProjectReference Include="..\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
