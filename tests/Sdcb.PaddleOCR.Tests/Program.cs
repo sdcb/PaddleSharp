@@ -6,9 +6,9 @@ namespace Sdcb.PaddleOCR.Tests;
 
 internal class Program
 {
-    public static void Main()
+    public static void Main2()
     {
-        //Environment.SetEnvironmentVariable("GLOG_v", "2");
+        Environment.SetEnvironmentVariable("GLOG_v", "0");
         FullOcrModel model = LocalFullModels.ChineseV5;
         FastCheck(model);
     }
@@ -21,7 +21,7 @@ internal class Program
         using (PaddleOcrAll all = new(model)
         {
             AllowRotateDetection = true,
-            Enable180Classification = false,
+            Enable180Classification = true,
         })
         {
             // Load local file by following code:

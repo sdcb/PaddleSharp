@@ -195,26 +195,29 @@ public class PaddleOcrDetector : IDisposable
             normalized = Normalize(padded);
         }
 
-        using PaddlePredictor predictor = _p.Clone();
-        using (Mat _ = normalized)
-        using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+        PaddlePredictor predictor = _p;
+        lock(predictor)
         {
-            input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
-            float[] data = ExtractMat(normalized);
-            input.SetData(data);
-        }
+            using (Mat _ = normalized)
+            using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+            {
+                input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
+                float[] data = ExtractMat(normalized);
+                input.SetData(data);
+            }
 
-        if (!predictor.Run())
-        {
-            throw new Exception("PaddlePredictor(Detector) run failed.");
-        }
+            if (!predictor.Run())
+            {
+                throw new Exception("PaddlePredictor(Detector) run failed.");
+            }
 
-        using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
-        {
-            float[] data = output.GetData<float>();
-            int[] shape = output.Shape;
+            using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
+            {
+                float[] data = output.GetData<float>();
+                int[] shape = output.Shape;
 
-            return Mat.FromPixelData(shape[2], shape[3], MatType.CV_32FC1, data);
+                return Mat.FromPixelData(shape[2], shape[3], MatType.CV_32FC1, data);
+            }
         }
     }
 

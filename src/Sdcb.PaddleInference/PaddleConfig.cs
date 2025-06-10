@@ -630,11 +630,20 @@ public class PaddleConfig : IDisposable
         get
         {
             ThrowIfDisposed();
+            if (GetVersion() < new Version(3, 0, 0))
+            {
+                return false;
+            }
             return PaddleNative.PD_ConfigNewExecutorEnabled(_ptr) != 0;
         }
         set
         {
             ThrowIfDisposed();
+            if (GetVersion() < new Version(3, 0, 0))
+            {
+                Console.WriteLine("New Executor is not supported in Paddle Inference version < 3.0.0");
+                return;
+            }
             PaddleNative.PD_ConfigEnableNewExecutor(_ptr, (sbyte)(value ? 1 : 0));
         }
     }
@@ -647,11 +656,22 @@ public class PaddleConfig : IDisposable
         get
         {
             ThrowIfDisposed();
+            if (GetVersion() < new Version(3, 0, 0))
+            {
+                return false;
+            }
+
             return PaddleNative.PD_ConfigNewIREnabled(_ptr) != 0;
         }
         set
         {
             ThrowIfDisposed();
+            if (GetVersion() < new Version(3, 0, 0))
+            {
+                Console.WriteLine("New IR is not supported in Paddle Inference version < 3.0.0");
+                return;
+            }
+
             PaddleNative.PD_ConfigEnableNewIR(_ptr, (sbyte)(value ? 1 : 0));
         }
     }

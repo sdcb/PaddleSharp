@@ -98,33 +98,36 @@ public class PaddleOcrClassifier : IDisposable
         using Mat resized = ResizePadding(src, Shape);
         using Mat normalized = Normalize(resized);
 
-        using PaddlePredictor predictor = _p.Clone();
-        using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+        PaddlePredictor predictor = _p;
+        lock(predictor)
         {
-            input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
-            float[] data = PaddleOcrDetector.ExtractMat(normalized);
-            input.SetData(data);
-        }
-        if (!predictor.Run())
-        {
-            throw new Exception("PaddlePredictor(Classifier) run failed.");
-        }
-
-        using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
-        {
-            float[] softmax = output.GetData<float>();
-            float score = 0;
-            int label = 0;
-            for (int i = 0; i < softmax.Length; ++i)
+            using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
             {
-                if (softmax[i] > score)
-                {
-                    score = softmax[i];
-                    label = i;
-                }
+                input.Shape = new[] { 1, 3, normalized.Rows, normalized.Cols };
+                float[] data = PaddleOcrDetector.ExtractMat(normalized);
+                input.SetData(data);
+            }
+            if (!predictor.Run())
+            {
+                throw new Exception("PaddlePredictor(Classifier) run failed.");
             }
 
-            return label % 2 == 1 && score > RotateThreshold;
+            using (PaddleTensor output = predictor.GetOutputTensor(predictor.OutputNames[0]))
+            {
+                float[] softmax = output.GetData<float>();
+                float score = 0;
+                int label = 0;
+                for (int i = 0; i < softmax.Length; ++i)
+                {
+                    if (softmax[i] > score)
+                    {
+                        score = softmax[i];
+                        label = i;
+                    }
+                }
+
+                return label % 2 == 1 && score > RotateThreshold;
+            }
         }
     }
 

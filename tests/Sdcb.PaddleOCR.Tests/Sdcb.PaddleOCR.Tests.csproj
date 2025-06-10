@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>Sdcb.PaddleOCR.Tests.Program</StartupObject>
+    <!--<StartupObject>Sdcb.PaddleOCR.Tests.Program</StartupObject>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,10 +27,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20240616" />
-    <PackageReference Include="Sdcb.PaddleInference.runtime.win64.mkl" Version="3.0.0.25" />
+    <PackageReference Include="Sdcb.OpenCvSharp4.mini.runtime.win-x64" Version="4.11.0.34" />
+    <PackageReference Include="Sdcb.PaddleInference.runtime.win64.mkl" Version="3.0.0.26" />
     <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0">
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
