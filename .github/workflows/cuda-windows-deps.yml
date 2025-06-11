@@ -75,20 +75,26 @@ jobs:
           Get-ChildItem -Recurse cudnn
           echo "::endgroup::"
 
+      - name: List CUDA files
+        run: |
+          echo "::group:: CUDA files"
+          ls -Recurse "${{ env.CUDA_PATH }}"
+          echo "::endgroup::"
+
       - name: Copy cuda/cudnn files to artifacts
         run: |
           mkdir artifacts
 
           $cudaMajor = '${{ matrix.cuda }}'.Split('.')[0]
           echo "Copy CUDA $cudaMajor files to artifacts..."
-          cp "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}/bin/cublas64_$cudaMajor.dll" artifacts
-          cp "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}/bin/cublasLt64_$cudaMajor.dll" artifacts
+          cp "${{ env.CUDA_PATH.CUDA_PATH }}/bin/cublas64_$cudaMajor.dll" artifacts
+          cp "${{ env.CUDA_PATH.CUDA_PATH }}/bin/cublasLt64_$cudaMajor.dll" artifacts
 
           $cudnnMajor = '${{ matrix.cudnn }}'.Split('.')[0]
           echo "Copy cuDNN $cudnnMajor files to artifacts..."
-          cp $"{{ steps.cuda-toolkit.outputs.CUDA_PATH }}/bin/cudnn64_$cudnnMajor.dll" artifacts
-          cp $"{{ steps.cuda-toolkit.outputs.CUDA_PATH }}/bin/cudnn_cnn_infer64_$cudnnMajor.dll" artifacts
-          cp $"{{ steps.cuda-toolkit.outputs.CUDA_PATH }}/bin/cudnn_ops_infer64_$cudnnMajor.dll" artifacts
+          cp $"{{ env.CUDA_PATH }}/bin/cudnn64_$cudnnMajor.dll" artifacts
+          cp $"{{ env.CUDA_PATH.CUDA_PATH }}/bin/cudnn_cnn_infer64_$cudnnMajor.dll" artifacts
+          cp $"{{ env.CUDA_PATH.CUDA_PATH }}/bin/cudnn_ops_infer64_$cudnnMajor.dll" artifacts
 
           echo "List artifacts directory..."
           ls -Recurse artifacts
