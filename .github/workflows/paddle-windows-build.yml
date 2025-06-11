@@ -154,6 +154,7 @@ jobs:
 
       - name: Configure with CMake
         run: |
+          git config --system core.longpaths true
           mkdir ./paddle-src/build
           mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
           mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
