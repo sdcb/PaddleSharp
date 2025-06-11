@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/3.0
+      - feature/3.0-openvino
       - main
     paths:
       - '.github/workflows/paddle-windows-build.yml'
