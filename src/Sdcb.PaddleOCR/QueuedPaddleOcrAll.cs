@@ -39,9 +39,7 @@ public class QueuedPaddleOcrAll : IDisposable
 
         try
         {
-#pragma warning disable CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
             WaitFactoryReady();
-#pragma warning restore CS0618 // Method exposed for compatibility to the outside, now it called in constructor, will change to private in a future version.
         }
         catch (AggregateException)
         {
@@ -54,8 +52,7 @@ public class QueuedPaddleOcrAll : IDisposable
     /// Waits for the factory to become ready before processing OCR requests.
     /// </summary>
     /// <exception cref="ObjectDisposedException">The instance of <see cref="QueuedPaddleOcrAll"/> is disposed.</exception>
-    [Obsolete("This method been called in constructor, will change to private in a future, exposed for compatibility.")]
-    public void WaitFactoryReady()
+    private void WaitFactoryReady()
     {
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
 
@@ -70,19 +67,24 @@ public class QueuedPaddleOcrAll : IDisposable
     /// Queues an OCR request to be processed.
     /// </summary>
     /// <param name="src">The image to be recognized.</param>
-    /// <param name="recognizeBatchSize">The number of images recognized with one call. 
-    /// Zero means single recognition only. Maximum value is limited by the model and hardware.</param>
+    /// <param name="recognizeBatchSize">
+    /// The number of images recognized with one call. 
+    /// Zero means single recognition only. Maximum value is limited by the model and hardware.
+    /// </param>
+    /// <param name="configure">
+    /// Configuration action to customize the <see cref="PaddleOcrAll"/> instance before running the OCR.
+    /// </param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> that represents the queued OCR operation.</returns>
     /// <exception cref="ObjectDisposedException">The instance of <see cref="QueuedPaddleOcrAll"/> is disposed.</exception>
-    public Task<PaddleOcrResult> Run(Mat src, int recognizeBatchSize = 0, CancellationToken cancellationToken = default)
+    public Task<PaddleOcrResult> Run(Mat src, int recognizeBatchSize = 0, Action<PaddleOcrAll>? configure = null, CancellationToken cancellationToken = default)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(QueuedPaddleOcrAll));
 
         TaskCompletionSource<PaddleOcrResult> tcs = new();
         cancellationToken.ThrowIfCancellationRequested();
 
-        _queue.Add(new ThreadedQueueItem(src, recognizeBatchSize, cancellationToken, tcs), cancellationToken);
+        _queue.Add(new ThreadedQueueItem(src, recognizeBatchSize, configure, cancellationToken, tcs), cancellationToken);
 
         return tcs.Task;
     }
@@ -103,7 +105,7 @@ public class QueuedPaddleOcrAll : IDisposable
             _countdownEvent.Signal();
         }
 
-        using var _ = paddleOcr;
+        using PaddleOcrAll _ = paddleOcr;
         foreach (ThreadedQueueItem item in _queue.GetConsumingEnumerable())
         {
             if (item.CancellationToken.IsCancellationRequested || _disposed)
@@ -114,6 +116,7 @@ public class QueuedPaddleOcrAll : IDisposable
 
             try
             {
+                item.Configure?.Invoke(paddleOcr);
                 PaddleOcrResult result = paddleOcr.Run(item.Source, item.RecognizeBatchSize);
                 item.TaskCompletionSource.SetResult(result);
             }
@@ -136,4 +139,9 @@ public class QueuedPaddleOcrAll : IDisposable
     }
 }
 
-internal record ThreadedQueueItem(Mat Source, int RecognizeBatchSize, CancellationToken CancellationToken, TaskCompletionSource<PaddleOcrResult> TaskCompletionSource);
+internal record ThreadedQueueItem(
+    Mat Source, 
+    int RecognizeBatchSize, 
+    Action<PaddleOcrAll>? Configure,
+    CancellationToken CancellationToken, 
+    TaskCompletionSource<PaddleOcrResult> TaskCompletionSource);
