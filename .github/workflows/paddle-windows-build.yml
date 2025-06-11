@@ -25,6 +25,8 @@ jobs:
             cmake_flags: "-DWITH_MKL=OFF"
           - name: mkldnn
             cmake_flags: "-DWITH_MKL=ON"
+          - name: openvino
+            cmake_flags: "-DWITH_OPENVINO=ON"
             
           - name: cu118_cudnn89_sm61
             cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""
