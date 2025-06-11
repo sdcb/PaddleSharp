@@ -5,11 +5,6 @@
 /// </summary>
 public static class LocalFullModels
 {
-    /// <summary>
-    /// Chinese v4, also support English and digits.
-    /// </summary>
-    public static FullOcrModel ChineseV4 => new(LocalDetectionModel.ChineseV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
-
     // delete because too large(>100MB)
     ///// <summary>
     ///// Chinese server v4, also support English and digits.
@@ -20,6 +15,11 @@ public static class LocalFullModels
     /// Chinise v5 version
     /// </summary>
     public static FullOcrModel ChineseV5 => new(LocalDetectionModel.ChineseV5, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV5);
+
+    /// <summary>
+    /// Chinese v4, also support English and digits.
+    /// </summary>
+    public static FullOcrModel ChineseV4 => new(LocalDetectionModel.ChineseV4, LocalClassificationModel.ChineseMobileV2, LocalRecognizationModel.ChineseV4);
 
     /// <summary>
     /// English v4 version.
@@ -126,6 +126,16 @@ public static class LocalFullModels
     /// </summary>
     public static FullOcrModel[] All => new[]
     {
+        ChineseV5,
+        ChineseV4,
+        EnglishV4,
+        DevanagariV4,
+        ArabicV4,
+        TamilV4,
+        KannadaV4,
+        TeluguV4,
+        JapanV4,
+        KoreanV4,
         ChineseV3,
         EnglishV3,
         KoreanV3,
