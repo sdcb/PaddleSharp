@@ -18,7 +18,7 @@ public static class PaddleDevice
     /// <param name="memoryOptimized">Whether to use memory optimized mode. Default value is true.</param>
     /// <param name="glogEnabled">Whether to enable GLog. Default value is false.</param>
     /// <returns>The MKLDNN paddle device definition.</returns>
-    public static Action<PaddleConfig> Mkldnn(int cacheCapacity = 1, int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
+    public static Action<PaddleConfig> Mkldnn(int cacheCapacity = 10, int cpuMathThreadCount = 0, bool memoryOptimized = true, bool glogEnabled = false)
     {
         return cfg =>
         {
