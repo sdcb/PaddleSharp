@@ -78,8 +78,6 @@ jobs:
         ls -l nuget
 
     - name: Build NuGet package
-      env:
-        arch: ${{ split(matrix.rid, '-')[1] }}
       run: |
         set -euo pipefail
 
@@ -121,6 +119,7 @@ jobs:
         # ---------- 生成 .props ----------
         NORMALIZED_NAME="$(echo "${PKG_ID}" | tr '.-' '_' )_Dlls"
         PROPS_FILE="$WORK/build/net45/${PKG_ID}.props"
+        ARCH="${{ matrix.rid##*- }}" # get arch from matrix.rid, e.g. win-x64 -> x64, just get whatever after the last '-'
         {
           cat <<EOF
         <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -134,7 +133,7 @@ jobs:
             cat <<EOF
           <ItemGroup Condition="\$(TargetFrameworkVersion.StartsWith('v4')) Or \$(TargetFramework.StartsWith('net4'))">
             <Content Include="\$(${NORMALIZED_NAME})\\${{ matrix.rid }}\\native\\${libname}">
-              <Link>dll\\${{ env.arch }}\\${libname}</Link>
+              <Link>dll\\$ARCH\\${libname}</Link>
               <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </Content>
           </ItemGroup>
