@@ -78,6 +78,8 @@ jobs:
         ls -l nuget
 
     - name: Build NuGet package
+      env:
+        arch: ${{ matrix.rid#*- }}
       run: |
         set -euo pipefail
 
@@ -132,7 +134,7 @@ jobs:
             cat <<EOF
           <ItemGroup Condition="\$(TargetFrameworkVersion.StartsWith('v4')) Or \$(TargetFramework.StartsWith('net4'))">
             <Content Include="\$(${NORMALIZED_NAME})\\${{ matrix.rid }}\\native\\${libname}">
-              <Link>dll\\${{ matrix.arch }}\\${libname}</Link>
+              <Link>dll\\${{ env.arch }}\\${libname}</Link>
               <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </Content>
           </ItemGroup>
