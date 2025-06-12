@@ -45,6 +45,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
+        echo "arch=$(echo '${{ matrix.rid }}' | awk -F'-' '{print $NF}')" >> $GITHUB_ENV
         echo "Fetching latest successful ${{ matrix.action }} run of branch ${{ github.ref_name }}"
         RUN_ID=$(gh run list -R ${{ github.repository }} \
                   --workflow=${{ matrix.action }} \
@@ -55,7 +56,6 @@ jobs:
         
         echo "Download artifact ${{ matrix.artifact }}"
         gh run download -R ${{ github.repository }} $RUN_ID --name ${{ matrix.artifact }} --dir paddle_inference_c
-        echo arch="echo "${{ matrix.rid }}" | awk -F '-' '{print $NF}' >> $GITHUB_ENV
 
         echo "::group::Artifact tree"
         ls -lR paddle_inference_c
