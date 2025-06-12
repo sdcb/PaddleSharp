@@ -206,3 +206,7 @@ jobs:
     - name: Push nupkg to Github Packages
       run: |
         dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
+
+    - name: Push nupkg to ProGet
+      run: |
+        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate
