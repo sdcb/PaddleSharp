@@ -79,7 +79,7 @@ jobs:
 
     - name: Build NuGet package
       env:
-        arch: ${{ matrix.rid#*- }}
+        arch: ${{ matrix.rid.split('-')[1] }}
       run: |
         set -euo pipefail
 
