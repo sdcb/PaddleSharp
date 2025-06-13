@@ -48,6 +48,10 @@ public abstract class OcrBaseModel
                 //c.NewIREnabled = true;
                 c.NewExecutorEnabled = true;
             }
+            else
+            {
+                c.NewExecutorEnabled = false;
+            }
         }));
     }
 }

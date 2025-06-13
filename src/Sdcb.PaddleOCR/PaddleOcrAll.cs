@@ -72,34 +72,6 @@ public class PaddleOcrAll : IDisposable
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified model path, label file path, model version and configure action.
-    /// </summary>
-    /// <param name="modelPath">Path to the model.</param>
-    /// <param name="labelFilePath">Path to the label file.</param>
-    /// <param name="version">Version of the model.</param>
-    /// <param name="configure">Configure action for PaddleConfig.</param>
-    [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-    public PaddleOcrAll(string modelPath, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
-        : this(FullOcrModel.FromDirectory(modelPath, labelFilePath, version), configure)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the detection, classification, recognition model directories, label file path, model version and the configure action.
-    /// </summary>
-    /// <param name="detectionModelDir">Path to the detection model directory.</param>
-    /// <param name="classificationModelDir">Path to the classification model directory.</param>
-    /// <param name="recognitionModelDir">Path to the recognition model directory.</param>
-    /// <param name="labelFilePath">Path to the label file.</param>
-    /// <param name="version">Version of the model.</param>
-    /// <param name="configure">Configure action for PaddleConfig.</param>
-    [Obsolete("use PaddleOcrAll(PaddleOcrDetector detector, PaddleOcrClassifier? classifier, PaddleOcrRecognizer recognizer)")]
-    public PaddleOcrAll(string detectionModelDir, string classificationModelDir, string recognitionModelDir, string labelFilePath, ModelVersion version, Action<PaddleConfig> configure)
-        : this(FullOcrModel.FromDirectory(detectionModelDir, classificationModelDir, recognitionModelDir, labelFilePath, version), configure)
-    {
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="PaddleOcrAll"/> class with the specified PaddlePaddle models and device configuration.
     /// </summary>
     /// <param name="detector">The object detector to use.</param>

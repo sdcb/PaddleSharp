@@ -26,18 +26,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.14.1">
+    <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SharpCompress" Version="0.33.0" />
+    <PackageReference Include="SharpCompress" Version="0.40.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0.1" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleOCR.Models.Shared\Sdcb.PaddleOCR.Models.Shared.csproj" Condition="'$(Configuration)' == 'Debug'" />
 
-    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.0-preview.1" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.0-preview.2" Condition="'$(Configuration)' != 'Debug'" />
     <ProjectReference Include="..\Sdcb.PaddleOCR\Sdcb.PaddleOCR.csproj" Condition="'$(Configuration)' == 'Debug'" />
 
   </ItemGroup>

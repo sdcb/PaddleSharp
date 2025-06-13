@@ -87,4 +87,11 @@ public abstract class RecognizationModel : OcrBaseModel
     /// <param name="version">The version of recognition model.</param>
     /// <returns>The RecognizationModel object created with the specified directory path, label path and model version.</returns>
     public static RecognizationModel FromDirectory(string directoryPath, string labelPath, ModelVersion version) => new FileRecognizationModel(directoryPath, labelPath, version);
+
+    /// <summary>
+    /// Create the RecognizationModel object with the V5 model directory path.
+    /// </summary>
+    /// <param name="directoryPath">The directory path of recognition model.</param>
+    /// <returns>The RecognizationModel object created with the specified V5 directory path.</returns>
+    public static RecognizationModel FromDirectoryV5(string directoryPath) => FromDirectory(directoryPath, "", ModelVersion.V5);
 }
