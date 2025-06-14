@@ -7,9 +7,6 @@ on:
     paths:
       - .github/workflows/push-native-nuget.yml
   workflow_dispatch:
-
-env:
-  PADDLE_VERSION: "3.0.0"
   
 jobs:
   build-all:
