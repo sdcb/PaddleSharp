@@ -55,7 +55,7 @@ jobs:
         echo "Run id = $RUN_ID"
         
         echo "Download artifact ${{ matrix.title }}"
-        gh run download -R ${{ github.repository }} $RUN_ID --name nuget-${{ matrix.artifact }} --dir nupkg-src
+        gh run download -R ${{ github.repository }} $RUN_ID --name nuget-${{ matrix.title }} --dir nupkg-src
 
         echo "::group::Artifact tree"
         ls -lR nupkg-src
