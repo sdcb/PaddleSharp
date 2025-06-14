@@ -1,9 +1,12 @@
 ﻿name: push-native-nuget
 on:
+  push:
+    branches:
+      - master
+      - feature/3.0
+    paths:
+      - .github/workflows/push-native-nuget.yml
   workflow_dispatch:
-
-permissions:
-  packages: write
 
 env:
   PADDLE_VERSION: "3.0.0"
