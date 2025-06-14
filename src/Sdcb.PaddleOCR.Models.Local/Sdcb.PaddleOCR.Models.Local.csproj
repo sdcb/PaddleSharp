@@ -48,10 +48,10 @@
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV3" Version="2.7.0.1" />
     <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV4" Version="2.7.0.1" />
-    <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV5" Version="3.0.0-preview.1" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.LocalV5" Version="3.0.0" />
 
     <PackageReference Include="Sdcb.PaddleOCR.Models.Shared" Version="2.7.0.1" />
-    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.0-preview.2" />
+    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
