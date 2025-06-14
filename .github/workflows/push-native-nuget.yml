@@ -1,11 +1,5 @@
 ﻿name: push-native-nuget
 on:
-  push:
-    branches:
-      - master
-      - feature/3.0
-    paths:
-      - .github/workflows/push-native-nuget.yml
   workflow_dispatch:
   
 jobs:
@@ -59,5 +53,5 @@ jobs:
       run: |
         for nupkg in nupkg-src/*.nupkg; do
           echo "Uploading $nupkg"
-          echo dotnet nuget push "$nupkg" --source "nuget.org" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
+          dotnet nuget push "$nupkg" --source "nuget.org" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
         done
