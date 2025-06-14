@@ -59,5 +59,5 @@ jobs:
       run: |
         for nupkg in nupkgs/*.nupkg; do
           echo "Uploading $nupkg"
-          dotnet nuget push "$nupkg" --source "nuget.org" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
+          echo dotnet nuget push "$nupkg" --source "nuget.org" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
         done
