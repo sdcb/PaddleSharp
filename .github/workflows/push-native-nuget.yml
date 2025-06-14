@@ -1,5 +1,10 @@
 ﻿name: push-native-nuget
 on:
+  push:
+    branches:
+      - feature/3.0
+    paths:
+      - .github/workflows/push-native-nuget.yml
   workflow_dispatch:
   
 jobs:
