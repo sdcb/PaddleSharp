@@ -1,11 +1,5 @@
 ﻿name: push-native-nuget
 on:
-  push:
-    branches:
-      - master
-      - feature/3.0
-    paths:
-      - .github/workflows/push-native-nuget.yml
   workflow_dispatch:
 
 permissions:
@@ -61,6 +55,9 @@ jobs:
         ls -lR nupkg-src
         echo "::endgroup::"
 
-    # - name: Push nupkg to ProGet
-    #   run: |
-    #     dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate --timeout 21600
+    - name: Push nupkg to NuGet
+      run: |
+        for nupkg in nupkgs/*.nupkg; do
+          echo "Uploading $nupkg"
+          dotnet nuget push "$nupkg" --source "nuget.org" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
+        done
