@@ -1,4 +1,4 @@
-# PaddleSharp 🌟 [![main](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml/badge.svg)](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml) [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
+﻿# PaddleSharp 🌟 [![main](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml/badge.svg)](https://github.com/sdcb/PaddleSharp/actions/workflows/main.yml) [![QQ](https://img.shields.io/badge/QQ_Group-579060605-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20)](https://jq.qq.com/?_wv=1027&k=K4fBqpyQ)
 
 **English** | **[简体中文](README_CN.md)**
 
@@ -21,19 +21,46 @@ Please checkout [this page 📄](https://github.com/sdcb/PaddleSharp/releases).
 | -------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | Sdcb.PaddleInference | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.svg)](https://nuget.org/packages/Sdcb.PaddleInference) | Paddle Inference C API .NET binding ⚙️ |
 
-### Native packages 🏗️
+### Native Packages 🏗️
 
-| Package                                           | Version 📌                                                                                                                                                                      | Description             |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| Sdcb.PaddleInference.runtime.win64.mkl            | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                       | win64+mkldnn            |
-| Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | win64+openblas          |
-| Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | no AVX, for old CPUs    |
-| Sdcb.PaddleInference.runtime.win64.cu120-sm86-89  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm86-89)   | for NVIDIA 30/40 series |
-| Sdcb.PaddleInference.runtime.win64.cu120-sm80  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm80.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm80)   | for NVIDIA A100/A10 |
-| Sdcb.PaddleInference.runtime.win64.cu120-sm61-75  | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu120-sm61-75)   | for NVIDIA 10/20 series |
+| Package                                           | Version 📌                                                                                                                                                                      | Description                          |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| Sdcb.PaddleInference.runtime.win64.mkl            | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.mkl.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.mkl)                       | Recommended for most users (CPU, MKL) |
+| Sdcb.PaddleInference.runtime.win64.openblas       | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas)             | CPU, OpenBLAS                        |
+| Sdcb.PaddleInference.runtime.win64.openblas-noavx | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.openblas-noavx.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.openblas-noavx) | CPU, no AVX, for old CPUs            |
+| Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm61 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm61) | CUDA 11.8, GTX 10 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm75) | CUDA 11.8, RTX 20/GTX 16xx Series    |
+| Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm86) | CUDA 11.8, RTX 30 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu118_cudnn89_sm89) | CUDA 11.8, RTX 40 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm61 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm61) | CUDA 12.6, GTX 10 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm75) | CUDA 12.6, RTX 20/GTX 16xx Series    |
+| Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm86) | CUDA 12.6, RTX 30 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu126_cudnn95_sm89) | CUDA 12.6, RTX 40 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm61 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm61.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm61) | CUDA 12.9, GTX 10 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm75 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm75.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm75) | CUDA 12.9, RTX 20/GTX 16xx Series    |
+| Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm86 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm86.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm86) | CUDA 12.9, RTX 30 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm89 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm89.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm89) | CUDA 12.9, RTX 40 Series             |
+| Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm120 | [![NuGet](https://img.shields.io/nuget/v/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm120.svg)](https://nuget.org/packages/Sdcb.PaddleInference.runtime.win64.cu129_cudnn910_sm120) | CUDA 12.9, RTX 50 Series             |
 
-Note: `cu120` means CUDA 12.0, it's compiled in CUDA 12.0.1/cuDNN 8.9.7.29/Tensor RT 8.6.1.6 version.
+**Package Selection Guide:**
 
+- We recommend `Sdcb.PaddleInference.runtime.win64.mkl` for most users. It offers the best balance between performance and package size. Please note that this package does not support GPU acceleration, making it suitable for most general scenarios.
+- `openblas-noavx` is tailored for older CPUs that do not support the AVX2 instruction set.
+- The remaining packages cover various CUDA combinations (GPU acceleration), supporting three CUDA versions:
+  - **CUDA 11.8:** Supports 10–40 series NVIDIA GPUs
+  - **CUDA 12.6:** Supports 10–40 series NVIDIA GPUs
+  - **CUDA 12.9:** Supports 10–50 series NVIDIA GPUs
+
+**Important:**  
+Not all GPU packages are suitable for every card. Please refer to the following GPU-to-`sm` suffix mapping:
+
+| `sm` Suffix | Supported GPU Series                       |
+|-------------|-------------------------------------------|
+| sm61        | GTX 10 Series                            |
+| sm75        | RTX 20 Series (and GTX 16xx series such as GTX 1660) |
+| sm86        | RTX 30 Series                            |
+| sm89        | RTX 40 Series                            |
+| sm120       | RTX 50 Series (supported by CUDA 12.9 only) |
 
 Linux OS packages(preview):
 
