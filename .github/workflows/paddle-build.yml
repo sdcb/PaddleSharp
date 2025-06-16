@@ -138,7 +138,8 @@ jobs:
     
       - name: Copy common.dll/.so
         run: |
-          cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
+          # libcommon.so, common.dll, 
+          cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
 
       - name: Upload paddle_inference_c_install_dir
         uses: actions/upload-artifact@v4
