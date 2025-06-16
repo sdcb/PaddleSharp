@@ -25,6 +25,11 @@ jobs:
           - name: openblas
             cmake_flags: "-DWITH_MKL=OFF"
             os: ubuntu-22.04
+          - name: mkldnn
+            cmake_flags: "-DWITH_MKL=ON"
+          - name: openvino
+            cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON"
+            os: ubuntu-22.04
           - name: openblas
             cmake_flags: "-DWITH_MKL=OFF"
             os: ubuntu-22.04-arm
