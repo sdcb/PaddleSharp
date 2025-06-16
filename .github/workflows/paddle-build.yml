@@ -14,31 +14,18 @@ env:
 
 jobs:
   build-all:
-    runs-on: ${{ matrix.os == 'win' && 'windows-latest' || 'ubuntu-22.04' }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         include:
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-            os: windows-2022
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-            os: ubuntu-22.04
-          - name: mkldnn
-            cmake_flags: "-DWITH_MKL=ON"
-          - name: openvino
-            cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON"
-            os: ubuntu-22.04
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-            os: ubuntu-22.04-arm
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-            os: macos-13
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-            os: macos-15
+          - { name: openblas, os: windows-2022,     cmake_flags: "-DWITH_MKL=OFF" }
+          - { name: openblas, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=OFF" }
+          - { name: mkldnn,   os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON" }
+          - { name: openvino, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON" }
+          - { name: openblas, os: ubuntu-22.04-arm, cmake_flags: "-DWITH_MKL=OFF" }
+          - { name: openblas, os: macos-13,         cmake_flags: "-DWITH_MKL=OFF" }
+          - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_MKL=OFF" }
     steps:
       - name: Setup dependencies
         run: |
