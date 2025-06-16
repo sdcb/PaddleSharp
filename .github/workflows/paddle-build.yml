@@ -21,10 +21,19 @@ jobs:
         include:
           - name: openblas
             cmake_flags: "-DWITH_MKL=OFF"
-            os: win
+            os: windows-2022
           - name: openblas
             cmake_flags: "-DWITH_MKL=OFF"
-            os: linux
+            os: ubuntu-22.04
+          - name: openblas
+            cmake_flags: "-DWITH_MKL=OFF"
+            os: ubuntu-22.04-arm
+          - name: openblas
+            cmake_flags: "-DWITH_MKL=OFF"
+            os: macos-13
+          - name: openblas
+            cmake_flags: "-DWITH_MKL=OFF"
+            os: macos-15
     steps:
       - name: Setup dependencies
         run: |
@@ -83,7 +92,7 @@ jobs:
           fetch-depth: 1
 
       - uses: ilammy/msvc-dev-cmd@v1
-        if: ${{ matrix.os == 'win' }}
+        if: ${{ runner.os == 'Windows' }}
         with:
           toolset: '14.29'
 
@@ -124,7 +133,7 @@ jobs:
       - name: Upload paddle_inference_install_dir
         uses: actions/upload-artifact@v4
         with:
-          name: cpp_${{ matrix.name }}
+          name: ${{ matrix.os }}_cpp_${{ matrix.name }}
           path: ./paddle-src/build/paddle_inference_install_dir/*
     
       - name: Copy common.dll/.so
@@ -134,5 +143,5 @@ jobs:
       - name: Upload paddle_inference_c_install_dir
         uses: actions/upload-artifact@v4
         with:
-          name: c_${{ matrix.name }}
+          name: ${{ matrix.os }}_c_${{ matrix.name }}
           path: ./paddle-src/build/paddle_inference_c_install_dir/*
