@@ -96,6 +96,7 @@ jobs:
           rm capi.patch
 
       - name: Configure with CMake
+        shell: pwsh
         run: |
           mkdir ./paddle-src/build
           mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
