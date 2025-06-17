@@ -19,12 +19,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: openblas, os: windows-2022,     cmake_flags: "-DWITH_MKL=OFF" }
-          - { name: openblas, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=OFF" }
-          - { name: mkldnn,   os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON" }
-          - { name: openvino, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON" }
+          - { name: openblas, os: windows-2022,     cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
+          - { name: openblas, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
+          - { name: mkldnn,   os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
+          - { name: openvino, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
           - { name: openblas, os: ubuntu-22.04-arm, cmake_flags: "-DWITH_ARM=ON" }
-          - { name: openblas, os: macos-13,         cmake_flags: "" }
+          - { name: openblas, os: macos-13,         cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
           - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_ARM=ON" }
     steps:
       - name: Setup dependencies
@@ -114,7 +114,6 @@ jobs:
             ${{ matrix.cmake_flags }} `
             -DON_INFER=ON `
             -DWITH_PYTHON=OFF `
-            -DWITH_ONNXRUNTIME=ON `
             -DWITH_UNITY_BUILD=ON
 
       - name: Build with Ninja
