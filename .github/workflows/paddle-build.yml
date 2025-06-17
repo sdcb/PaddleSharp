@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Setup dependencies
         run: |
-          pip3 install numpy protobuf wheel ninja
+          pip install numpy protobuf wheel ninja --break-system-packages
 
       - uses: Jimver/cuda-toolkit@v0.2.24
         if: ${{ matrix.cuda != '' }}
