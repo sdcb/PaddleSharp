@@ -24,7 +24,7 @@ jobs:
           - { name: mkldnn,   os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
           - { name: openvino, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
           - { name: openblas, os: ubuntu-22.04-arm, cmake_flags: "-DWITH_ARM=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=class-memaccess\"" }
-          - { name: openblas, os: macos-13,         cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
+          - { name: openblas, os: macos-13,         cmake_flags: "-DWITH_ONNXRUNTIME=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=inconsistent-missing-override\"" }
           - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_ARM=ON" }
     steps:
       - name: Setup dependencies
