@@ -28,8 +28,13 @@ jobs:
           - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_MKL=OFF" }
     steps:
       - name: Setup dependencies
+        shell: bash
         run: |
-          pip install numpy protobuf wheel ninja --break-system-packages
+          if [ "${{ runner.os }}" == "macOS" ]; then
+            pip install numpy protobuf wheel ninja --break-system-packages
+          else
+            pip install numpy protobuf wheel ninja
+          fi
 
       - uses: Jimver/cuda-toolkit@v0.2.24
         if: ${{ matrix.cuda != '' }}
