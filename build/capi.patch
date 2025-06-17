@@ -1,0 +1,170 @@
+diff --git a/cmake/flags.cmake b/cmake/flags.cmake
+index 942d40dfe7..f56d420f6e 100644
+--- a/cmake/flags.cmake
++++ b/cmake/flags.cmake
+@@ -245,7 +245,6 @@ if(APPLE)
+   set(COMMON_FLAGS
+       -Wno-deprecated-register
+       -Werror=format
+-      -Werror=inconsistent-missing-override
+       -Werror=braced-scalar-init
+       -Werror=uninitialized
+       -Werror=tautological-constant-out-of-range-compare
+diff --git a/paddle/fluid/inference/api/analysis_predictor.cc b/paddle/fluid/inference/api/analysis_predictor.cc
+index c9d5b7cfc6..dbac930966 100644
+--- a/paddle/fluid/inference/api/analysis_predictor.cc
++++ b/paddle/fluid/inference/api/analysis_predictor.cc
+@@ -447,7 +447,9 @@ bool AnalysisPredictor::Init(
+   paddle::platform::SetNumThreads(config_.cpu_math_library_num_threads());
+ 
+   std::string model_path = config_.prog_file();
+-  if (!model_path.empty()) {
++  if (config_.model_from_memory()) {
++    load_pir_model_ = config_.new_executor_enabled();
++  } else if (!model_path.empty()) {
+     load_pir_model_ =
+         model_path.substr(model_path.find_last_of(".") + 1) == "json";
+   } else if (!config_.model_dir().empty()) {
+@@ -523,7 +525,7 @@ bool AnalysisPredictor::Init(
+   if (!PrepareExecutor()) {
+     return true;
+   }
+-
++  
+ #if defined(PADDLE_WITH_CUDA) || defined(PADDLE_WITH_HIP)
+   // TODO(inference): Now only gpu with external stream support private
+   // device_context.
+diff --git a/paddle/fluid/inference/capi_exp/pd_config.cc b/paddle/fluid/inference/capi_exp/pd_config.cc
+index 9238599111..8e38198227 100644
+--- a/paddle/fluid/inference/capi_exp/pd_config.cc
++++ b/paddle/fluid/inference/capi_exp/pd_config.cc
+@@ -508,4 +508,32 @@ __pd_give PD_Cstr* PD_ConfigSummary(__pd_keep PD_Config* pd_config) {
+   return paddle_infer::CvtStrToCstr(sum_str);
+ }
+ 
++void PD_ConfigEnableNewExecutor(__pd_keep PD_Config* pd_config,
++                                PD_Bool x) {
++  CHECK_AND_CONVERT_PD_CONFIG;
++  config->EnableNewExecutor(x);
++}
++
++PD_Bool PD_ConfigNewExecutorEnabled(__pd_keep PD_Config* pd_config) {
++  CHECK_AND_CONVERT_PD_CONFIG;
++  return config->new_executor_enabled();  // NOLINT
++}
++
++void PD_ConfigEnableNewIR(__pd_keep PD_Config* pd_config,
++                          PD_Bool x) {
++  CHECK_AND_CONVERT_PD_CONFIG;
++  config->EnableNewIR(x);
++}
++
++PD_Bool PD_ConfigNewIREnabled(__pd_keep PD_Config* pd_config) {
++  CHECK_AND_CONVERT_PD_CONFIG;
++  return config->new_ir_enabled();  // NOLINT
++}
++
++void PD_ConfigUseOptimizedModel(__pd_keep PD_Config* pd_config,
++                                PD_Bool x) {
++  CHECK_AND_CONVERT_PD_CONFIG;
++  config->UseOptimizedModel(x);
++}
++
+ }  // extern "C"
+diff --git a/paddle/fluid/inference/capi_exp/pd_config.h b/paddle/fluid/inference/capi_exp/pd_config.h
+index b611328030..3dfe02b258 100644
+--- a/paddle/fluid/inference/capi_exp/pd_config.h
++++ b/paddle/fluid/inference/capi_exp/pd_config.h
+@@ -743,6 +743,39 @@ PADDLE_CAPI_EXPORT extern __pd_give PD_OneDimArrayCstr* PD_ConfigAllPasses(
+ PADDLE_CAPI_EXPORT extern __pd_give PD_Cstr* PD_ConfigSummary(
+     __pd_keep PD_Config* pd_config);
+ 
++/// \brief A boolean state telling whether to use new executor.
++/// \param[in] pd_config config
++/// \param[in] x enable new executor or not
++PADDLE_CAPI_EXPORT extern void PD_ConfigEnableNewExecutor(
++    __pd_keep PD_Config* pd_config,
++    PD_Bool x);
++
++/// \brief A boolean state telling whether the new executor is enabled.
++/// \param[in] pd_config config
++/// \return Whether new executor is enabled
++PADDLE_CAPI_EXPORT extern PD_Bool PD_ConfigNewExecutorEnabled(
++    __pd_keep PD_Config* pd_config);
++
++/// \brief A boolean state telling whether to use new IR.
++/// \param[in] pd_config config
++/// \param[in] x enable new IR or not
++PADDLE_CAPI_EXPORT extern void PD_ConfigEnableNewIR(
++    __pd_keep PD_Config* pd_config,
++    PD_Bool x);
++
++/// \brief A boolean state telling whether the new IR is enabled.
++/// \param[in] pd_config config
++/// \return Whether new IR is enabled
++PADDLE_CAPI_EXPORT extern PD_Bool PD_ConfigNewIREnabled(
++    __pd_keep PD_Config* pd_config);
++
++/// \brief Control whether to use optimized model to inference.
++/// \param[in] pd_config config
++/// \param[in] x whether to use optimized model
++PADDLE_CAPI_EXPORT extern void PD_ConfigUseOptimizedModel(
++    __pd_keep PD_Config* pd_config,
++    PD_Bool x);
++
+ #ifdef __cplusplus
+ }  // extern "C"
+ #endif
+diff --git a/paddle/fluid/pir/serialize_deserialize/src/interface.cc b/paddle/fluid/pir/serialize_deserialize/src/interface.cc
+index adb60536a7..e6b9016011 100644
+--- a/paddle/fluid/pir/serialize_deserialize/src/interface.cc
++++ b/paddle/fluid/pir/serialize_deserialize/src/interface.cc
+@@ -69,8 +69,14 @@ void WriteModule(const pir::Program& program,
+ bool ReadModule(const std::string& file_path,
+                 pir::Program* program,
+                 int64_t pir_version) {
+-  std::ifstream f(file_path);
+-  Json data = Json::parse(f);
++  Json data;
++  if (file_path.size() < 1000) {
++    std::ifstream f(file_path);
++    data = Json::parse(f);
++  } else {
++    data = Json::parse(file_path);
++  }
++  
+   if (pir_version < 0) {
+     pir_version = DEVELOP_VERSION;
+     VLOG(6) << "pir_version is null, get pir_version: " << pir_version;
+diff --git a/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc b/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
+index 1d563c326a..9c3318099d 100644
+--- a/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
++++ b/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
+@@ -188,13 +188,20 @@ void LoadCombineFunction(const std::string& file_path,
+                          std::vector<phi::DenseTensor*>* out,
+                          bool load_as_fp16,
+                          phi::Place place) {
+-  std::ifstream fin(file_path, std::ios::binary);
+-  PADDLE_ENFORCE_EQ(static_cast<bool>(fin),
+-                    true,
+-                    common::errors::Unavailable(
+-                        "Load operator fail to open file %s, please check "
+-                        "whether the model file is complete or damaged.",
+-                        file_path));
++  std::unique_ptr<std::istream> fin_ptr;
++  if (file_path.size() < 1000) {
++    fin_ptr = std::make_unique<std::ifstream>(file_path, std::ios::binary);
++    PADDLE_ENFORCE_EQ(static_cast<bool>(*fin_ptr),
++                      true,
++                      common::errors::Unavailable(
++                          "Load operator fail to open file %s, please check "
++                          "whether the model file is complete or damaged.",
++                          file_path));
++  } else {
++    fin_ptr = std::make_unique<std::istringstream>(
++        file_path, std::ios::in | std::ios::binary);
++  }
++  std::istream& fin = *fin_ptr;
+ 
+   PADDLE_ENFORCE_GT(out->size(),
+                     0UL,

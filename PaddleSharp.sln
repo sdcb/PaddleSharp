@@ -12,23 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		testEnvironments.json = testEnvironments.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2A95EF6-DE13-4070-B359-CC6F6FD49A07}"
-	ProjectSection(SolutionItems) = preProject
-		build\00-common.linq = build\00-common.linq
-		build\01-build-native.linq = build\01-build-native.linq
-		build\02-build-packages.linq = build\02-build-packages.linq
-		build\03-publish-proget-nuget.linq = build\03-publish-proget-nuget.linq
-		build\04-chatgpt-parse-code.linq = build\04-chatgpt-parse-code.linq
-		build\icon.jpg = build\icon.jpg
-		build\oneapi.png = build\oneapi.png
-		build\onnxruntime.png = build\onnxruntime.png
-		build\Sdcb.Mkldnn.runtime.nuspec = build\Sdcb.Mkldnn.runtime.nuspec
-		build\Sdcb.Onnx.runtime.nuspec = build\Sdcb.Onnx.runtime.nuspec
-		build\Sdcb.Paddle2Onnx.runtime.nuspec = build\Sdcb.Paddle2Onnx.runtime.nuspec
-		build\Sdcb.PaddleInference.runtime.nuspec = build\Sdcb.PaddleInference.runtime.nuspec
-		build\test.linq = build\test.linq
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B3A59318-2F90-40D4-B995-7D56EB8C50F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleInference", "src\Sdcb.PaddleInference\Sdcb.PaddleInference.csproj", "{BCD42B48-62DF-4E44-8F43-08371A0FC567}"
@@ -47,21 +30,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 		.github\workflows\paddle-windows-build.yml = .github\workflows\paddle-windows-build.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{3C8D6738-0E9A-4BDD-AB62-26B854B055F9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Tests", "tests\Sdcb.PaddleOCR.Tests\Sdcb.PaddleOCR.Tests.csproj", "{4FA38A15-304E-4AFA-85DC-6C5DD87C4DFD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA2A775C-763B-4B69-AC5B-4F90DD668E4A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet6-paddle", "dotnet6-paddle", "{ACED3A78-4E04-421F-AC15-2B91192382CE}"
-	ProjectSection(SolutionItems) = preProject
-		build\docker\dotnet6-paddle\Dockerfile = build\docker\dotnet6-paddle\Dockerfile
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet6sdk-paddle", "dotnet6sdk-paddle", "{C6C02ED4-7411-43D3-B326-358CBC9BEF02}"
-	ProjectSection(SolutionItems) = preProject
-		build\docker\dotnet6sdk-paddle\Dockerfile = build\docker\dotnet6sdk-paddle\Dockerfile
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Models.Online", "src\Sdcb.PaddleOCR.Models.Online\Sdcb.PaddleOCR.Models.Online.csproj", "{E996BEA0-C552-4A31-8DC2-DED4B97648FF}"
 EndProject
@@ -101,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleSeg", "src\Sdcb.PaddleSeg\Sdcb.PaddleSeg.csproj", "{5B99D3D9-BDDD-4C0A-BD51-7E24B1B69DF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdcb.PaddleOCR.Models.LocalV5", "src\Sdcb.PaddleOCR.Models.LocalV5\Sdcb.PaddleOCR.Models.LocalV5.csproj", "{75603F9B-E48A-4196-94B9-DE12E41E57A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "build\build.csproj", "{53633353-B004-48E3-830C-EFF7D87A6526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,6 +157,10 @@ Global
 		{75603F9B-E48A-4196-94B9-DE12E41E57A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75603F9B-E48A-4196-94B9-DE12E41E57A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75603F9B-E48A-4196-94B9-DE12E41E57A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53633353-B004-48E3-830C-EFF7D87A6526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53633353-B004-48E3-830C-EFF7D87A6526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53633353-B004-48E3-830C-EFF7D87A6526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53633353-B004-48E3-830C-EFF7D87A6526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,11 +169,7 @@ Global
 		{BCD42B48-62DF-4E44-8F43-08371A0FC567} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{A80CAB18-32B8-4E2E-B639-F7285C4C8559} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{3C7FF86D-81F2-4675-B41E-B3B36E744F62} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
-		{6921A5C2-A45B-48D7-BA1B-EAF1A5E1A1EB} = {D2A95EF6-DE13-4070-B359-CC6F6FD49A07}
-		{3C8D6738-0E9A-4BDD-AB62-26B854B055F9} = {D2A95EF6-DE13-4070-B359-CC6F6FD49A07}
 		{4FA38A15-304E-4AFA-85DC-6C5DD87C4DFD} = {CA2A775C-763B-4B69-AC5B-4F90DD668E4A}
-		{ACED3A78-4E04-421F-AC15-2B91192382CE} = {3C8D6738-0E9A-4BDD-AB62-26B854B055F9}
-		{C6C02ED4-7411-43D3-B326-358CBC9BEF02} = {3C8D6738-0E9A-4BDD-AB62-26B854B055F9}
 		{E996BEA0-C552-4A31-8DC2-DED4B97648FF} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{06475814-73FA-4C45-BCD0-4F64849A5612} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
 		{69BF0B03-E1FE-4CF8-97A5-40E32B758E1A} = {B3A59318-2F90-40D4-B995-7D56EB8C50F0}
