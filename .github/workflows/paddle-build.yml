@@ -23,9 +23,9 @@ jobs:
           - { name: openblas, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=OFF" }
           - { name: mkldnn,   os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON" }
           - { name: openvino, os: ubuntu-22.04,     cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON" }
-          - { name: openblas, os: ubuntu-22.04-arm, cmake_flags: "-DWITH_ARM" }
+          - { name: openblas, os: ubuntu-22.04-arm, cmake_flags: "-DWITH_ARM=ON" }
           - { name: openblas, os: macos-13,         cmake_flags: "" }
-          - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_ARM" }
+          - { name: openblas, os: macos-15,         cmake_flags: "-DWITH_ARM=ON" }
     steps:
       - name: Setup dependencies
         shell: bash
