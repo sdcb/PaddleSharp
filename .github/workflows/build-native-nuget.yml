@@ -136,8 +136,19 @@ jobs:
 
         # ---------- 找到所有动态库 ----------
         NUGET_LIB_DIR="${{ github.workspace }}/nuget"
-        # find 出来的是全路径
-        mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f)
+        
+        LIB_PATHS=()
+        
+        if command -v mapfile >/dev/null 2>&1; then
+          # Bash ≥4（Linux runner）
+          mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f -print)
+        else
+          # Bash 3.x（macOS runner）
+          while IFS= read -r -d '' f; do
+            LIB_PATHS+=("$f")
+          done < <(find "$NUGET_LIB_DIR" -type f -print0)
+        fi
+        
         if [ ${#LIB_PATHS[@]} -eq 0 ]; then
           echo "Error: no native libs found in $NUGET_LIB_DIR"
           exit 1
