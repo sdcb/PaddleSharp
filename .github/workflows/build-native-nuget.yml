@@ -85,14 +85,14 @@ jobs:
     - name: Patch RPATH for paddle_inference_c.so(linux only)
       if: ${{ matrix.rid == 'linux-x64' || matrix.rid == 'linux-arm64' }}
       run: |
-        echo "Current RPATH for paddle_inference_c.so"
-        patchelf --print-rpath nuget/paddle_inference_c.so
+        echo "Current RPATH for libpaddle_inference_c.so"
+        patchelf --print-rpath nuget/libpaddle_inference_c.so
 
-        echo "Patching RPATH for paddle_inference_c.so"
-        patchelf --set-rpath '$ORIGIN' nuget/paddle_inference_c.so
+        echo "Patching RPATH for libpaddle_inference_c.so"
+        patchelf --set-rpath '$ORIGIN' nuget/libpaddle_inference_c.so
 
-        echo "RPATH set to '$ORIGIN' for paddle_inference_c.so"
-        patchelf --print-rpath nuget/paddle_inference_c.so
+        echo "RPATH set to '$ORIGIN' for libpaddle_inference_c.so"
+        patchelf --print-rpath nuget/libpaddle_inference_c.so
 
         echo "RPATH patched successfully."
 
