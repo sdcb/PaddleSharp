@@ -72,7 +72,7 @@ jobs:
     - name: Copy Native Dynamic Libs(.so/.dll/.dylib) to nuget
       run: |
         mkdir -p nuget
-        if [[ "${{ matrix.rid }}" == windows* ]]; then
+        if [[ "${{ matrix.rid }}" == win* ]]; then
           find paddle_inference_c -type f \( -iname "*.dll" \) -exec cp {} nuget/ \;
         elif [[ "${{ matrix.rid }}" == linux* ]]; then
           find paddle_inference_c -type f \( -iname "*.so*" \) -exec cp {} nuget/ \;
