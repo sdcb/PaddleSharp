@@ -18,68 +18,23 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - name: openblas_noavx
-            cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF"
-          - name: openblas
-            cmake_flags: "-DWITH_MKL=OFF"
-          - name: mkldnn
-            cmake_flags: "-DWITH_MKL=ON"
-            
-          - name: cu118_cudnn89_sm61
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-          - name: cu118_cudnn89_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-          - name: cu118_cudnn89_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-          - name: cu118_cudnn89_sm89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""
-            cuda: 11.8.0
-            cudnn: 8.9.7.29
-
-          - name: cu126_cudnn95_sm61
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-          - name: cu126_cudnn95_sm89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""
-            cuda: 12.6.3
-            cudnn: 9.5.1.17
-
-          - name: cu129_cudnn910_sm61
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""
-            cuda: 12.9.0
-            cudnn: 9.10.1.4
-          - name: cu129_cudnn910_sm75
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""
-            cuda: 12.9.0
-            cudnn: 9.10.1.4
-          - name: cu129_cudnn910_sm86
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""
-            cuda: 12.9.0
-            cudnn: 9.10.1.4
-          - name: cu129_cudnn910_sm89
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""
-            cuda: 12.9.0
-            cudnn: 9.10.1.4
-          - name: cu129_cudnn910_sm120
-            cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DCMAKE_CUDA_ARCHITECTURES=\"120-real\""
-            cuda: 12.9.0
-            cudnn: 9.10.1.4
+        include: 
+          - { name: openblas_noavx,                                      cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF" }
+          - { name: openblas,                                            cmake_flags: "-DWITH_MKL=OFF" }
+          - { name: mkldnn,                                              cmake_flags: "-DWITH_MKL=ON" }
+          - { name: cu118_cudnn89_sm61,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { name: cu118_cudnn89_sm75,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { name: cu118_cudnn89_sm86,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { name: cu118_cudnn89_sm89,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { name: cu126_cudnn95_sm61,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { name: cu126_cudnn95_sm75,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { name: cu126_cudnn95_sm86,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { name: cu126_cudnn95_sm89,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { name: cu129_cudnn910_sm61,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { name: cu129_cudnn910_sm75,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { name: cu129_cudnn910_sm86,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { name: cu129_cudnn910_sm89,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { name: cu129_cudnn910_sm120, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DCMAKE_CUDA_ARCHITECTURES=\"120-real\"" }
     steps:
       - name: Setup dependencies
         run: |
