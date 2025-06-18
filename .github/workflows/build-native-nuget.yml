@@ -72,15 +72,29 @@ jobs:
     - name: Copy Native Dynamic Libs(.so/.dll/.dylib) to nuget
       run: |
         mkdir -p nuget
-        if [[ "${{ matrix.rid }}" == "win-x64" ]]; then
+        if [[ "${{ matrix.rid }}" == windows* ]]; then
           find paddle_inference_c -type f \( -iname "*.dll" \) -exec cp {} nuget/ \;
-        elif [[ "${{ matrix.rid }}" == "linux-x64" ]]; then
+        elif [[ "${{ matrix.rid }}" == linux* ]]; then
           find paddle_inference_c -type f \( -iname "*.so*" \) -exec cp {} nuget/ \;
-        elif [[ "${{ matrix.rid }}" == "osx-x64" || "${{ matrix.rid }}" == "osx-arm64" ]]; then
+        elif [[ "${{ matrix.rid }}" == osx* ]]; then
           find paddle_inference_c -type f \( -iname "*.dylib" \) -exec cp {} nuget/ \;
         fi
 
         ls -l nuget
+
+    - name: Patch RPATH for paddle_inference_c.so(linux only)
+      if: ${{ matrix.rid == 'linux-x64' || matrix.rid == 'linux-arm64' }}
+      run: |
+        echo "Current RPATH for paddle_inference_c.so"
+        patchelf --print-rpath nuget/paddle_inference_c.so
+
+        echo "Patching RPATH for paddle_inference_c.so"
+        patchelf --set-rpath '$ORIGIN' nuget/paddle_inference_c.so
+
+        echo "RPATH set to '$ORIGIN' for paddle_inference_c.so"
+        patchelf --print-rpath nuget/paddle_inference_c.so
+
+        echo "RPATH patched successfully."
 
     - name: Build NuGet package
       run: |
@@ -200,17 +214,17 @@ jobs:
         echo "::endgroup::"
         echo NUPKG_PATH="${{ github.workspace }}/nupkgs/${PKG_ID}.${{ env.PADDLE_VERSION }}.${{ github.run_number }}.nupkg" >> $GITHUB_ENV
         
-    - name: Upload nupkg artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-${{ matrix.title }}
-        path: ${{ env.NUPKG_PATH }}
-        if-no-files-found: error
+    # - name: Upload nupkg artifact
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: nuget-${{ matrix.title }}
+    #     path: ${{ env.NUPKG_PATH }}
+    #     if-no-files-found: error
 
-    - name: Push nupkg to Github Packages
-      run: |
-        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
+    # - name: Push nupkg to Github Packages
+    #   run: |
+    #     dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
 
-    - name: Push nupkg to ProGet
-      run: |
-        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate --timeout 21600
+    # - name: Push nupkg to ProGet
+    #   run: |
+    #     dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate --timeout 21600
