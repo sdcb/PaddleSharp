@@ -16,7 +16,7 @@ env:
   
 jobs:
   build-all:
-    runs-on: ${{ matrix.rid == 'osx-x64' && 'macos-13' || matrix.rid == 'osx-arm64' && 'macos-15' || 'ubuntu-22.04' }}
+    runs-on: ${{ matrix.rid == 'osx-x64' && 'macos-13' || matrix.rid == 'osx-arm64' && 'macos-13' || 'ubuntu-22.04' }}
     strategy:
       matrix:
         include:
