@@ -16,7 +16,7 @@ env:
   
 jobs:
   build-all:
-    runs-on: ${{ matrix.rid == 'osx-x64' && 'macos-13' || matrix.rid == 'osx-arm64' && 'macos-13' || 'ubuntu-22.04' }}
+    runs-on: ${{ startsWith(matrix.rid, 'osx') && 'macos-13' || 'ubuntu-22.04' }}
     strategy:
       matrix:
         include:
@@ -251,17 +251,17 @@ jobs:
         echo "::endgroup::"
         echo NUPKG_PATH="${{ github.workspace }}/nupkgs/${PKG_ID}.${{ env.PADDLE_VERSION }}.${{ github.run_number }}.nupkg" >> $GITHUB_ENV
         
-    # - name: Upload nupkg artifact
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: nuget-${{ matrix.title }}
-    #     path: ${{ env.NUPKG_PATH }}
-    #     if-no-files-found: error
+    - name: Upload nupkg artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-${{ matrix.title }}
+        path: ${{ env.NUPKG_PATH }}
+        if-no-files-found: error
 
-    # - name: Push nupkg to Github Packages
-    #   run: |
-    #     dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
+    - name: Push nupkg to Github Packages
+      run: |
+        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
 
-    # - name: Push nupkg to ProGet
-    #   run: |
-    #     dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate --timeout 21600
+    - name: Push nupkg to ProGet
+      run: |
+        dotnet nuget push ${{ env.NUPKG_PATH }} --source "https://proget.starworks.cc:88/nuget/test/v3/index.json" --api-key "${{ secrets.PROGET_API_KEY }}" --skip-duplicate --timeout 21600
