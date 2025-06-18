@@ -24,10 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-linux-container.yml = .github\workflows\build-linux-container.yml
 		.github\workflows\build-native-nuget.yml = .github\workflows\build-native-nuget.yml
-		.github\workflows\cuda-windows-deps.yml = .github\workflows\cuda-windows-deps.yml
 		.github\workflows\main.yml = .github\workflows\main.yml
 		.github\workflows\paddle-build.yml = .github\workflows\paddle-build.yml
-		.github\workflows\paddle-windows-build.yml = .github\workflows\paddle-windows-build.yml
+		.github\workflows\push-native-nuget.yml = .github\workflows\push-native-nuget.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdcb.PaddleOCR.Tests", "tests\Sdcb.PaddleOCR.Tests\Sdcb.PaddleOCR.Tests.csproj", "{4FA38A15-304E-4AFA-85DC-6C5DD87C4DFD}"
