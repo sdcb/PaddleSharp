@@ -16,7 +16,7 @@ env:
   
 jobs:
   build-all:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.rid == 'osx-x64' && 'macos-13' || matrix.rid == 'osx-arm64' && 'macos-15' || 'ubuntu-22.04' }}
     strategy:
       matrix:
         include:
@@ -81,20 +81,46 @@ jobs:
         fi
 
         ls -l nuget
-
-    - name: Patch RPATH for paddle_inference_c.so(linux only)
-      if: ${{ matrix.rid == 'linux-x64' || matrix.rid == 'linux-arm64' }}
+        
+    - name: Patch RPATH / install-name for Paddle
+      shell: bash
       run: |
-        echo "Current RPATH for libpaddle_inference_c.so"
-        patchelf --print-rpath nuget/libpaddle_inference_c.so
-
-        echo "Patching RPATH for libpaddle_inference_c.so"
-        patchelf --set-rpath '$ORIGIN' nuget/libpaddle_inference_c.so
-
-        echo "RPATH set to '$ORIGIN' for libpaddle_inference_c.so"
-        patchelf --print-rpath nuget/libpaddle_inference_c.so
-
-        echo "RPATH patched successfully."
+        set -e
+        echo "RID=${{ matrix.rid }}"
+    
+        case "${{ matrix.rid }}" in
+    
+          # ---------- Linux (x86_64 / aarch64) ----------
+          linux-*)
+            echo "Before:"
+            patchelf --print-rpath nuget/libpaddle_inference_c.so || true
+    
+            patchelf --set-rpath '$ORIGIN' nuget/libpaddle_inference_c.so
+    
+            echo "After :"
+            patchelf --print-rpath nuget/libpaddle_inference_c.so
+            ;;
+    
+          # ---------- macOS (x86_64 / arm64) ----------
+          osx-*)
+            dylib=nuget/libpaddle_inference_c.dylib
+    
+            echo "Before:"
+            otool -l "$dylib" | grep -A2 LC_RPATH || true
+    
+            install_name_tool -id @rpath/$(basename "$dylib") "$dylib"
+            install_name_tool -add_rpath @loader_path "$dylib" 2>/dev/null || true
+    
+            echo "After :"
+            otool -l "$dylib" | grep -A2 LC_RPATH
+            ;;
+    
+          *)
+            echo "no rpath patch needed for ${{ matrix.rid }}"
+            ;;
+        esac
+    
+        echo "RPATH / LC_RPATH patched successfully."
 
     - name: Build NuGet package
       run: |
