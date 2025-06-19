@@ -18,9 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup NuGet Source
-        run: dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
-      - name: Show sources
-        run: dotnet nuget list source
+        run: |
+          dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget list source
       - name: Restore dependencies
         run: |
           dotnet restore
