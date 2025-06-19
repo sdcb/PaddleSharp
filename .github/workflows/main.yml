@@ -23,5 +23,10 @@ jobs:
           dotnet nuget list source
       - name: Build code
         run: dotnet build -c Release
+      - name: ldd debug(linux only)
+        if: matrix.runs-on == 'ubuntu-22.04'
+        run: |
+          ls -lR ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+          ldd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native/libpaddle_inference_c.so
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
