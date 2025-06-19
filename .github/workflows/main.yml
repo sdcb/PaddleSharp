@@ -23,7 +23,7 @@ jobs:
           dotnet nuget list source
       - name: Restore dependencies
         run: |
-          dotnet restore
+          dotnet restore -c Release
       - name: Build code
         run: dotnet build -c Release --no-restore
       - name: Test
