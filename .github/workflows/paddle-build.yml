@@ -154,7 +154,7 @@ jobs:
         case "${{ runner.os }}" in    
           Linux)
             echo "Before:"
-            LIB=./paddle-src/build/paddle_inference_install_dir/paddle/lib/libpaddle_inference_c.so
+            LIB=./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/libpaddle_inference_c.so
             patchelf --print-rpath $LIB || true    
             patchelf --set-rpath '$ORIGIN' $LIB
     
@@ -163,7 +163,7 @@ jobs:
             ;;
     
           macOS)
-            dylib=./paddle-src/build/paddle_inference_install_dir/paddle/lib/libpaddle_inference_c.dylib
+            dylib=./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/libpaddle_inference_c.dylib
     
             echo "Before:"
             otool -l "$dylib" | grep -A2 LC_RPATH || true
