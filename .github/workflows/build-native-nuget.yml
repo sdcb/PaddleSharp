@@ -16,7 +16,7 @@ env:
   
 jobs:
   build-all:
-    runs-on: ${{ startsWith(matrix.rid, 'osx') && 'macos-13' || 'ubuntu-22.04' }}
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
@@ -38,10 +38,10 @@ jobs:
           - { title: win64.cu129_cudnn910_sm120, rid: win-x64, action: paddle-build.yml, artifact: windows-2022_c_cu129_cudnn910_sm120 }
           - { title: linux64.openblas,           rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openblas }
           - { title: linux64.mkl,                rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_mkldnn }
-          - { title: linux64.openvino,           rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openvino }
-          - { title: linux-arm64.openblas,       rid: linux-arm64, action: paddle-build.yml, artifact: ubuntu-22.04-arm_c_openblas }
-          - { title: osx-x64.openblas,           rid: osx-x64,     action: paddle-build.yml, artifact: macos-13_c_openblas }
-          - { title: osx-arm64.openblas,         rid: osx-arm64,   action: paddle-build.yml, artifact: macos-15_c_openblas }
+          - { title: linux64,                    rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openvino }
+          - { title: linux-arm64,                rid: linux-arm64, action: paddle-build.yml, artifact: ubuntu-22.04-arm_c_openblas }
+          - { title: osx-x64,                    rid: osx-x64,     action: paddle-build.yml, artifact: macos-13_c_openblas }
+          - { title: osx-arm64,                  rid: osx-arm64,   action: paddle-build.yml, artifact: macos-15_c_openblas }
   
   
     steps:
@@ -81,46 +81,6 @@ jobs:
         fi
 
         ls -l nuget
-        
-    - name: Patch RPATH / install-name for Paddle
-      shell: bash
-      run: |
-        set -e
-        echo "RID=${{ matrix.rid }}"
-    
-        case "${{ matrix.rid }}" in
-    
-          # ---------- Linux (x86_64 / aarch64) ----------
-          linux-*)
-            echo "Before:"
-            patchelf --print-rpath nuget/libpaddle_inference_c.so || true
-    
-            patchelf --set-rpath '$ORIGIN' nuget/libpaddle_inference_c.so
-    
-            echo "After :"
-            patchelf --print-rpath nuget/libpaddle_inference_c.so
-            ;;
-    
-          # ---------- macOS (x86_64 / arm64) ----------
-          osx-*)
-            dylib=nuget/libpaddle_inference_c.dylib
-    
-            echo "Before:"
-            otool -l "$dylib" | grep -A2 LC_RPATH || true
-    
-            install_name_tool -id @rpath/$(basename "$dylib") "$dylib"
-            install_name_tool -add_rpath @loader_path "$dylib" 2>/dev/null || true
-    
-            echo "After :"
-            otool -l "$dylib" | grep -A2 LC_RPATH
-            ;;
-    
-          *)
-            echo "no rpath patch needed for ${{ matrix.rid }}"
-            ;;
-        esac
-    
-        echo "RPATH / LC_RPATH patched successfully."
 
     - name: Build NuGet package
       run: |
@@ -138,16 +98,7 @@ jobs:
         NUGET_LIB_DIR="${{ github.workspace }}/nuget"
         
         LIB_PATHS=()
-        
-        if command -v mapfile >/dev/null 2>&1; then
-          # Bash ≥4（Linux runner）
-          mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f -print)
-        else
-          # Bash 3.x（macOS runner）
-          while IFS= read -r -d '' f; do
-            LIB_PATHS+=("$f")
-          done < <(find "$NUGET_LIB_DIR" -type f -print0)
-        fi
+        mapfile -t LIB_PATHS < <(find "$NUGET_LIB_DIR" -type f -print)
         
         if [ ${#LIB_PATHS[@]} -eq 0 ]; then
           echo "Error: no native libs found in $NUGET_LIB_DIR"
