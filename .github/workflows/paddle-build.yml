@@ -186,7 +186,7 @@ jobs:
       shell: bash
       run: |
         cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
-        cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*phi.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/ || true
+        cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*phi* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/ || true
         ls -lR ./paddle-src/build/paddle_inference_install_dir
 
     - name: Upload paddle_inference_c_install_dir
