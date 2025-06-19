@@ -20,7 +20,7 @@ jobs:
       - name: Setup NuGet Source
         run: |
           dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget
-          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
           dotnet nuget list source
       - name: Restore dependencies
         run: |
