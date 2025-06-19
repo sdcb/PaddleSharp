@@ -11,7 +11,7 @@ on:
   
 jobs:
   windows:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
         runs-on: [windows-2022, ubuntu-22.04]
