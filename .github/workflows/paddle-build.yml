@@ -19,141 +19,178 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: openblas_noavx,       os: windows-2022,                                cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF" }
-          - { name: openblas,             os: windows-2022,                                cmake_flags: "-DWITH_MKL=OFF" }
-          - { name: mkldnn,               os: windows-2022,                                cmake_flags: "-DWITH_MKL=ON" }
-          - { name: cu118_cudnn89_sm61,   os: windows-2022, cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
-          - { name: cu118_cudnn89_sm75,   os: windows-2022, cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
-          - { name: cu118_cudnn89_sm86,   os: windows-2022, cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
-          - { name: cu118_cudnn89_sm89,   os: windows-2022, cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
-          - { name: cu126_cudnn95_sm61,   os: windows-2022, cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
-          - { name: cu126_cudnn95_sm75,   os: windows-2022, cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
-          - { name: cu126_cudnn95_sm86,   os: windows-2022, cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
-          - { name: cu126_cudnn95_sm89,   os: windows-2022, cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
-          - { name: cu129_cudnn910_sm61,  os: windows-2022, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
-          - { name: cu129_cudnn910_sm75,  os: windows-2022, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
-          - { name: cu129_cudnn910_sm86,  os: windows-2022, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
-          - { name: cu129_cudnn910_sm89,  os: windows-2022, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
-          - { name: cu129_cudnn910_sm120, os: windows-2022, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DCMAKE_CUDA_ARCHITECTURES=\"120-real\"" }
-          - { name: openblas,             os: ubuntu-22.04,                                cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
-          - { name: mkldnn,               os: ubuntu-22.04,                                cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
-          - { name: openvino,             os: ubuntu-22.04,                                cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
-          - { name: openblas,             os: ubuntu-22.04-arm,                            cmake_flags: "-DWITH_ARM=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=class-memaccess\"" }
-          - { name: openblas,             os: macos-13,                                    cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
-          - { name: openblas,             os: macos-15,                                    cmake_flags: "-DWITH_ARM=ON" }
+          - { os: windows-2022,     name: openblas_noavx,       cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF" }
+          - { os: windows-2022,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF" }
+          - { os: windows-2022,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON" }
+          - { os: windows-2022,     name: cu118_cudnn89_sm61,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { os: windows-2022,     name: cu118_cudnn89_sm75,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { os: windows-2022,     name: cu118_cudnn89_sm86,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { os: windows-2022,     name: cu118_cudnn89_sm89,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { os: windows-2022,     name: cu126_cudnn95_sm61,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { os: windows-2022,     name: cu126_cudnn95_sm75,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { os: windows-2022,     name: cu126_cudnn95_sm86,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { os: windows-2022,     name: cu126_cudnn95_sm89,   cuda: 12.6.3, cudnn: 9.5.1.17, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { os: windows-2022,     name: cu129_cudnn910_sm61,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\" -DCMAKE_CUDA_ARCHITECTURES=\"61-real\""   }
+          - { os: windows-2022,     name: cu129_cudnn910_sm75,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\" -DCMAKE_CUDA_ARCHITECTURES=\"75-real\""   }
+          - { os: windows-2022,     name: cu129_cudnn910_sm86,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\" -DCMAKE_CUDA_ARCHITECTURES=\"86-real\""   }
+          - { os: windows-2022,     name: cu129_cudnn910_sm89,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\" -DCMAKE_CUDA_ARCHITECTURES=\"89-real\""   }
+          - { os: windows-2022,     name: cu129_cudnn910_sm120, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DCMAKE_CUDA_ARCHITECTURES=\"120-real\"" }
+          - { os: ubuntu-22.04,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04,     name: openvino,             cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04-arm, name: openblas,             cmake_flags: "-DWITH_ARM=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=class-memaccess\"" }
+          - { os: macos-13,         name: openblas,             cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
+          - { os: macos-15,         name: openblas,             cmake_flags: "-DWITH_ARM=ON" }
     steps:
-      - name: Setup dependencies
-        shell: bash
-        run: |
-          if [ "${{ runner.os }}" == "macOS" ]; then
-            pip install numpy protobuf wheel ninja --break-system-packages
-          else
-            pip install numpy protobuf wheel ninja
-          fi
+    - name: Setup dependencies
+      shell: bash
+      run: |
+        if [ "${{ runner.os }}" == "macOS" ]; then
+          pip install numpy protobuf wheel ninja --break-system-packages
+        else
+          pip install numpy protobuf wheel ninja
+        fi
 
-      - uses: Jimver/cuda-toolkit@v0.2.24
-        if: ${{ matrix.cuda != '' }}
-        id: cuda-toolkit
-        with:
-          method: network
-          cuda: ${{ matrix.cuda }}
-          # Windows sub-packages are kind of different, so we need to handle them separately
-          # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
-          sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
-            '["nvcc"]' || 
-            '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev", "curand", "curand_dev", 
-              "cusparse", "cusparse_dev", "cusolver", "cusolver_dev", "nvrtc", "nvrtc_dev", 
-              "cuda_profiler_api", "nvjpeg", "nvjpeg_dev", "thrust"]' 
-            }}
-          non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
-            '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev", "libcurand", "libcurand-dev", 
-              "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", 
-              "libnvrtc-dev", "profiler_api", "libthrust"]' || 
-            '[]' }}
-          log-file-suffix: ${{ runner.os }}.txt
-      
-      - name: Download cuDNN
-        if: ${{ matrix.cudnn != '' }}
-        shell: pwsh
-        run: |
-          $cudaMajor = '${{ matrix.cuda }}'.Split('.')[0]
-          echo "Downloading cuDNN for CUDA $cudaMajor and cuDNN ${{ matrix.cudnn }}..."
-          if ("${{ runner.os }}" -eq "Linux") {
-            Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.tar.xz -OutFile cudnn.tar.xz
-            mkdir cudnn && tar -xf cudnn.tar.xz --strip-components=1 -C cudnn
-
-            sudo cp cudnn/include/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/include/
-            sudo cp cudnn/lib/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/lib64/
-          } elseif ("${{ runner.os }}" -eq "Windows") {
-            Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.zip -OutFile cudnn.zip
-            mkdir cudnn && tar -xf cudnn.zip --strip-components=1 -C cudnn
-
-            cp -Recurse -Force cudnn\* "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}"
-          }
-      
-          echo "::group:: cuDNN files"
-          Get-ChildItem -Recurse cudnn
-          echo "::endgroup::"
-
-      - name: Checkout Paddle repo
-        uses: actions/checkout@v4
-        with:
-          repository: PaddlePaddle/Paddle
-          ref: ${{ env.PADDLE_BRANCH }}
-          path: paddle-src
-          fetch-depth: 1
-
-      - uses: ilammy/msvc-dev-cmd@v1
-        if: ${{ runner.os == 'Windows' }}
-        with:
-          toolset: '14.29'
-
-      - name: Apply patches
-        shell: pwsh
-        run: |
-          cd ./paddle-src
-          Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/linux/build/capi.patch -OutFile capi.patch
-          git apply --ignore-whitespace capi.patch
-          rm capi.patch
-
-      - name: Configure with CMake
-        shell: pwsh
-        run: |
-          mkdir ./paddle-src/build
-          mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
-          mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
-
-          cd ./paddle-src/build
-
-          cmake .. -GNinja `
-            ${{ matrix.cmake_flags }} `
-            -DON_INFER=ON `
-            -DWITH_PYTHON=OFF `
-            -DWITH_UNITY_BUILD=ON
-
-      - name: Build with Ninja
-        run: |
-          cd ./paddle-src/build
-          ninja all
-
-      - name: Show build files
-        shell: bash
-        run: |
-          ls -lR ./paddle-src/build
-
-      - name: Upload paddle_inference_install_dir
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}_cpp_${{ matrix.name }}
-          path: ./paddle-src/build/paddle_inference_install_dir/*
+    - uses: Jimver/cuda-toolkit@v0.2.24
+      if: ${{ matrix.cuda != '' }}
+      id: cuda-toolkit
+      with:
+        method: network
+        cuda: ${{ matrix.cuda }}
+        # Windows sub-packages are kind of different, so we need to handle them separately
+        # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
+        sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
+          '["nvcc"]' || 
+          '["nvcc", "cublas", "cublas_dev", "cudart", "cufft", "cufft_dev", "curand", "curand_dev", 
+            "cusparse", "cusparse_dev", "cusolver", "cusolver_dev", "nvrtc", "nvrtc_dev", 
+            "cuda_profiler_api", "nvjpeg", "nvjpeg_dev", "thrust"]' 
+          }}
+        non-cuda-sub-packages: ${{ matrix.os == 'ubuntu-22.04' && 
+          '["libcublas", "libcublas-dev", "libcufft", "libcufft-dev", "libcurand", "libcurand-dev", 
+            "libcusparse", "libcusparse-dev", "libcusolver", "libcusolver-dev", "libnvrtc", 
+            "libnvrtc-dev", "profiler_api", "libthrust"]' || 
+          '[]' }}
+        log-file-suffix: ${{ runner.os }}.txt
     
-      - name: Copy common.dll/.so
-        run: |
-          # libcommon.so, common.dll, 
-          cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
+    - name: Download cuDNN
+      if: ${{ matrix.cudnn != '' }}
+      shell: pwsh
+      run: |
+        $cudaMajor = '${{ matrix.cuda }}'.Split('.')[0]
+        echo "Downloading cuDNN for CUDA $cudaMajor and cuDNN ${{ matrix.cudnn }}..."
+        if ("${{ runner.os }}" -eq "Linux") {
+          Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.tar.xz -OutFile cudnn.tar.xz
+          mkdir cudnn && tar -xf cudnn.tar.xz --strip-components=1 -C cudnn
 
-      - name: Upload paddle_inference_c_install_dir
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}_c_${{ matrix.name }}
-          path: ./paddle-src/build/paddle_inference_c_install_dir/*
+          sudo cp cudnn/include/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/include/
+          sudo cp cudnn/lib/* ${{steps.cuda-toolkit.outputs.CUDA_PATH}}/lib64/
+        } elseif ("${{ runner.os }}" -eq "Windows") {
+          Invoke-WebRequest -Uri https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-${{ matrix.cudnn }}_cuda$cudaMajor-archive.zip -OutFile cudnn.zip
+          mkdir cudnn && tar -xf cudnn.zip --strip-components=1 -C cudnn
+
+          cp -Recurse -Force cudnn\* "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}"
+        }
+    
+        echo "::group:: cuDNN files"
+        Get-ChildItem -Recurse cudnn
+        echo "::endgroup::"
+
+    - name: Checkout Paddle repo
+      uses: actions/checkout@v4
+      with:
+        repository: PaddlePaddle/Paddle
+        ref: ${{ env.PADDLE_BRANCH }}
+        path: paddle-src
+        fetch-depth: 1
+
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: ${{ runner.os == 'Windows' }}
+      with:
+        toolset: '14.29'
+
+    - name: Apply patches
+      shell: pwsh
+      run: |
+        cd ./paddle-src
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/linux/build/capi.patch -OutFile capi.patch
+        git apply --ignore-whitespace capi.patch
+        rm capi.patch
+
+    - name: Configure with CMake
+      shell: pwsh
+      run: |
+        mkdir ./paddle-src/build
+        mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
+        mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
+
+        cd ./paddle-src/build
+
+        cmake .. -GNinja `
+          ${{ matrix.cmake_flags }} `
+          -DON_INFER=ON `
+          -DWITH_PYTHON=OFF `
+          -DWITH_UNITY_BUILD=ON
+
+    - name: Build with Ninja
+      run: |
+        cd ./paddle-src/build
+        ninja all
+
+    - name: Show build files
+      shell: bash
+      run: |
+        ls -lR ./paddle-src/build
+
+    - name: Upload paddle_inference_install_dir
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}_cpp_${{ matrix.name }}
+        path: ./paddle-src/build/paddle_inference_install_dir/*
+    
+    - name: Patch RPATH / install-name for Paddle
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: |    
+        case "${{ runner.os }}" in    
+          Linux)
+            echo "Before:"
+            LIB=./paddle-src/build/paddle_inference_install_dir/paddle/lib/libpaddle_inference_c.so
+            patchelf --print-rpath $LIB || true    
+            patchelf --set-rpath '$ORIGIN' $LIB
+    
+            echo "After :"
+            patchelf --print-rpath $LIB
+            ;;
+    
+          macOS)
+            dylib=./paddle-src/build/paddle_inference_install_dir/paddle/lib/libpaddle_inference_c.dylib
+    
+            echo "Before:"
+            otool -l "$dylib" | grep -A2 LC_RPATH || true
+    
+            install_name_tool -id @rpath/$(basename "$dylib") "$dylib"
+            install_name_tool -add_rpath @loader_path "$dylib" 2>/dev/null || true
+    
+            echo "After :"
+            otool -l "$dylib" | grep -A2 LC_RPATH
+            ;;
+    
+          *)
+            echo "no rpath patch needed for ${{ matrix.rid }}"
+            ;;
+        esac
+    
+        echo "RPATH / LC_RPATH patched successfully."
+
+    - name: Post process paddle_inference_install_dir
+      shell: bash
+      run: |
+        cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*common.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/
+        cp ./paddle-src/build/paddle_inference_install_dir/paddle/lib/*phi.* ./paddle-src/build/paddle_inference_c_install_dir/paddle/lib/ || true
+        ls -lR ./paddle-src/build/paddle_inference_install_dir
+
+    - name: Upload paddle_inference_c_install_dir
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}_c_${{ matrix.name }}
+        path: ./paddle-src/build/paddle_inference_c_install_dir/*
