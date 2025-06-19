@@ -12,11 +12,15 @@ on:
 jobs:
   windows:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        runs-on: [windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
       - name: Setup NuGet Source
-        run: |
-          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
+      - name: Show sources
+        run: dotnet nuget list source
       - name: Restore dependencies
         run: |
           dotnet restore
