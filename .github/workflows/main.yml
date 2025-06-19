@@ -3,27 +3,24 @@ on:
   push:
     branches:
       - master
+      - feature/linux
     paths:
       - 'src/**'
       - .github/workflows/main.yml
   workflow_dispatch:
   
-
 jobs:
   windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup NuGet Source
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
+      - name: Restore dependencies
+        run: |
+          dotnet restore
       - name: Build code
-        run: dotnet build -c Release
+        run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
-  # linux-ubuntu:
-  #   runs-on: ubuntu-latest
-  #   container: sdflysha/dotnet6sdk-paddle:2.5.0-ubuntu22
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Build code
-  #       run: dotnet build -c Release
-  #     - name: Test
-  #       run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LinuxExclude"
