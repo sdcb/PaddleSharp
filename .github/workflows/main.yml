@@ -21,10 +21,7 @@ jobs:
         run: |
           dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
           dotnet nuget list source
-      - name: Restore dependencies
-        run: |
-          dotnet restore -c Release
       - name: Build code
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
