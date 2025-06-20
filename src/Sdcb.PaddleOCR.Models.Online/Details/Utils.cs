@@ -1,6 +1,7 @@
 ﻿using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -50,14 +51,27 @@ internal static class Utils
         throw new Exception($"Failed to download {localFile} from all uris: {string.Join(", ", uris.Select(x => x.ToString()))}");
     }
 
-    public static async Task DownloadAndExtractAsync(string name, Uri uri, string rootDir, CancellationToken cancellationToken)
-    {
-        Directory.CreateDirectory(rootDir);
-        string paramsFile = Path.Combine(rootDir, "inference.pdiparams");
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> _modelLocks = new();
 
-        if (!File.Exists(paramsFile))
+    public static async Task DownloadAndExtractAsync(
+        string name, Uri uri, string rootDir, CancellationToken cancellationToken)
+    {
+        string paramsFile = Path.Combine(rootDir, "inference.pdiparams");
+        if (File.Exists(paramsFile))
+            return;
+
+        string key = name;
+        SemaphoreSlim gate = _modelLocks.GetOrAdd(key, _ => new SemaphoreSlim(1, 1));
+
+        await gate.WaitAsync(cancellationToken);
+        try
         {
+            if (File.Exists(paramsFile))
+                return;
+
+            Directory.CreateDirectory(rootDir);
             string localTarFile = Path.Combine(rootDir, uri.Segments.Last());
+
             if (!File.Exists(localTarFile) || new FileInfo(localTarFile).Length == 0)
             {
                 Console.WriteLine($"Downloading {name} model from {uri}");
@@ -85,6 +99,13 @@ internal static class Utils
             }
 
             File.Delete(localTarFile);
+        }
+        finally
+        {
+            gate.Release();
+
+            if (gate.CurrentCount == 1)
+                _modelLocks.TryRemove(key, out _);
         }
     }
 
