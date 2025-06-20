@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace Sdcb.Paddle2Onnx.Tests;
 
-[Trait("Category", "LinuxExclude")]
+[Trait("Category", "WindowsOnly")]
 public class DescribeOnnxTest
 {
     private readonly ITestOutputHelper _console;

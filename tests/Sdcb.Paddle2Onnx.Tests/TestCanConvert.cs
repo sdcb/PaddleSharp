@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace Sdcb.Paddle2Onnx.Tests;
 
-[Trait("Category", "LinuxExclude")]
+[Trait("Category", "WindowsOnly")]
 public class TestCanConvert
 {
 #pragma warning disable IDE0052 // 删除未读的私有成员

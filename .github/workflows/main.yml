@@ -71,7 +71,7 @@ jobs:
         export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
-          dotnet test -c Release --no-build --verbosity normal --filter 'TestCategory!=LinuxExclude'
+          dotnet test -c Release --no-build --verbosity normal --filter 'Category!=WindowsOnly'
         else
           dotnet test -c Release --no-build --verbosity normal
         fi
