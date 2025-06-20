@@ -39,12 +39,11 @@ jobs:
         if: matrix.runs-on == 'ubuntu-22.04'
         run: |
           cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
-          ls -lR
 
           for so in $(find . -type f -name '*.so*'); do
             echo "================ $so ================"
             patchelf --print-rpath "$so" || true
             echo
-          done)
+          done
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
