@@ -51,7 +51,7 @@ jobs:
       run: |
         cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
 
-        patchelf --add-needed libmklml_intel.so libdnnl.so.3
+        patchelf --add-needed libmklml_intel.so libpaddle_inference_c.so
 
         for so in $(find . -type f -name '*.so*'); do
           echo "================ $so ================"
