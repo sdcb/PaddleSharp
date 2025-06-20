@@ -7,9 +7,9 @@ namespace Sdcb.Paddle2Onnx.Tests;
 [Trait("Category", "LinuxExclude")]
 public class TestCanConvert
 {
-#pragma warning disable IDE0052 // É¾³ıÎ´¶ÁµÄË½ÓĞ³ÉÔ±
+#pragma warning disable IDE0052 // åˆ é™¤æœªè¯»çš„ç§æœ‰æˆå‘˜
     private readonly ITestOutputHelper _console;
-#pragma warning restore IDE0052 // É¾³ıÎ´¶ÁµÄË½ÓĞ³ÉÔ±
+#pragma warning restore IDE0052 // åˆ é™¤æœªè¯»çš„ç§æœ‰æˆå‘˜
 
     public TestCanConvert(ITestOutputHelper console)
     {
