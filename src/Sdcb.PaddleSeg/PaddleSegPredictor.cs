@@ -71,7 +71,7 @@ namespace Sdcb.PaddleSeg
             Mat imFloat = new Mat();
             src.ConvertTo(imFloat, MatType.CV_32FC3, 1.0 / 255.0);
 
-            imFloat = (imFloat - 0.5) / 0.5;
+            imFloat = (imFloat - (Scalar)0.5) / 0.5;
 
             return imFloat;
         }
@@ -98,7 +98,7 @@ namespace Sdcb.PaddleSeg
                 {
                     // Convert BGR to RGB order
                     int rgb = 2 - i;
-                    using Mat dest = new(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
+                    using Mat dest = Mat.FromPixelData(rows, cols, MatType.CV_32FC1, resultPtr + i * rows * cols * sizeof(float));
                     Cv2.ExtractChannel(src, dest, rgb);
                 }
             }
