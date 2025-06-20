@@ -50,6 +50,9 @@ jobs:
       if: matrix.runs-on == 'ubuntu-22.04'
       run: |
         cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+
+        patchelf --add-needed libmklml_intel.so libdnnl.so.3
+
         for so in $(find . -type f -name '*.so*'); do
           echo "================ $so ================"
           patchelf --set-rpath '$ORIGIN' "$so" || true
