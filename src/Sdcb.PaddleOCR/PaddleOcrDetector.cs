@@ -19,9 +19,6 @@ public class PaddleOcrDetector : IDisposable
     /// <summary>Gets or sets the maximum size for resizing the input image.</summary>
     public int? MaxSize { get; set; } = 1536;
 
-    /// <summary>Gets or sets the size for dilation during preprocessing.</summary>
-    public int? DilatedSize { get; set; } = 2;
-
     /// <summary>Gets or sets the score threshold for filtering out possible text boxes.</summary>
     public float? BoxScoreThreahold { get; set; } = 0.7f;
 
@@ -32,7 +29,7 @@ public class PaddleOcrDetector : IDisposable
     public int MinSize { get; set; } = 3;
 
     /// <summary>Gets or sets the ratio for enlarging text boxes during post-processing.</summary>
-    public float UnclipRatio { get; set; } = 2.0f;
+    public float UnclipRatio { get; set; } = 1.5f;
 
     /// <summary>
     /// Initializes a new instance of the PaddleOcrDetector class with the provided DetectionModel and PaddleConfig.
@@ -120,48 +117,42 @@ public class PaddleOcrDetector : IDisposable
             using Mat roi = pred[0, resizedSize.Height, 0, resizedSize.Width];
             roi.ConvertTo(cbuf, MatType.CV_8UC1, 255);
         }
-        using Mat dilated = new();
-        {
-            using Mat binary = BoxThreshold != null ?
-                cbuf.Threshold((int)(BoxThreshold * 255), 255, ThresholdTypes.Binary) :
-                cbuf;
+        using Mat binary = BoxThreshold != null ?
+            cbuf.Threshold((int)(BoxThreshold * 255), 255, ThresholdTypes.Binary) :
+            cbuf;
 
-            if (DilatedSize != null)
-            {
-                using Mat ones = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(DilatedSize.Value, DilatedSize.Value));
-                Cv2.Dilate(binary, dilated, ones);
-            }
-            else
-            {
-                Cv2.CopyTo(binary, dilated);
-            }
-        }
-
-        Point[][] contours = dilated.FindContoursAsArray(RetrievalModes.List, ContourApproximationModes.ApproxSimple);
+        Point[][] contours = binary.FindContoursAsArray(RetrievalModes.List, ContourApproximationModes.ApproxSimple);
         Size size = src.Size();
         double scaleRate = 1.0 * src.Width / resizedSize.Width;
 
         RotatedRect[] rects = contours
             .Where(x => BoxScoreThreahold == null || GetScore(x, pred) > BoxScoreThreahold)
-            .Select(x => Cv2.MinAreaRect(x))
-            .Where(x => x.Size.Width > MinSize && x.Size.Height > MinSize)
-            .Select(rect =>
+            .Select(x =>
             {
-                float minEdge = Math.Min(rect.Size.Width, rect.Size.Height);
+                RotatedRect rect = Cv2.MinAreaRect(x);
+
+                float area = (float)Math.Abs(Cv2.ContourArea(x));
+                float perimeter = (float)Cv2.ArcLength(x, true);
+                if (perimeter < 1e-6f)
+                    return null;
+
+                float d = UnclipRatio * area / perimeter;
+
                 Size2f newSize = new(
-                    (rect.Size.Width + UnclipRatio * minEdge) * scaleRate,
-                    (rect.Size.Height + UnclipRatio * minEdge) * scaleRate);
-                RotatedRect largerRect = new(rect.Center * scaleRate, newSize, rect.Angle);
-                return largerRect;
+                    (rect.Size.Width + 2 * d) * (float)scaleRate,
+                    (rect.Size.Height + 2 * d) * (float)scaleRate);
+
+                RotatedRect enlarged = new(rect.Center * (float)scaleRate, newSize, rect.Angle);
+
+                return (RotatedRect?)enlarged;
             })
+            .Where(r => r.HasValue &&
+                        r.Value.Size.Width > MinSize &&
+                        r.Value.Size.Height > MinSize)
+            .Select(v => v!.Value)
             .OrderBy(v => v.Center.Y)
             .ThenBy(v => v.Center.X)
             .ToArray();
-        //{
-        //	using Mat demo = dilated.CvtColor(ColorConversionCodes.GRAY2RGB);
-        //	demo.DrawContours(contours, -1, Scalar.Red);
-        //	Image(demo).Dump();
-        //}
         return rects;
     }
 
@@ -196,7 +187,7 @@ public class PaddleOcrDetector : IDisposable
         }
 
         PaddlePredictor predictor = _p;
-        lock(predictor)
+        lock (predictor)
         {
             using (Mat _ = normalized)
             using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
