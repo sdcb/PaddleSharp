@@ -26,7 +26,13 @@ jobs:
       - name: ldd debug(linux only)
         if: matrix.runs-on == 'ubuntu-22.04'
         run: |
-          ls -lR ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
-          ldd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native/libpaddle_inference_c.so
+          cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+          ls -lR
+          
+          for so in $(find . -type f -name '*.so'); do
+            echo "================ $so ================"
+            ldd "$so"
+            echo
+          done
       - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
