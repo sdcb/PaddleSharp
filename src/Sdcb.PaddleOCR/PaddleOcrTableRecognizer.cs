@@ -84,27 +84,30 @@ public class PaddleOcrTableRecognizer : IDisposable
         Size rawSize = src.Size();
         float[] inputData = TablePreprocess(src);
 
-        using PaddlePredictor predictor = _p.Clone();
-        using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+        PaddlePredictor predictor = _p;
+        lock (predictor)
         {
-            input.Shape = new[] { 1, 3, MaxEdgeSize, MaxEdgeSize };
-            input.SetData(inputData);
-        }
-        if (!predictor.Run())
-        {
-            throw new Exception("PaddlePredictor(Table) run failed.");
-        }
+            using (PaddleTensor input = predictor.GetInputTensor(predictor.InputNames[0]))
+            {
+                input.Shape = new[] { 1, 3, MaxEdgeSize, MaxEdgeSize };
+                input.SetData(inputData);
+            }
+            if (!predictor.Run())
+            {
+                throw new Exception("PaddlePredictor(Table) run failed.");
+            }
 
-        string[] outputNames = predictor.OutputNames;
-        using (PaddleTensor output0 = predictor.GetOutputTensor(outputNames[0]))
-        using (PaddleTensor output1 = predictor.GetOutputTensor(outputNames[1]))
-        {
-            float[] locations = output0.GetData<float>();
-            int[] locationShape = output0.Shape;
-            float[] structures = output1.GetData<float>();
-            int[] structureShape = output1.Shape;
+            string[] outputNames = predictor.OutputNames;
+            using (PaddleTensor output0 = predictor.GetOutputTensor(outputNames[0]))
+            using (PaddleTensor output1 = predictor.GetOutputTensor(outputNames[1]))
+            {
+                float[] locations = output0.GetData<float>();
+                int[] locationShape = output0.Shape;
+                float[] structures = output1.GetData<float>();
+                int[] structureShape = output1.Shape;
 
-            return TablePostProcessor(locations, locationShape, structures, structureShape, rawSize, Model.GetLabelByIndex);
+                return TablePostProcessor(locations, locationShape, structures, structureShape, rawSize, Model.GetLabelByIndex);
+            }
         }
     }
 
