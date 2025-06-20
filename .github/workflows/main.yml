@@ -49,5 +49,5 @@ jobs:
       shell: bash
       run: |
         export GLOG_v=3
-        export mklml_dir=./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        export FLAGS_mklml_dir=./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
         dotnet test -c Release --no-build --verbosity normal
