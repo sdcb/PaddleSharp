@@ -16,34 +16,38 @@ jobs:
       matrix:
         runs-on: [windows-2022, ubuntu-22.04]
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup NuGet Source
-        run: |
-          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
-          dotnet nuget list source
-      - name: Build code
-        run: dotnet build -c Release
-      - name: ldd debug(linux only)
-        if: matrix.runs-on == 'ubuntu-22.04'
-        run: |
-          cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
-          ls -lR
-          
-          for so in $(find . -type f -name '*.so*'); do
-            echo "================ $so ================"
-            ldd "$so"
-            echo
-          done
+    - uses: actions/checkout@v4
+    - name: Setup NuGet Source
+      run: |
+        dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+        dotnet nuget list source
+    - name: Build code
+      run: dotnet build -c Release
+    - name: ldd debug(linux only)
+      if: matrix.runs-on == 'ubuntu-22.04'
+      run: |
+        cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        ls -lR
+        
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          ldd "$so"
+          echo
+        done
 
-      - name: rpath debug(linux only)
-        if: matrix.runs-on == 'ubuntu-22.04'
-        run: |
-          cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+    - name: rpath debug(linux only)
+      if: matrix.runs-on == 'ubuntu-22.04'
+      run: |
+        cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
 
-          for so in $(find . -type f -name '*.so*'); do
-            echo "================ $so ================"
-            patchelf --print-rpath "$so" || true
-            echo
-          done
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          patchelf --print-rpath "$so" || true
+          echo
+        done
+    - name: Test
+      shell: bash
+      run: |
+        GLOG_v=3
+        mklml_dir=./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        dotnet test -c Release --no-build --verbosity normal
