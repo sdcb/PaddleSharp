@@ -36,9 +36,9 @@ jobs:
           - { title: win64.cu129_cudnn910_sm86,  rid: win-x64, action: paddle-build.yml, artifact: windows-2022_c_cu129_cudnn910_sm86 }
           - { title: win64.cu129_cudnn910_sm89,  rid: win-x64, action: paddle-build.yml, artifact: windows-2022_c_cu129_cudnn910_sm89 }
           - { title: win64.cu129_cudnn910_sm120, rid: win-x64, action: paddle-build.yml, artifact: windows-2022_c_cu129_cudnn910_sm120 }
-          - { title: linux64.openblas,           rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openblas }
-          - { title: linux64.mkl,                rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_mkldnn }
-          - { title: linux64,                    rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openvino }
+          - { title: linux-x64.openblas,         rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openblas }
+          - { title: linux-x64.mkl,              rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_mkldnn }
+          - { title: linux-x64,                  rid: linux-x64,   action: paddle-build.yml, artifact: ubuntu-22.04_c_openvino }
           - { title: linux-arm64,                rid: linux-arm64, action: paddle-build.yml, artifact: ubuntu-22.04-arm_c_openblas }
           - { title: osx-x64,                    rid: osx-x64,     action: paddle-build.yml, artifact: macos-13_c_openblas }
           - { title: osx-arm64,                  rid: osx-arm64,   action: paddle-build.yml, artifact: macos-15_c_openblas }
