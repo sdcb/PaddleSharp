@@ -45,6 +45,23 @@ jobs:
           patchelf --print-rpath "$so" || true
           echo
         done
+
+    - name: Match rpath(linux only)
+      if: matrix.runs-on == 'ubuntu-22.04'
+      run: |
+        cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          patchelf --set-rpath '$ORIGIN' "$so" || true
+          echo
+        done
+
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          patchelf --print-rpath "$so" || true
+          echo
+        done
+
     - name: Test
       shell: bash
       run: |
