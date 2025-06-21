@@ -46,29 +46,29 @@ jobs:
           echo
         done
 
-    # - name: Match rpath(linux only)
-    #   if: matrix.runs-on == 'ubuntu-22.04'
-    #   run: |
-    #     cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+    - name: Match rpath(linux only)
+      if: matrix.runs-on == 'ubuntu-22.04'
+      run: |
+        cd ./tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
 
-    #     patchelf --add-needed libmklml_intel.so libpaddle_inference_c.so
+        patchelf --add-needed libmklml_intel.so libpaddle_inference_c.so
 
-    #     for so in $(find . -type f -name '*.so*'); do
-    #       echo "================ $so ================"
-    #       patchelf --set-rpath '$ORIGIN' "$so" || true
-    #       echo
-    #     done
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          patchelf --set-rpath '$ORIGIN' "$so" || true
+          echo
+        done
 
-    #     for so in $(find . -type f -name '*.so*'); do
-    #       echo "================ $so ================"
-    #       patchelf --print-rpath "$so" || true
-    #       echo
-    #     done
+        for so in $(find . -type f -name '*.so*'); do
+          echo "================ $so ================"
+          patchelf --print-rpath "$so" || true
+          echo
+        done
 
     - name: Test
       shell: bash
       run: |
-        export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        # export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
           dotnet test ./tests/Sdcb.PaddleOCR.Tests/Sdcb.PaddleOCR.Tests.csproj -c Release --no-build --verbosity normal --filter 'Category!=WindowsOnly'
