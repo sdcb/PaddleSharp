@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
-        runs-on: [windows-2022, ubuntu-22.04]
+        runs-on: [windows-2022, ubuntu-22.04, ubuntu-22.04-arm]
     steps:
     - uses: actions/checkout@v4
     - name: Setup NuGet Source
