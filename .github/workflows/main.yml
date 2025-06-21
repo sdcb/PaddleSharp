@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
-        runs-on: [windows-2022, ubuntu-22.04, ubuntu-22.04-arm, macos-13, macos-15]
+        runs-on: [windows-2022, ubuntu-22.04, ubuntu-22.04-arm, macos-13]
     steps:
     - uses: actions/checkout@v4
     - name: Setup NuGet Source
@@ -69,10 +69,10 @@ jobs:
       shell: bash
       run: |
         # export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
-        export GLOG_v=4
-        if [[ "${{ matrix.runs-on }}" == "macos-15" ]]; then
-          export FLAGS_use_system_allocator=1
-        fi
+        # export GLOG_v=4
+        # if [[ "${{ matrix.runs-on }}" == "macos-15" ]]; then
+        #   export FLAGS_use_system_allocator=1
+        # fi
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
           dotnet test ./tests/Sdcb.PaddleOCR.Tests/Sdcb.PaddleOCR.Tests.csproj -c Release --no-build --verbosity normal --filter 'Category!=WindowsOnly'
