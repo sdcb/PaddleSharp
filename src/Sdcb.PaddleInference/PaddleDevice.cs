@@ -171,6 +171,6 @@ public static class PaddleDevice
     private static void CommonAction(PaddleConfig cfg, bool memoryOptimized, bool glogEnabled)
     {
         cfg.MemoryOptimized = memoryOptimized;
-        cfg.GLogEnabled = glogEnabled;
+        //cfg.GLogEnabled = glogEnabled;
     }
 }
