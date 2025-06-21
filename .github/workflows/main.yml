@@ -69,6 +69,9 @@ jobs:
       shell: bash
       run: |
         # export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        if [[ "${{ matrix.runs-on }}" == "macos-15" ]]; then
+          export FLAGS_use_system_allocator=1
+        fi
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
           dotnet test ./tests/Sdcb.PaddleOCR.Tests/Sdcb.PaddleOCR.Tests.csproj -c Release --no-build --verbosity normal --filter 'Category!=WindowsOnly'
