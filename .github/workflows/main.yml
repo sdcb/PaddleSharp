@@ -69,6 +69,7 @@ jobs:
       shell: bash
       run: |
         # export FLAGS_mklml_dir=${{ github.workspace }}/tests/Sdcb.PaddleOCR.Tests/bin/Release/net8.0/runtimes/linux-x64/native
+        export GLOG_v=4
         if [[ "${{ matrix.runs-on }}" == "macos-15" ]]; then
           export FLAGS_use_system_allocator=1
         fi
