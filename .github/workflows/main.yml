@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
   
 jobs:
-  windows:
+  run:
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
-        runs-on: [windows-2022, ubuntu-22.04, ubuntu-22.04-arm]
+        runs-on: [windows-2022, ubuntu-22.04, ubuntu-22.04-arm, macos-13, macos-15]
     steps:
     - uses: actions/checkout@v4
     - name: Setup NuGet Source
