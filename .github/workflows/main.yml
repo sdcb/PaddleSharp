@@ -53,17 +53,17 @@ jobs:
 
         patchelf --add-needed libmklml_intel.so libpaddle_inference_c.so
 
-        for so in $(find . -type f -name '*.so*'); do
-          echo "================ $so ================"
-          patchelf --set-rpath '$ORIGIN' "$so" || true
-          echo
-        done
+        # for so in $(find . -type f -name '*.so*'); do
+        #   echo "================ $so ================"
+        #   patchelf --set-rpath '$ORIGIN' "$so" || true
+        #   echo
+        # done
 
-        for so in $(find . -type f -name '*.so*'); do
-          echo "================ $so ================"
-          patchelf --print-rpath "$so" || true
-          echo
-        done
+        # for so in $(find . -type f -name '*.so*'); do
+        #   echo "================ $so ================"
+        #   patchelf --print-rpath "$so" || true
+        #   echo
+        # done
 
     - name: Test
       shell: bash
