@@ -57,3 +57,111 @@ index e977207378..e3756a5e1d 100644
  
      add_custom_command(
        TARGET ${TARGET_NAME}
+diff --git a/paddle/fluid/operators/generator/CMakeLists.txt b/paddle/fluid/operators/generator/CMakeLists.txt
+index 7c0fdca05d..2451403e4c 100644
+--- a/paddle/fluid/operators/generator/CMakeLists.txt
++++ b/paddle/fluid/operators/generator/CMakeLists.txt
+@@ -87,12 +87,19 @@ set(generated_static_argument_mapping_path
+ set(generated_sparse_argument_mapping_path
+     ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/ops_signature/generated_sparse_sig.cc
+ )
+-execute_process(
+-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
+-  COMMAND ${CMAKE_COMMAND} -E make_directory ${parsed_op_dir} RESULTS_VARIABLE
+-          _result)
+-if(${_result})
+-  message(FATAL_ERROR "Failed to create folder for parsed op yamls, exiting.")
++## NOTE(Windows): 原先使用 execute_process + `${CMAKE_COMMAND} -E make_directory` 在部分 Windows 环境下
++## 由于多 COMMAND 聚合的行为（以及 GitHub Actions pwsh runner 的实现差异）导致子目录未能及时创建，进而
++## parse_op.py 在打开输出文件时报 FileNotFoundError。这里在配置阶段直接使用 `file(MAKE_DIRECTORY ...)`
++## 递归创建所需目录，保证跨平台一致性，避免后续 Python 脚本写文件失败。
++file(MAKE_DIRECTORY
++  ${parsed_op_dir}
++  ${parsed_op_dir}/inconsistent
++  ${parsed_op_dir}/legacy)
++
++if(NOT EXISTS ${parsed_op_dir} OR
++   NOT EXISTS ${parsed_op_dir}/inconsistent OR
++   NOT EXISTS ${parsed_op_dir}/legacy)
++  message(FATAL_ERROR "Failed to create required parsed op yaml directories.")
+ endif()
+ 
+ message(
+@@ -104,42 +111,42 @@ message(
+ - ${fused_op_yaml_file}
+ - ${static_op_yaml_file}")
+ 
+-execute_process(
+-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
+-  COMMAND ${CMAKE_COMMAND} -E make_directory ${parsed_op_dir}
+-  COMMAND ${CMAKE_COMMAND} -E make_directory ${parsed_op_dir}/inconsistent
+-  COMMAND ${CMAKE_COMMAND} -E make_directory ${parsed_op_dir}/legacy
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${op_yaml_file}
+-          --output_path ${parsed_op_dir}/ops.parsed.yaml
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${legacy_op_yaml_file}
+-          --output_path ${parsed_op_dir}/inconsistent/dygraph_ops.parsed.yaml
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${bw_op_yaml_file}
+-          --output_path ${parsed_op_dir}/backward.parsed.yaml --backward
+-  COMMAND
+-    ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${legacy_bw_op_yaml_file}
+-    --output_path ${parsed_op_dir}/inconsistent/dygraph_backward.parsed.yaml
+-    --backward
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${static_op_yaml_file}
+-          --output_path ${parsed_op_dir}/legacy/static_ops.parsed.yaml
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${fused_op_yaml_file}
+-          --output_path ${parsed_op_dir}/fused_ops.parsed.yaml
+-  COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${sparse_op_yaml_file}
+-          --output_path ${parsed_op_dir}/sparse_ops.parsed.yaml
+-  COMMAND
+-    ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${sparse_bw_op_yaml_file}
+-    --output_path ${parsed_op_dir}/sparse_backward.parsed.yaml --backward
+-  COMMAND
+-    ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${static_bw_op_yaml_file}
+-    --output_path ${parsed_op_dir}/legacy/static_backward.parsed.yaml --backward
+-  COMMAND
+-    ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${fused_bw_op_yaml_file}
+-    --output_path ${parsed_op_dir}/fused_backward.parsed.yaml --backward
+-    RESULTS_VARIABLE _results)
+-foreach(_result in ${_results})
+-  if(${_result})
+-    message(FATAL_ERROR "op yaml parsing failed, exiting.")
++## 逐条调用 Python，避免单一 execute_process 聚合时 Windows 下前置目录未必可见的问题
++set(_parse_fail FALSE)
++macro(_RUN_PARSE _yaml _out _is_bwd)
++  if(_is_bwd)
++    execute_process(
++      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
++      COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${_yaml}
++              --output_path ${_out} --backward
++      RESULT_VARIABLE _ret)
++  else()
++    execute_process(
++      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
++      COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${_yaml}
++              --output_path ${_out}
++      RESULT_VARIABLE _ret)
+   endif()
+-endforeach()
++  if(NOT _ret EQUAL 0)
++    message(WARNING "parse_op failed for ${_yaml} -> ${_out}, code=${_ret}")
++    set(_parse_fail TRUE)
++  endif()
++endmacro()
++
++_RUN_PARSE(${op_yaml_file}              ${parsed_op_dir}/ops.parsed.yaml FALSE)
++_RUN_PARSE(${legacy_op_yaml_file}       ${parsed_op_dir}/inconsistent/dygraph_ops.parsed.yaml FALSE)
++_RUN_PARSE(${bw_op_yaml_file}           ${parsed_op_dir}/backward.parsed.yaml TRUE)
++_RUN_PARSE(${legacy_bw_op_yaml_file}    ${parsed_op_dir}/inconsistent/dygraph_backward.parsed.yaml TRUE)
++_RUN_PARSE(${static_op_yaml_file}       ${parsed_op_dir}/legacy/static_ops.parsed.yaml FALSE)
++_RUN_PARSE(${fused_op_yaml_file}        ${parsed_op_dir}/fused_ops.parsed.yaml FALSE)
++_RUN_PARSE(${sparse_op_yaml_file}       ${parsed_op_dir}/sparse_ops.parsed.yaml FALSE)
++_RUN_PARSE(${sparse_bw_op_yaml_file}    ${parsed_op_dir}/sparse_backward.parsed.yaml TRUE)
++_RUN_PARSE(${static_bw_op_yaml_file}    ${parsed_op_dir}/legacy/static_backward.parsed.yaml TRUE)
++_RUN_PARSE(${fused_bw_op_yaml_file}     ${parsed_op_dir}/fused_backward.parsed.yaml TRUE)
++
++if(_parse_fail)
++  message(FATAL_ERROR "op yaml parsing failed, exiting.")
++endif()
+ 
+ # validation of op yamls
+ message("validate op yaml:
