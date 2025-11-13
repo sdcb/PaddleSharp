@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90184b6fde..1f2af31dd0 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -722,7 +722,9 @@ add_subdirectory(paddle)
+ if(WITH_PYTHON)
+   add_subdirectory(python)
+ endif()
+-add_subdirectory(test)
++if(WITH_TESTING)
++  add_subdirectory(test)
++endif()
+ 
+ get_directory_property(all_inc_dirs INCLUDE_DIRECTORIES)
+ list(JOIN all_inc_dirs "\r\n" all_inc_dirs)

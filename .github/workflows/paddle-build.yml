@@ -113,9 +113,20 @@ jobs:
       shell: pwsh
       run: |
         cd ./paddle-src
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.2/build/capi.patch -OutFile capi.patch
-        git apply --ignore-whitespace capi.patch
-        rm capi.patch
+        
+        # Download patches in parallel
+        $jobs = @(
+          (Start-Job { Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.2/build/capi.patch -OutFile capi.patch }),
+          (Start-Job { Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.2/build/cmake.patch -OutFile cmake.patch })
+        )
+        $jobs | Wait-Job | Receive-Job
+        $jobs | Remove-Job
+        
+        # Apply patches (need to expand wildcard for git)
+        git apply --ignore-whitespace *.patch
+        
+        # Clean up
+        rm *.patch
 
     - name: Configure with CMake
       shell: pwsh
