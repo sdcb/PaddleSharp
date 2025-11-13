@@ -43,6 +43,11 @@ jobs:
           - { os: macos-13,         name: openblas,             cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
           - { os: macos-15,         name: openblas,             cmake_flags: "-DWITH_ARM=ON" }
     steps:
+    - name: Setup CMake 3.29.x
+      # Downgrade to CMake 3.29 to avoid policy / ExternalProject regressions seen in 4.12
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: 3.29.6
     - name: Setup dependencies
       shell: bash
       run: |
