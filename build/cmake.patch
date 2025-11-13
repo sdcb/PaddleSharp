@@ -23,6 +23,36 @@ index 90184b6fde..109282af09 100755
  
  get_directory_property(all_inc_dirs INCLUDE_DIRECTORIES)
  list(JOIN all_inc_dirs "\r\n" all_inc_dirs)
+diff --git a/cmake/external/gflags.cmake b/cmake/external/gflags.cmake
+index b36006a55c..f304d20f9f 100755
+--- a/cmake/external/gflags.cmake
++++ b/cmake/external/gflags.cmake
+@@ -45,12 +45,6 @@ ExternalProject_Add(
+   INSTALL_COMMAND ${INSTALL_COMMAND}
+   CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+              -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+-             -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+-             -DCMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}
+-             -DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}
+-             -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+-             -DCMAKE_C_FLAGS_DEBUG=${CMAKE_C_FLAGS_DEBUG}
+-             -DCMAKE_C_FLAGS_RELEASE=${CMAKE_C_FLAGS_RELEASE}
+              -DBUILD_STATIC_LIBS=ON
+              -DCMAKE_INSTALL_PREFIX=${GFLAGS_INSTALL_DIR}
+              -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+@@ -61,6 +55,12 @@ ExternalProject_Add(
+     -DCMAKE_INSTALL_PREFIX:PATH=${GFLAGS_INSTALL_DIR}
+     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+     -DCMAKE_BUILD_TYPE:STRING=${THIRD_PARTY_BUILD_TYPE}
++    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
++    -DCMAKE_CXX_FLAGS_RELEASE:STRING=${CMAKE_CXX_FLAGS_RELEASE}
++    -DCMAKE_CXX_FLAGS_DEBUG:STRING=${CMAKE_CXX_FLAGS_DEBUG}
++    -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
++    -DCMAKE_C_FLAGS_DEBUG:STRING=${CMAKE_C_FLAGS_DEBUG}
++    -DCMAKE_C_FLAGS_RELEASE:STRING=${CMAKE_C_FLAGS_RELEASE}
+   BUILD_BYPRODUCTS ${GFLAGS_LIBRARIES})
+ 
+ add_library(gflags STATIC IMPORTED GLOBAL)
 diff --git a/cmake/generic.cmake b/cmake/generic.cmake
 index e977207378..e3756a5e1d 100644
 --- a/cmake/generic.cmake
