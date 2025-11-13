@@ -130,7 +130,8 @@ jobs:
           ${{ matrix.cmake_flags }} `
           -DON_INFER=ON `
           -DWITH_PYTHON=OFF `
-          -DWITH_UNITY_BUILD=ON
+          -DWITH_UNITY_BUILD=ON `
+          -DWITH_TESTING=OFF
 
     - name: Build with Ninja
       run: |
