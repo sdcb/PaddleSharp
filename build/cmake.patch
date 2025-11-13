@@ -58,7 +58,7 @@ index e977207378..e3756a5e1d 100644
      add_custom_command(
        TARGET ${TARGET_NAME}
 diff --git a/paddle/fluid/operators/generator/CMakeLists.txt b/paddle/fluid/operators/generator/CMakeLists.txt
-index 7c0fdca05d..2451403e4c 100644
+index 7c0fdca05d..e2fd2fcd4b 100644
 --- a/paddle/fluid/operators/generator/CMakeLists.txt
 +++ b/paddle/fluid/operators/generator/CMakeLists.txt
 @@ -87,12 +87,19 @@ set(generated_static_argument_mapping_path
@@ -87,7 +87,7 @@ index 7c0fdca05d..2451403e4c 100644
  endif()
  
  message(
-@@ -104,42 +111,42 @@ message(
+@@ -104,42 +111,48 @@ message(
  - ${fused_op_yaml_file}
  - ${static_op_yaml_file}")
  
@@ -127,37 +127,43 @@ index 7c0fdca05d..2451403e4c 100644
 -    message(FATAL_ERROR "op yaml parsing failed, exiting.")
 +## 逐条调用 Python，避免单一 execute_process 聚合时 Windows 下前置目录未必可见的问题
 +set(_parse_fail FALSE)
-+macro(_RUN_PARSE _yaml _out _is_bwd)
-+  if(_is_bwd)
-+    execute_process(
-+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
-+      COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${_yaml}
-+              --output_path ${_out} --backward
-+      RESULT_VARIABLE _ret)
++
++function(RUN_PARSE _yaml _out)
++  # 自动判断是否为 backward 类 yaml，匹配规则：包含 "backward" 子串
++  string(FIND "${_yaml}" "backward" _has_backward)
++  if(_has_backward GREATER -1)
++    set(_is_backward TRUE)
 +  else()
-+    execute_process(
-+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
-+      COMMAND ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path ${_yaml}
-+              --output_path ${_out}
-+      RESULT_VARIABLE _ret)
++    set(_is_backward FALSE)
    endif()
 -endforeach()
++
++  # 构造命令
++  set(_cmd ${PYTHON_EXECUTABLE} parse_op.py --op_yaml_path "${_yaml}" --output_path "${_out}")
++  if(_is_backward)
++    list(APPEND _cmd --backward)
++  endif()
++
++  execute_process(
++    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/paddle/fluid/operators/generator
++    COMMAND ${_cmd}
++    RESULT_VARIABLE _ret)
 +  if(NOT _ret EQUAL 0)
 +    message(WARNING "parse_op failed for ${_yaml} -> ${_out}, code=${_ret}")
-+    set(_parse_fail TRUE)
++    set(_parse_fail TRUE PARENT_SCOPE)
 +  endif()
-+endmacro()
++endfunction()
 +
-+_RUN_PARSE(${op_yaml_file}              ${parsed_op_dir}/ops.parsed.yaml FALSE)
-+_RUN_PARSE(${legacy_op_yaml_file}       ${parsed_op_dir}/inconsistent/dygraph_ops.parsed.yaml FALSE)
-+_RUN_PARSE(${bw_op_yaml_file}           ${parsed_op_dir}/backward.parsed.yaml TRUE)
-+_RUN_PARSE(${legacy_bw_op_yaml_file}    ${parsed_op_dir}/inconsistent/dygraph_backward.parsed.yaml TRUE)
-+_RUN_PARSE(${static_op_yaml_file}       ${parsed_op_dir}/legacy/static_ops.parsed.yaml FALSE)
-+_RUN_PARSE(${fused_op_yaml_file}        ${parsed_op_dir}/fused_ops.parsed.yaml FALSE)
-+_RUN_PARSE(${sparse_op_yaml_file}       ${parsed_op_dir}/sparse_ops.parsed.yaml FALSE)
-+_RUN_PARSE(${sparse_bw_op_yaml_file}    ${parsed_op_dir}/sparse_backward.parsed.yaml TRUE)
-+_RUN_PARSE(${static_bw_op_yaml_file}    ${parsed_op_dir}/legacy/static_backward.parsed.yaml TRUE)
-+_RUN_PARSE(${fused_bw_op_yaml_file}     ${parsed_op_dir}/fused_backward.parsed.yaml TRUE)
++RUN_PARSE(${op_yaml_file}              ${parsed_op_dir}/ops.parsed.yaml)
++RUN_PARSE(${legacy_op_yaml_file}       ${parsed_op_dir}/inconsistent/dygraph_ops.parsed.yaml)
++RUN_PARSE(${bw_op_yaml_file}           ${parsed_op_dir}/backward.parsed.yaml)
++RUN_PARSE(${legacy_bw_op_yaml_file}    ${parsed_op_dir}/inconsistent/dygraph_backward.parsed.yaml)
++RUN_PARSE(${static_op_yaml_file}       ${parsed_op_dir}/legacy/static_ops.parsed.yaml)
++RUN_PARSE(${fused_op_yaml_file}        ${parsed_op_dir}/fused_ops.parsed.yaml)
++RUN_PARSE(${sparse_op_yaml_file}       ${parsed_op_dir}/sparse_ops.parsed.yaml)
++RUN_PARSE(${sparse_bw_op_yaml_file}    ${parsed_op_dir}/sparse_backward.parsed.yaml)
++RUN_PARSE(${static_bw_op_yaml_file}    ${parsed_op_dir}/legacy/static_backward.parsed.yaml)
++RUN_PARSE(${fused_bw_op_yaml_file}     ${parsed_op_dir}/fused_backward.parsed.yaml)
 +
 +if(_parse_fail)
 +  message(FATAL_ERROR "op yaml parsing failed, exiting.")
