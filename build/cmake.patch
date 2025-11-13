@@ -1,8 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90184b6fde..1f2af31dd0 100755
+index 90184b6fde..640601f24c 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -722,7 +722,9 @@ add_subdirectory(paddle)
+@@ -22,7 +22,6 @@ else()
+ endif()
+ # use to get_property location of static lib
+ # https://cmake.org/cmake/help/v3.0/policy/CMP0026.html?highlight=cmp0026
+-cmake_policy(SET CMP0026 OLD)
+ cmake_policy(SET CMP0079 NEW)
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ set(PADDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -722,7 +721,9 @@ add_subdirectory(paddle)
  if(WITH_PYTHON)
    add_subdirectory(python)
  endif()

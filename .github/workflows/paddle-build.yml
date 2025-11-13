@@ -132,9 +132,6 @@ jobs:
       shell: pwsh
       run: |
         mkdir ./paddle-src/build
-        mkdir ./paddle-src/build/paddle/phi/ops/yaml/inconsistent
-        mkdir ./paddle-src/build/paddle/phi/ops/yaml/legacy
-
         cd ./paddle-src/build
 
         cmake .. -GNinja `
