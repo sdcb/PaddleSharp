@@ -121,11 +121,9 @@ jobs:
         )
         $jobs | Wait-Job | Receive-Job
         $jobs | Remove-Job
-
-        ls
         
-        # Apply patches (need to expand wildcard for git)
-        git apply --ignore-whitespace *.patch
+        # Apply patches
+        git apply --ignore-whitespace (Get-ChildItem *.patch).Name
         
         # Clean up
         rm *.patch
