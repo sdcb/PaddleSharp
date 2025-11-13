@@ -1,16 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90184b6fde..640601f24c 100755
+index 90184b6fde..109282af09 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,7 +22,6 @@ else()
+@@ -20,9 +20,6 @@ else()
+   cmake_minimum_required(VERSION 3.15)
+   cmake_policy(VERSION 3.10)
  endif()
- # use to get_property location of static lib
- # https://cmake.org/cmake/help/v3.0/policy/CMP0026.html?highlight=cmp0026
+-# use to get_property location of static lib
+-# https://cmake.org/cmake/help/v3.0/policy/CMP0026.html?highlight=cmp0026
 -cmake_policy(SET CMP0026 OLD)
  cmake_policy(SET CMP0079 NEW)
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
  set(PADDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-@@ -722,7 +721,9 @@ add_subdirectory(paddle)
+@@ -722,7 +719,9 @@ add_subdirectory(paddle)
  if(WITH_PYTHON)
    add_subdirectory(python)
  endif()
@@ -21,3 +23,37 @@ index 90184b6fde..640601f24c 100755
  
  get_directory_property(all_inc_dirs INCLUDE_DIRECTORIES)
  list(JOIN all_inc_dirs "\r\n" all_inc_dirs)
+diff --git a/cmake/generic.cmake b/cmake/generic.cmake
+index e977207378..e3756a5e1d 100644
+--- a/cmake/generic.cmake
++++ b/cmake/generic.cmake
+@@ -276,20 +276,17 @@ function(merge_static_libs TARGET_NAME)
+     set(mri_file
+         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.mri
+         CACHE INTERNAL "phi_static.mri file")
+-    get_property(
+-      ABS_MERGE_LIB_PATH
+-      TARGET ${TARGET_NAME}
+-      PROPERTY LOCATION)
+-    file(WRITE ${mri_file} "create ${ABS_MERGE_LIB_PATH}\n")
+-
++    
++    # Use generator expressions to get library paths at build time
++    # Note: We need to generate the MRI file at build time, not configure time
++    set(mri_content "create $<TARGET_FILE:${TARGET_NAME}>\n")
+     foreach(lib ${libs})
+-      get_property(
+-        ABS_LIB_PATH
+-        TARGET ${lib}
+-        PROPERTY LOCATION)
+-      file(APPEND ${mri_file} "addlib ${ABS_LIB_PATH}\n")
++      set(mri_content "${mri_content}addlib $<TARGET_FILE:${lib}>\n")
+     endforeach()
+-    file(APPEND ${mri_file} "save\nend\n")
++    set(mri_content "${mri_content}save\nend\n")
++    
++    # Write MRI content to a temporary file that will be processed at build time
++    file(GENERATE OUTPUT ${mri_file} CONTENT "${mri_content}")
+ 
+     add_custom_command(
+       TARGET ${TARGET_NAME}
