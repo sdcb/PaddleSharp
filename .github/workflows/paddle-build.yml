@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - feature/3.1
+      - feature/3.2
       - master
     paths:
       - .github/workflows/paddle-build.yml
@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 env:
-  PADDLE_VERSION: "3.1.0"
-  PADDLE_BRANCH: "v3.1.0"
+  PADDLE_VERSION: "3.2.1"
+  PADDLE_BRANCH: "v3.2.1"
 
 jobs:
   build-all:
@@ -113,7 +113,7 @@ jobs:
       shell: pwsh
       run: |
         cd ./paddle-src
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.1/build/capi.patch -OutFile capi.patch
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.2/build/capi.patch -OutFile capi.patch
         git apply --ignore-whitespace capi.patch
         rm capi.patch
 

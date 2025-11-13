@@ -1,17 +1,5 @@
-diff --git a/cmake/flags.cmake b/cmake/flags.cmake
-index e49922c355..74857fa8f4 100644
---- a/cmake/flags.cmake
-+++ b/cmake/flags.cmake
-@@ -244,7 +244,6 @@ if(APPLE)
-   set(COMMON_FLAGS
-       -Wno-deprecated-register
-       -Werror=format
--      -Werror=inconsistent-missing-override
-       -Werror=braced-scalar-init
-       -Werror=uninitialized
-       -Werror=tautological-constant-out-of-range-compare
 diff --git a/paddle/fluid/inference/api/analysis_predictor.cc b/paddle/fluid/inference/api/analysis_predictor.cc
-index 51ecf263ca..456f90c202 100644
+index 28f8233117..df8220b119 100644
 --- a/paddle/fluid/inference/api/analysis_predictor.cc
 +++ b/paddle/fluid/inference/api/analysis_predictor.cc
 @@ -464,7 +464,9 @@ bool AnalysisPredictor::Init(
@@ -25,16 +13,7 @@ index 51ecf263ca..456f90c202 100644
      load_pir_model_ =
          model_path.substr(model_path.find_last_of(".") + 1) == "json";
    } else if (!config_.model_dir().empty()) {
-@@ -540,7 +542,7 @@ bool AnalysisPredictor::Init(
-   if (!PrepareExecutor()) {
-     return true;
-   }
--
-+  
- #if defined(PADDLE_WITH_CUDA) || defined(PADDLE_WITH_HIP)
-   // TODO(inference): Now only gpu with external stream support private
-   // device_context.
-@@ -1376,7 +1378,7 @@ bool AnalysisPredictor::SaveOrLoadPirParameters(bool for_save) {
+@@ -1379,7 +1381,7 @@ bool AnalysisPredictor::SaveOrLoadPirParameters(bool for_save) {
        }
  
      } else {
@@ -43,87 +22,6 @@ index 51ecf263ca..456f90c202 100644
          pir::LoadCombineFunction(config_.params_file(),
                                   filter_param_names,
                                   &tensor_out,
-diff --git a/paddle/fluid/inference/capi_exp/pd_config.cc b/paddle/fluid/inference/capi_exp/pd_config.cc
-index 9238599111..8e38198227 100644
---- a/paddle/fluid/inference/capi_exp/pd_config.cc
-+++ b/paddle/fluid/inference/capi_exp/pd_config.cc
-@@ -508,4 +508,32 @@ __pd_give PD_Cstr* PD_ConfigSummary(__pd_keep PD_Config* pd_config) {
-   return paddle_infer::CvtStrToCstr(sum_str);
- }
- 
-+void PD_ConfigEnableNewExecutor(__pd_keep PD_Config* pd_config,
-+                                PD_Bool x) {
-+  CHECK_AND_CONVERT_PD_CONFIG;
-+  config->EnableNewExecutor(x);
-+}
-+
-+PD_Bool PD_ConfigNewExecutorEnabled(__pd_keep PD_Config* pd_config) {
-+  CHECK_AND_CONVERT_PD_CONFIG;
-+  return config->new_executor_enabled();  // NOLINT
-+}
-+
-+void PD_ConfigEnableNewIR(__pd_keep PD_Config* pd_config,
-+                          PD_Bool x) {
-+  CHECK_AND_CONVERT_PD_CONFIG;
-+  config->EnableNewIR(x);
-+}
-+
-+PD_Bool PD_ConfigNewIREnabled(__pd_keep PD_Config* pd_config) {
-+  CHECK_AND_CONVERT_PD_CONFIG;
-+  return config->new_ir_enabled();  // NOLINT
-+}
-+
-+void PD_ConfigUseOptimizedModel(__pd_keep PD_Config* pd_config,
-+                                PD_Bool x) {
-+  CHECK_AND_CONVERT_PD_CONFIG;
-+  config->UseOptimizedModel(x);
-+}
-+
- }  // extern "C"
-diff --git a/paddle/fluid/inference/capi_exp/pd_config.h b/paddle/fluid/inference/capi_exp/pd_config.h
-index b611328030..3dfe02b258 100644
---- a/paddle/fluid/inference/capi_exp/pd_config.h
-+++ b/paddle/fluid/inference/capi_exp/pd_config.h
-@@ -743,6 +743,39 @@ PADDLE_CAPI_EXPORT extern __pd_give PD_OneDimArrayCstr* PD_ConfigAllPasses(
- PADDLE_CAPI_EXPORT extern __pd_give PD_Cstr* PD_ConfigSummary(
-     __pd_keep PD_Config* pd_config);
- 
-+/// \brief A boolean state telling whether to use new executor.
-+/// \param[in] pd_config config
-+/// \param[in] x enable new executor or not
-+PADDLE_CAPI_EXPORT extern void PD_ConfigEnableNewExecutor(
-+    __pd_keep PD_Config* pd_config,
-+    PD_Bool x);
-+
-+/// \brief A boolean state telling whether the new executor is enabled.
-+/// \param[in] pd_config config
-+/// \return Whether new executor is enabled
-+PADDLE_CAPI_EXPORT extern PD_Bool PD_ConfigNewExecutorEnabled(
-+    __pd_keep PD_Config* pd_config);
-+
-+/// \brief A boolean state telling whether to use new IR.
-+/// \param[in] pd_config config
-+/// \param[in] x enable new IR or not
-+PADDLE_CAPI_EXPORT extern void PD_ConfigEnableNewIR(
-+    __pd_keep PD_Config* pd_config,
-+    PD_Bool x);
-+
-+/// \brief A boolean state telling whether the new IR is enabled.
-+/// \param[in] pd_config config
-+/// \return Whether new IR is enabled
-+PADDLE_CAPI_EXPORT extern PD_Bool PD_ConfigNewIREnabled(
-+    __pd_keep PD_Config* pd_config);
-+
-+/// \brief Control whether to use optimized model to inference.
-+/// \param[in] pd_config config
-+/// \param[in] x whether to use optimized model
-+PADDLE_CAPI_EXPORT extern void PD_ConfigUseOptimizedModel(
-+    __pd_keep PD_Config* pd_config,
-+    PD_Bool x);
-+
- #ifdef __cplusplus
- }  // extern "C"
- #endif
 diff --git a/paddle/fluid/pir/serialize_deserialize/src/interface.cc b/paddle/fluid/pir/serialize_deserialize/src/interface.cc
 index bc597db6d1..6c45afcd46 100644
 --- a/paddle/fluid/pir/serialize_deserialize/src/interface.cc
@@ -146,10 +44,18 @@ index bc597db6d1..6c45afcd46 100644
      pir_version = DEVELOP_VERSION;
      VLOG(6) << "pir_version is null, get pir_version: " << pir_version;
 diff --git a/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc b/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
-index 1d563c326a..9c3318099d 100644
+index 1d563c326a..0871d34170 100644
 --- a/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
 +++ b/paddle/fluid/pir/serialize_deserialize/src/save_load_parameters.cc
-@@ -188,13 +188,20 @@ void LoadCombineFunction(const std::string& file_path,
+@@ -12,6 +12,7 @@ limitations under the License. */
+ #include <cstdint>
+ #include <fstream>
+ #include <numeric>
++#include <sstream>
+ 
+ #include "glog/logging.h"
+ #include "paddle/fluid/framework/lod_tensor.h"
+@@ -188,13 +189,20 @@ void LoadCombineFunction(const std::string& file_path,
                           std::vector<phi::DenseTensor*>* out,
                           bool load_as_fp16,
                           phi::Place place) {
