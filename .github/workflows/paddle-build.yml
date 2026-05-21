@@ -23,7 +23,7 @@ jobs:
         include:
           # - { os: windows-2025,     name: openblas_noavx,       cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
           - { os: windows-2025,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
           # - { os: windows-2025,     name: cu118_cudnn89_sm61,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\"  -DWITH_ONNXRUNTIME=ON" }
           # - { os: windows-2025,     name: cu118_cudnn89_sm75,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\"  -DWITH_ONNXRUNTIME=ON" }
           # - { os: windows-2025,     name: cu118_cudnn89_sm86,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\"  -DWITH_ONNXRUNTIME=ON" }
