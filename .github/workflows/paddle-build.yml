@@ -113,7 +113,7 @@ jobs:
       shell: pwsh
       run: |
         cd ./paddle-src
-        $patchBaseUrl = 'https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/feature/3.3/build/patches'
+        $patchBaseUrl = 'https://raw.githubusercontent.com/sdcb/PaddleSharp/refs/heads/${{ github.ref }}/build/patches'
         $patches = @(
           '01-load-from-memory.patch',
           '02-warprnnt-deps-order.patch'
