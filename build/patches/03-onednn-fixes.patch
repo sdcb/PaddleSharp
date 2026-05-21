@@ -1,0 +1,97 @@
+diff --git a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_instruction.cc b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_instruction.cc
+index 1a2419a2fc..b61718a6ca 100644
+--- a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_instruction.cc
++++ b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_instruction.cc
+@@ -102,6 +102,22 @@ static phi::Attribute ConvertPirAttribute2RuntimeAttribute(
+       }
+     }
+     return vec_res;
++  } else if (attr_type_name == "pir::ArrayAttribute<pir::DoubleAttribute>") {
++    auto array_list = attr.dyn_cast<pir::ArrayAttribute>().AsVector();
++    std::vector<double> vec_res;
++    if (array_list.size() > 0) {
++      if (array_list[0].isa<pir::DoubleAttribute>()) {
++        for (size_t i = 0; i < array_list.size(); ++i) {
++          vec_res.push_back(
++              array_list[i].dyn_cast<pir::DoubleAttribute>().data());
++        }
++      } else {
++        PADDLE_THROW(common::errors::Unimplemented(
++            "ConvertPirAttribute2RuntimeAttribute not support [%s] ",
++            attr_type_name));
++      }
++    }
++    return vec_res;
+   } else if (attr_type_name == "paddle::dialect::IntArrayAttribute") {
+     std::vector<int64_t> int_array =
+         attr.dyn_cast<paddle::dialect::IntArrayAttribute>().data().GetData();
+diff --git a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
+index 65c58cfa52..6fb698b42f 100644
+--- a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
++++ b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
+@@ -265,6 +265,19 @@ void OneDNNLegacyKernelInstruction::Run() {
+                    " begin");
+   }
+ 
++  // OneDNN kernels use OneDNNContext::GetInputsName/GetOutputsName to build
++  // primitive cache keys. The ordinary OperatorWithKernel path initializes
++  // them in OperatorWithKernel::BuildPhiKernelContext(), but this legacy
++  // instruction invokes the phi kernel directly with an ExecutionContext, so
++  // initialize the current op's name maps here as well.
++  const auto& dev_ctx = kernel_context_->device_context();
++  if (phi::OneDNNContext::classof(&dev_ctx)) {
++    auto* one_dnn_ctx = const_cast<phi::OneDNNContext*>(
++        static_cast<const phi::OneDNNContext*>(&dev_ctx));
++    one_dnn_ctx->SetInputsName(operator_base_->Inputs());
++    one_dnn_ctx->SetOutputsName(operator_base_->Outputs());
++  }
++
+   // Step1. TransLayout
+   auto inputs = kernel_context_->InNameList();
+   for (auto& input_name : inputs) {
+diff --git a/paddle/phi/backends/onednn/onednn_context.cc b/paddle/phi/backends/onednn/onednn_context.cc
+index b3b1ae076d..325049b100 100644
+--- a/paddle/phi/backends/onednn/onednn_context.cc
++++ b/paddle/phi/backends/onednn/onednn_context.cc
+@@ -14,6 +14,8 @@
+ #ifdef PADDLE_WITH_DNNL
+ #include "paddle/phi/backends/onednn/onednn_context.h"
+ 
++#include <sstream>
++
+ #include "paddle/phi/common/place.h"
+ #include "paddle/phi/core/enforce.h"
+ #include "paddle/utils/flat_hash_map.h"
+@@ -339,10 +341,28 @@ struct OneDNNContext::Impl {
+   const std::vector<std::string>& GetInputsName(
+       const std::string& input) const {
+     auto it = inputs_name_.find(input);
+-    PADDLE_ENFORCE_NE(it,
+-                      inputs_name_.end(),
+-                      common::errors::NotFound(
+-                          "OneDnnContext does not have the input %s.", input));
++    if (it == inputs_name_.end()) {
++      std::ostringstream os;
++      bool first = true;
++      for (const auto& pair : inputs_name_) {
++        if (!first) {
++          os << ", ";
++        }
++        first = false;
++        os << pair.first << "=[";
++        for (size_t i = 0; i < pair.second.size(); ++i) {
++          if (i != 0) {
++            os << ", ";
++          }
++          os << pair.second[i];
++        }
++        os << "]";
++      }
++      PADDLE_THROW(common::errors::NotFound(
++          "OneDnnContext does not have the input %s. Existing inputs are: %s.",
++          input,
++          os.str()));
++    }
+     return it->second;
+   }
+ 
