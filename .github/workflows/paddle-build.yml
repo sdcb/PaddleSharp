@@ -21,24 +21,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - { os: windows-2025,     name: openblas_noavx,       cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: openblas_noavx,       cmake_flags: "-DWITH_AVX=OFF -DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
           - { os: windows-2025,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
           - { os: windows-2025,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu118_cudnn89_sm61,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu118_cudnn89_sm75,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu118_cudnn89_sm86,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu118_cudnn89_sm89,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu129_cudnn910_sm61,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu129_cudnn910_sm75,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu129_cudnn910_sm86,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu129_cudnn910_sm89,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\"  -DWITH_ONNXRUNTIME=ON" }
-          # - { os: windows-2025,     name: cu129_cudnn910_sm120, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DWITH_ONNXRUNTIME=ON" }
-          # - { os: ubuntu-22.04,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
-          # - { os: ubuntu-22.04,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
-          # - { os: ubuntu-22.04,     name: openvino,             cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
-          # - { os: ubuntu-22.04-arm, name: openblas,             cmake_flags: "-DWITH_ARM=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=class-memaccess\"" }
-          # - { os: macos-26-intel,   name: openblas,             cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
-          # - { os: macos-26,         name: openblas,             cmake_flags: "-DWITH_ARM=ON" }
+          - { os: windows-2025,     name: cu118_cudnn89_sm61,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu118_cudnn89_sm75,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu118_cudnn89_sm86,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu118_cudnn89_sm89,   cuda: 11.8.0, cudnn: 8.9.7.29, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu129_cudnn910_sm61,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"61\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu129_cudnn910_sm75,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"75\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu129_cudnn910_sm86,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"86\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu129_cudnn910_sm89,  cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"89\"  -DWITH_ONNXRUNTIME=ON" }
+          - { os: windows-2025,     name: cu129_cudnn910_sm120, cuda: 12.9.0, cudnn: 9.10.1.4, cmake_flags: "-DWITH_GPU=ON -DCUDA_ARCH_NAME=Manual -DCUDA_ARCH_BIN=\"120\" -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04,     name: openblas,             cmake_flags: "-DWITH_MKL=OFF -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04,     name: mkldnn,               cmake_flags: "-DWITH_MKL=ON -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04,     name: openvino,             cmake_flags: "-DWITH_MKL=ON -DWITH_OPENVINO=ON -DWITH_ONNXRUNTIME=ON" }
+          - { os: ubuntu-22.04-arm, name: openblas,             cmake_flags: "-DWITH_ARM=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=class-memaccess\"" }
+          - { os: macos-26-intel,   name: openblas,             cmake_flags: "-DWITH_ONNXRUNTIME=ON" }
+          - { os: macos-26,         name: openblas,             cmake_flags: "-DWITH_ARM=ON" }
     steps:
     - name: Setup dependencies
       shell: bash

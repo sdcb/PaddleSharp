@@ -25,73 +25,372 @@ index 1a2419a2fc..b61718a6ca 100644
    } else if (attr_type_name == "paddle::dialect::IntArrayAttribute") {
      std::vector<int64_t> int_array =
          attr.dyn_cast<paddle::dialect::IntArrayAttribute>().data().GetData();
-diff --git a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
-index 65c58cfa52..6fb698b42f 100644
---- a/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
-+++ b/paddle/fluid/framework/new_executor/instruction/onednn/onednn_legacy_instruction.cc
-@@ -265,6 +265,19 @@ void OneDNNLegacyKernelInstruction::Run() {
-                    " begin");
-   }
- 
-+  // OneDNN kernels use OneDNNContext::GetInputsName/GetOutputsName to build
-+  // primitive cache keys. The ordinary OperatorWithKernel path initializes
-+  // them in OperatorWithKernel::BuildPhiKernelContext(), but this legacy
-+  // instruction invokes the phi kernel directly with an ExecutionContext, so
-+  // initialize the current op's name maps here as well.
-+  const auto& dev_ctx = kernel_context_->device_context();
-+  if (phi::OneDNNContext::classof(&dev_ctx)) {
-+    auto* one_dnn_ctx = const_cast<phi::OneDNNContext*>(
-+        static_cast<const phi::OneDNNContext*>(&dev_ctx));
-+    one_dnn_ctx->SetInputsName(operator_base_->Inputs());
-+    one_dnn_ctx->SetOutputsName(operator_base_->Outputs());
-+  }
-+
-   // Step1. TransLayout
-   auto inputs = kernel_context_->InNameList();
-   for (auto& input_name : inputs) {
 diff --git a/paddle/phi/backends/onednn/onednn_context.cc b/paddle/phi/backends/onednn/onednn_context.cc
-index b3b1ae076d..325049b100 100644
+index b3b1ae076d..cde18ecd43 100644
 --- a/paddle/phi/backends/onednn/onednn_context.cc
 +++ b/paddle/phi/backends/onednn/onednn_context.cc
-@@ -14,6 +14,8 @@
- #ifdef PADDLE_WITH_DNNL
- #include "paddle/phi/backends/onednn/onednn_context.h"
+@@ -336,6 +336,11 @@ struct OneDNNContext::Impl {
+     outputs_name_ = outputs_name;
+   }
  
-+#include <sstream>
++  bool HasInputsName(const std::string& input) const {
++    auto it = inputs_name_.find(input);
++    return it != inputs_name_.end() && !it->second.empty();
++  }
 +
- #include "paddle/phi/common/place.h"
- #include "paddle/phi/core/enforce.h"
- #include "paddle/utils/flat_hash_map.h"
-@@ -339,10 +341,28 @@ struct OneDNNContext::Impl {
    const std::vector<std::string>& GetInputsName(
        const std::string& input) const {
      auto it = inputs_name_.find(input);
--    PADDLE_ENFORCE_NE(it,
--                      inputs_name_.end(),
--                      common::errors::NotFound(
--                          "OneDnnContext does not have the input %s.", input));
-+    if (it == inputs_name_.end()) {
-+      std::ostringstream os;
-+      bool first = true;
-+      for (const auto& pair : inputs_name_) {
-+        if (!first) {
-+          os << ", ";
-+        }
-+        first = false;
-+        os << pair.first << "=[";
-+        for (size_t i = 0; i < pair.second.size(); ++i) {
-+          if (i != 0) {
-+            os << ", ";
-+          }
-+          os << pair.second[i];
-+        }
-+        os << "]";
-+      }
-+      PADDLE_THROW(common::errors::NotFound(
-+          "OneDnnContext does not have the input %s. Existing inputs are: %s.",
-+          input,
-+          os.str()));
-+    }
-     return it->second;
-   }
+@@ -458,6 +463,10 @@ void OneDNNContext::SetOutputsName(const TensorNameMap& outputs_name) {
+   impl_->SetOutputsName(outputs_name);
+ }
  
++bool OneDNNContext::HasInputsName(const std::string& input) const {
++  return impl_->HasInputsName(input);
++}
++
+ const std::vector<std::string>& OneDNNContext::GetInputsName(
+     const std::string& input) const {
+   return impl_->GetInputsName(input);
+diff --git a/paddle/phi/backends/onednn/onednn_context.h b/paddle/phi/backends/onednn/onednn_context.h
+index e30898f03c..98f0859438 100644
+--- a/paddle/phi/backends/onednn/onednn_context.h
++++ b/paddle/phi/backends/onednn/onednn_context.h
+@@ -152,6 +152,8 @@ class OneDNNContext : public CPUContext {
+ 
+   PADDLE_API void SetOutputsName(const TensorNameMap& outputs_name);
+ 
++  bool HasInputsName(const std::string& input) const;
++
+   const std::vector<std::string>& GetInputsName(const std::string& input) const;
+ 
+   const std::vector<std::string>& GetOutputsName(
+diff --git a/paddle/phi/kernels/fusion/onednn/fc_kernel.cc b/paddle/phi/kernels/fusion/onednn/fc_kernel.cc
+index 5fab0a83df..b98adf6e8f 100644
+--- a/paddle/phi/kernels/fusion/onednn/fc_kernel.cc
++++ b/paddle/phi/kernels/fusion/onednn/fc_kernel.cc
+@@ -12,6 +12,7 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#include <cstdint>
+ #include <memory>
+ #include "paddle/common/errors.h"
+ #include "paddle/phi/backends/onednn/onednn_reuse.h"
+@@ -39,6 +40,40 @@ struct InnerProductCache {
+   dnnl::memory dst_scales_mem;
+ };
+ 
++template <typename T>
++static void AppendFcKeyPart(std::string* key, const std::vector<T>& values) {
++  for (const auto& value : values) {
++    key->append("_");
++    key->append(std::to_string(value));
++  }
++}
++
++static void AppendFcTensorKeyPart(std::string* key,
++                                  const DenseTensor* tensor) {
++  if (tensor == nullptr) {
++    key->append("_null");
++    return;
++  }
++
++  key->append("_");
++  key->append(std::to_string(reinterpret_cast<uintptr_t>(tensor->data())));
++  AppendFcKeyPart(key, common::vectorize(tensor->dims()));
++  key->append("_");
++  key->append(DataTypeToString(tensor->dtype()));
++}
++
++static std::string GetFcNameKeyPart(const OneDNNContext& dev_ctx,
++                                    const std::string& name,
++                                    const DenseTensor* tensor) {
++  if (dev_ctx.HasInputsName(name)) {
++    return dev_ctx.GetInputsName(name)[0];
++  }
++
++  std::string key = name;
++  AppendFcTensorKeyPart(&key, tensor);
++  return key;
++}
++
+ std::tuple<std::vector<float>,
+            std::vector<float>,
+            std::vector<float>,
+@@ -81,7 +116,7 @@ class FCOneDNNHandler
+       : phi::funcs::OneDNNHandlerNoCachingT<T_in, dnnl::inner_product_forward>(
+             onednn_engine, cpu_place),
+         dev_ctx_(dev_ctx) {
+-    this->memory_key_ = dev_ctx.GetInputsName("W")[0];
++    this->memory_key_ = GetFcNameKeyPart(dev_ctx, "W", weights);
+ 
+     auto x_vec_dims = common::vectorize(x->dims());
+     auto weights_vec_dims = common::vectorize(weights->dims());
+@@ -433,10 +468,22 @@ void RunKernel(const phi::OneDNNContext& dev_ctx,
+   cache_key = phi::funcs::ExtendKeyWithThreadInfoIfNeeded(
+       dev_ctx,
+       phi::funcs::CreateKey(dev_ctx,
+-                            dev_ctx.GetInputsName("Input")[0],
+-                            dev_ctx.GetInputsName("W")[0],
++               GetFcNameKeyPart(dev_ctx, "Input", &input),
++               GetFcNameKeyPart(dev_ctx, "W", &w),
++               bias ? GetFcNameKeyPart(dev_ctx, "Bias", &*bias)
++                 : "",
+                             common::vectorize(input.dims()),
+-                            common::vectorize(w.dims())));
++               common::vectorize(w.dims()),
++               std::to_string(in_num_col_dims),
++               activation_type,
++               std::to_string(use_onednn),
++               std::to_string(padding_weights),
++               std::to_string(use_quantizer),
++               mkldnn_data_type,
++               std::to_string(scale_in),
++               scale_weights,
++               std::to_string(scale_out),
++               std::to_string(force_fp32_output)));
+ 
+   auto inner_product_cache =
+       std::static_pointer_cast<InnerProductCache>(dev_ctx.GetBlob(cache_key));
+diff --git a/paddle/phi/kernels/onednn/conv_function.h b/paddle/phi/kernels/onednn/conv_function.h
+index 8474634a18..54417dcebb 100644
+--- a/paddle/phi/kernels/onednn/conv_function.h
++++ b/paddle/phi/kernels/onednn/conv_function.h
+@@ -14,6 +14,8 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
++
+ #include "paddle/phi/backends/all_context.h"
+ #include "paddle/phi/core/dense_tensor.h"
+ #include "paddle/phi/core/visit_type.h"
+@@ -52,6 +54,70 @@ static dnnl::memory::data_type GetDstType(
+   return dst_dt;
+ }
+ 
++template <typename T>
++static void AppendConvKeyPart(std::string* key, const std::vector<T>& values) {
++  for (const auto& value : values) {
++    key->append("_");
++    key->append(std::to_string(value));
++  }
++}
++
++static void AppendConvTensorKeyPart(std::string* key,
++                                    const DenseTensor* tensor) {
++  if (tensor == nullptr) {
++    key->append("_null");
++    return;
++  }
++
++  key->append("_");
++  key->append(std::to_string(reinterpret_cast<uintptr_t>(tensor->data())));
++  AppendConvKeyPart(key, common::vectorize(tensor->dims()));
++  key->append("_");
++  key->append(DataTypeToString(tensor->dtype()));
++}
++
++static std::string GetConvUniqueName(const OneDNNContext& dev_ctx,
++                                     const DenseTensor* input,
++                                     const DenseTensor* filter,
++                                     const DenseTensor* bias,
++                                     const DenseTensor* residual_param,
++                                     const std::vector<int>& strides,
++                                     const std::vector<int>& paddings,
++                                     const std::vector<int>& dilations,
++                                     int groups,
++                                     const std::string& data_format,
++                                     bool is_bfloat16,
++                                     const std::string& fuse_activation,
++                                     bool fuse_residual_conn,
++                                     bool force_fp32_output) {
++  if (dev_ctx.HasInputsName("Input") && dev_ctx.HasInputsName("Filter")) {
++    return dev_ctx.GetInputsName("Input")[0] +
++           dev_ctx.GetInputsName("Filter")[0];
++  }
++
++  std::string key = "onednn_conv_fallback";
++  AppendConvTensorKeyPart(&key, input);
++  AppendConvTensorKeyPart(&key, filter);
++  AppendConvTensorKeyPart(&key, bias);
++  AppendConvTensorKeyPart(&key, residual_param);
++  AppendConvKeyPart(&key, strides);
++  AppendConvKeyPart(&key, paddings);
++  AppendConvKeyPart(&key, dilations);
++  key.append("_");
++  key.append(std::to_string(groups));
++  key.append("_");
++  key.append(data_format);
++  key.append("_");
++  key.append(std::to_string(is_bfloat16));
++  key.append("_");
++  key.append(fuse_activation);
++  key.append("_");
++  key.append(std::to_string(fuse_residual_conn));
++  key.append("_");
++  key.append(std::to_string(force_fp32_output));
++  return key;
++}
++
+ #define PD_VISIT_FLOAT_AND_INT8_TYPES(TYPE, NAME, ...)                      \
+   [&] {                                                                     \
+     const auto& __dtype__ = TYPE;                                           \
+@@ -89,8 +155,20 @@ void ComputeFP32(const OneDNNContext& dev_ctx,
+                  DenseTensor* output) {
+   const auto& onednn_engine = dev_ctx.GetEngine();
+   const bool is_conv3d = strides.size() == 3U;
+-  const std::string& unique_name =
+-      dev_ctx.GetInputsName("Input")[0] + dev_ctx.GetInputsName("Filter")[0];
++  const std::string unique_name = GetConvUniqueName(dev_ctx,
++                                                    input,
++                                                    filter,
++                                                    bias,
++                                                    residual_param,
++                                                    strides,
++                                                    paddings,
++                                                    dilations,
++                                                    groups,
++                                                    data_format,
++                                                    is_bfloat16,
++                                                    fuse_activation,
++                                                    fuse_residual_conn,
++                                                    force_fp32_output);
+   PD_VISIT_FLOAT_AND_INT8_TYPES(
+       filter->dtype(), "ConvOneDNNHandlerT", ([&] {
+         onednn::ConvOneDNNHandlerT<T, data_t, T_out> handler(dev_ctx,
+@@ -177,8 +255,20 @@ void ComputeINT8(const OneDNNContext& dev_ctx,
+       false,
+       common::errors::Unimplemented(
+           "residual fusion does not support force output with fp32"));
+-  const std::string& unique_name =
+-      dev_ctx.GetInputsName("Input")[0] + dev_ctx.GetInputsName("Filter")[0];
++  const std::string unique_name = GetConvUniqueName(dev_ctx,
++                                                    input,
++                                                    filter,
++                                                    bias,
++                                                    residual_param,
++                                                    strides,
++                                                    paddings,
++                                                    dilations,
++                                                    groups,
++                                                    data_format,
++                                                    is_bfloat16,
++                                                    fuse_activation,
++                                                    fuse_residual_conn,
++                                                    force_fp32_output);
+   PD_VISIT_FLOAT_AND_INT8_TYPES(
+       filter->dtype(), "ConvOneDNNHandlerT", ([&] {
+         onednn::ConvOneDNNHandlerT<T, data_t, T_out> handler(dev_ctx,
+diff --git a/paddle/phi/kernels/onednn/conv_transpose_kernel.cc b/paddle/phi/kernels/onednn/conv_transpose_kernel.cc
+index 8765dfae3e..4c4879d689 100644
+--- a/paddle/phi/kernels/onednn/conv_transpose_kernel.cc
++++ b/paddle/phi/kernels/onednn/conv_transpose_kernel.cc
+@@ -14,6 +14,8 @@
+ 
+ #include "paddle/phi/kernels/conv_transpose_kernel.h"
+ 
++#include <cstdint>
++
+ #include "paddle/phi/backends/onednn/onednn_helper.h"
+ #include "paddle/phi/backends/onednn/onednn_reuse.h"
+ #include "paddle/phi/core/compat/get_kerneltype_forvar_utils.h"
+@@ -43,6 +45,41 @@ inline dnnl::memory::dims GetWeightsTz(const phi::DenseTensor* filter,
+   return weights_tz;
+ }
+ 
++template <typename T>
++static void AppendDeconvKeyPart(std::string* key,
++                                const std::vector<T>& values) {
++  for (const auto& value : values) {
++    key->append("_");
++    key->append(std::to_string(value));
++  }
++}
++
++static void AppendDeconvTensorKeyPart(std::string* key,
++                                      const DenseTensor* tensor) {
++  if (tensor == nullptr) {
++    key->append("_null");
++    return;
++  }
++
++  key->append("_");
++  key->append(std::to_string(reinterpret_cast<uintptr_t>(tensor->data())));
++  AppendDeconvKeyPart(key, common::vectorize(tensor->dims()));
++  key->append("_");
++  key->append(DataTypeToString(tensor->dtype()));
++}
++
++static std::string GetDeconvNameKeyPart(const OneDNNContext& dev_ctx,
++                                        const std::string& name,
++                                        const DenseTensor* tensor) {
++  if (dev_ctx.HasInputsName(name)) {
++    return dev_ctx.GetInputsName(name)[0];
++  }
++
++  std::string key = name;
++  AppendDeconvTensorKeyPart(&key, tensor);
++  return key;
++}
++
+ template <typename T, typename K, typename T_out>
+ class ConvTransposeOneDNNHandlerT
+     : public funcs::OneDNNHandlerNoCachingT<T, dnnl::deconvolution_forward> {
+@@ -64,7 +101,7 @@ class ConvTransposeOneDNNHandlerT
+             dev_ctx.GetEngine(), dev_ctx.GetPlace()),
+         is_test_(dev_ctx.HasDnnAttr("is_test")
+                      ? PADDLE_GET_CONST(bool, dev_ctx.GetDnnAttr("is_test"))
+-                     : false) {
++                     : true) {
+     PADDLE_ENFORCE_EQ(is_test_,
+                       true,
+                       common::errors::InvalidArgument(
+@@ -380,12 +417,22 @@ void Execute(const OneDNNContext& dev_ctx,
+   // Add thread_id to cache_key
+   // fix issue https://github.com/PaddlePaddle/PaddleOCR/issues/15621
+   // https://github.com/PaddlePaddle/PaddleOCR/issues/15393
+-  std::string cache_key = funcs::CreateKey(dev_ctx,
+-                                           funcs::ThreadIDasStr(),
+-                                           dev_ctx.GetInputsName("Input")[0],
+-                                           dev_ctx.GetInputsName("Filter")[0],
+-                                           common::vectorize(x->dims()),
+-                                           common::vectorize(filter->dims()));
++    const std::string input_key = GetDeconvNameKeyPart(dev_ctx, "Input", x);
++    const std::string filter_key =
++      GetDeconvNameKeyPart(dev_ctx, "Filter", filter);
++    const std::string bias_key =
++      bias ? GetDeconvNameKeyPart(dev_ctx, "Bias", bias) : "";
++    std::string cache_key = funcs::CreateKey(dev_ctx,
++                         funcs::ThreadIDasStr(),
++                         input_key,
++                         filter_key,
++                         bias_key,
++                         common::vectorize(x->dims()),
++                         common::vectorize(filter->dims()),
++                         strides,
++                         paddings,
++                         dilations,
++                         std::to_string(groups));
+   const auto& onednn_engine = dev_ctx.GetEngine();
+ 
+   auto deconvolution_cache =
+@@ -434,11 +481,12 @@ void Execute(const OneDNNContext& dev_ctx,
+                                           bias->dims().size()));
+     }
+     // Caching Key for weights is needed
+-    std::string key =
+-        funcs::CreateKey(dev_ctx,
+-                         dev_ctx.GetInputsName("Input")[0],
+-                         dev_ctx.GetInputsName("Filter")[0],
+-                         (bias ? dev_ctx.GetInputsName("Bias")[0] : ""));
++    std::string key = funcs::CreateKey(dev_ctx,
++                       input_key,
++                       filter_key,
++                       bias_key,
++                       common::vectorize(filter->dims()),
++                       std::to_string(groups));
+ 
+     ConvTransposeOneDNNHandlerT<T, float, T_out> handler(dev_ctx,
+                                                          x,
