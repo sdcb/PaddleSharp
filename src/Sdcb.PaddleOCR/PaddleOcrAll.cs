@@ -166,8 +166,6 @@ public class PaddleOcrAll : IDisposable
     /// <returns>The cropped and rotated image.</returns>
     public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
     {
-        bool wider = rect.Size.Width > rect.Size.Height;
-        float angle = rect.Angle;
         Size srcSize = src.Size();
         Rect boundingRect = rect.BoundingRect();
 
@@ -188,27 +186,36 @@ public class PaddleOcrAll : IDisposable
             .Select(v => new Point2f(v.X - rectToExp.X, v.Y - rectToExp.Y))
             .ToArray();
 
-        Point2f[] srcPoints = (wider, angle) switch
+        // Convention-independent corner ordering. RotatedRect.Angle / Points() ordering changed
+        // across OpenCV versions (4.13 differs from 4.11), which broke the previous hard-coded
+        // angle-based corner selection. We instead order the four corners geometrically:
+        //   top-left = min(x+y), bottom-right = max(x+y), top-right = min(y-x), bottom-left = max(y-x).
+        // This is robust for the near-horizontal text lines OCR detectors emit.
+        Point2f tl = rp.Aggregate((a, b) => (a.X + a.Y) <= (b.X + b.Y) ? a : b);
+        Point2f br = rp.Aggregate((a, b) => (a.X + a.Y) >= (b.X + b.Y) ? a : b);
+        Point2f tr = rp.Aggregate((a, b) => (a.Y - a.X) <= (b.Y - b.X) ? a : b);
+        Point2f bl = rp.Aggregate((a, b) => (a.Y - a.X) >= (b.Y - b.X) ? a : b);
+
+        static float Dist(Point2f p, Point2f q) => (float)Math.Sqrt((p.X - q.X) * (p.X - q.X) + (p.Y - q.Y) * (p.Y - q.Y));
+        int cw = Math.Max(1, (int)Math.Round(Math.Max(Dist(tl, tr), Dist(bl, br))));
+        int ch = Math.Max(1, (int)Math.Round(Math.Max(Dist(tl, bl), Dist(tr, br))));
+
+        Point2f[] srcPoints = { tl, tr, br, bl };
+        Point2f[] dstPoints =
         {
-            (true, >= 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
-            _ => new[] { rp[0], rp[3], rp[2], rp[1] }
+            new Point2f(0, 0),
+            new Point2f(cw, 0),
+            new Point2f(cw, ch),
+            new Point2f(0, ch),
         };
 
-        var ptsDst0 = new Point2f(0, 0);
-        var ptsDst1 = new Point2f(rect.Size.Width, 0);
-        var ptsDst2 = new Point2f(rect.Size.Width, rect.Size.Height);
-        var ptsDst3 = new Point2f(0, rect.Size.Height);
+        using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, dstPoints);
+        Mat dest = expanded.WarpPerspective(matrix, new Size(cw, ch), InterpolationFlags.Nearest, BorderTypes.Replicate);
 
-        using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, new[] { ptsDst0, ptsDst1, ptsDst2, ptsDst3 });
-
-        Mat dest = expanded.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
-
-        if (!wider)
+        // Vertical text line → rotate 90° CW so the recognizer sees a horizontal strip.
+        if (ch >= cw * 1.5)
         {
             Cv2.Transpose(dest, dest);
-        }
-        else if (angle > 45)
-        {
             Cv2.Flip(dest, dest, FlipMode.X);
         }
         return dest;
