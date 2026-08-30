@@ -166,8 +166,6 @@ public class PaddleOcrAll : IDisposable
     /// <returns>The cropped and rotated image.</returns>
     public static Mat GetRotateCropImage(Mat src, RotatedRect rect)
     {
-        bool wider = rect.Size.Width > rect.Size.Height;
-        float angle = rect.Angle;
         Size srcSize = src.Size();
         Rect boundingRect = rect.BoundingRect();
 
@@ -188,31 +186,61 @@ public class PaddleOcrAll : IDisposable
             .Select(v => new Point2f(v.X - rectToExp.X, v.Y - rectToExp.Y))
             .ToArray();
 
-        Point2f[] srcPoints = (wider, angle) switch
+        // Convention-independent corner ordering. RotatedRect.Angle / Points() ordering changed
+        // across OpenCV versions (4.13 differs from 4.11), which broke the previous hard-coded
+        // angle-based corner selection. OrderPointsClockwise orders the four corners geometrically
+        // and is robust even near ±45° (a min/max of x±y can select duplicate points there and
+        // produce a degenerate perspective transform).
+        Point2f[] srcPoints = OrderPointsClockwise(rp); // tl, tr, br, bl
+
+        int cw = Math.Max(1, (int)Math.Round(Math.Max(
+            GetDistance(srcPoints[0], srcPoints[1]),
+            GetDistance(srcPoints[2], srcPoints[3]))));
+        int ch = Math.Max(1, (int)Math.Round(Math.Max(
+            GetDistance(srcPoints[0], srcPoints[3]),
+            GetDistance(srcPoints[1], srcPoints[2]))));
+
+        Point2f[] dstPoints =
         {
-            (true, >= 0 and < 45) => new[] { rp[1], rp[2], rp[3], rp[0] },
-            _ => new[] { rp[0], rp[3], rp[2], rp[1] }
+            new Point2f(0, 0),
+            new Point2f(cw, 0),
+            new Point2f(cw, ch),
+            new Point2f(0, ch),
         };
 
-        var ptsDst0 = new Point2f(0, 0);
-        var ptsDst1 = new Point2f(rect.Size.Width, 0);
-        var ptsDst2 = new Point2f(rect.Size.Width, rect.Size.Height);
-        var ptsDst3 = new Point2f(0, rect.Size.Height);
+        using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, dstPoints);
+        Mat dest = expanded.WarpPerspective(matrix, new Size(cw, ch), InterpolationFlags.Nearest, BorderTypes.Replicate);
 
-        using Mat matrix = Cv2.GetPerspectiveTransform(srcPoints, new[] { ptsDst0, ptsDst1, ptsDst2, ptsDst3 });
-
-        Mat dest = expanded.WarpPerspective(matrix, new Size(rect.Size.Width, rect.Size.Height), InterpolationFlags.Nearest, BorderTypes.Replicate);
-
-        if (!wider)
+        // Vertical text line → rotate 90° (CCW) so the recognizer sees a horizontal strip.
+        if (ch >= cw * 1.5)
         {
             Cv2.Transpose(dest, dest);
-        }
-        else if (angle > 45)
-        {
             Cv2.Flip(dest, dest, FlipMode.X);
         }
         return dest;
     }
+
+    /// <summary>
+    /// Orders four polygon corners as top-left, top-right, bottom-right, bottom-left, independently
+    /// of any OpenCV RotatedRect angle/point convention. Sorts by X, splits the two left-most and
+    /// two right-most points (always disjoint), then disambiguates by Y on the left and by distance
+    /// to the top-left corner on the right. Robust near ±45° where x±y heuristics pick duplicates.
+    /// </summary>
+    private static Point2f[] OrderPointsClockwise(Point2f[] points)
+    {
+        Point2f[] xSorted = points.OrderBy(p => p.X).ToArray();
+        Point2f[] leftMost = xSorted.Take(2).OrderBy(p => p.Y).ToArray();
+        Point2f[] rightMost = xSorted.Skip(2).ToArray();
+
+        Point2f tl = leftMost[0];
+        Point2f bl = leftMost[1];
+        Point2f br = rightMost.OrderByDescending(p => GetDistance(tl, p)).First();
+        Point2f tr = rightMost.Single(p => p != br);
+        return new[] { tl, tr, br, bl };
+    }
+
+    private static float GetDistance(Point2f a, Point2f b)
+        => (float)Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 
     /// <summary>
     /// Releases the resources used by this OCR engine.
